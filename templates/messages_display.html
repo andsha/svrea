@@ -1,0 +1,29 @@
+{% if messages%}
+    <style>
+        .messages_err{
+            color: Red ;
+            background-color: orange;
+            font-size: 100%;
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+            margin-bottom: 1%;
+            text-align: center;
+        }
+        .messages_default{
+            color: SteelBlue ;
+            background-color: LightBlue;
+            font-size: 100%;
+            font-family: "Trebuchet MS", Helvetica, sans-serif;
+            margin-bottom: 1%;
+            text-align: center;
+        }
+    </style>
+            {% for message in messages%}
+                <div class="{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    messages_err
+                {% else %}
+                    messages_default
+                {% endif %}">
+                    {{message | safe}}<br/>
+                </div>
+            {% endfor %}
+{% endif %}

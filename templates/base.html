@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static %}
+
+<head>
+
+    <style>
+        {% block head %}
+        {% endblock %}
+
+        div.blue {
+            color:#2471A3;
+        }
+        h1.rea {
+            font-size: 300%;
+        }
+        form.blue {
+            color:#2471A3;
+        }
+        .sold_period{
+        font-size: 24px;
+        }
+
+
+
+    </style>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <link rel="stylesheet" href=" {% static "css/bootstrap.min.css" %}" type="text/css"/>
+    <link rel="stylesheet" href=" {% static "css/bootstrap-multiselect.css" %}" type="text/css"/>
+    <link rel="stylesheet" href=" {% static "css/bootstrap-example.css" %}" type="text/css">
+
+
+    <script type="text/javascript" src="{% static "js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap-multiselect.js" %}"></script>
+
+
+</head>
+<body>
+    <div class="full">
+        <div class="text-center blue">
+            <a href="{% url 'index' %}" style="text-decoration: none;"><h1 class="rea">R.E.A.T.</h1></a>
+            <h3> Real Estate Analytical Tool</h3>
+        </div>
+        {% include "messages_display.html" %}
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    {%if request.user.is_authenticated%}
+                        <ul class="nav navbar-nav">
+                            <p class="navbar-text">Welcome, {{ request.user.username }}!</p>
+                            <li><a href='{% url "users:details" name=user %}'>Home</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Maps <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href='{% url "listings_map" %}'>Listings</a></li>
+                                    <li><a href='{% url "density_map" %}'>Property Density</a></li>
+                                    <li><a href='{% url "price_density_map" %}'>Price Density</a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plots <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href='{% url "plots_histograms"  %}'>Histograms</a></li>
+                                </ul>
+                            </li>
+                            {% if perms.svrea_script.can_see_history or perms.svrea_script.can_run_script %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Script <span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    {% if perms.svrea_script.can_see_history %}
+                                        <li><a href='{% url "script_history"  %}'>History</a></li>
+                                    {% endif %}
+                                    {% if perms.svrea_script.can_run_script %}
+                                        <li><a href='{% url "script_run"  %}'>Run</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
+                        <form class="navbar-form navbar-right" method="post">
+                            {% csrf_token %}
+                            <button type="submit" value="Log Out" name="submit" class="btn btn-default">Log Out</button>
+                        </form>
+                        <p class="navbar-text navbar-right"> / Home {% if path %} / {{path | safe}} {% endif %}</p>
+                    {% else %}
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{% url 'register' %}">Register</a></li>
+                        </ul>
+                        <form class="navbar-form navbar-right" method="post" name="login">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" placeholder="User Name" name = "username">
+                            <input type="password" class="form-control" placeholder="Password" name="password">
+                            <button type="submit" value="Log In" name="submit" class="btn btn-default">Log In</button>
+                        </form>
+                    {%endif%}
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+    {% block content %}
+    {% endblock %}
+    </div>
+</html>
