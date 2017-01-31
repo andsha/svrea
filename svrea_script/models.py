@@ -3,7 +3,7 @@ from django.db import models
 
 class Info(models.Model):
     started = models.DateTimeField(auto_now=True, primary_key=True)
-    user = models.CharField(max_length=50)
+    user_name = models.CharField(max_length=50, default='None')
     config = models.CharField(max_length = 200)
     status = models.CharField(max_length=200)
     comment = models.CharField(max_length=500)
