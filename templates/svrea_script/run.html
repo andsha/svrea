@@ -4,9 +4,17 @@
 {% block content %}
 
 
-{% if text %}
-    {{text}}
-{% endif %}
+<form method="post" > {% csrf_token %}
+    <div class="full">
+        <div class="text-center blue">
+            <input type="text" name="script_params">
+            <button type="submit" name="run_script" class="btn btn-default">Run Script</button>
+        </div>
+    </div>
+
+</form>
+
+{{text}}
 
 {% endblock %}
 
