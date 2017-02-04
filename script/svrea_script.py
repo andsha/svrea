@@ -13,7 +13,7 @@ import re
 from optparse import OptionParser
 import shutil
 
-import pgUtil
+from script import pgUtil
 
 gCallerId = 'scr06as'
 gUniqueKey = '3i0WnjAooYIHhgnyUKF597moNCYnt449kZbK3YAR'
@@ -920,7 +920,7 @@ class DataBase():
 
 
 
-class svrea_script():
+class Svrea_script():
 
     def __init__(self):
         self.transfer = False
@@ -1038,6 +1038,7 @@ class svrea_script():
 
     def run(self, lparams):
         print(lparams)
+
         return 0
 
         FORMAT = '%(levelname)-8s %(asctime)-15s %(message)s'
