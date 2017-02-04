@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import logout
 
 from script.svrea_script import Svrea_script
-from .models import Info
+from svrea_script.models import Info
+
 
 
 @login_required(redirect_field_name = "", login_url="/")
@@ -16,10 +17,10 @@ def script_run(request):
 
     if request.POST.get('run_script') == '':
         params = request.POST.get('script_params')
-        info = Info(user_name = request.user.username, config=params, status='started')
-        info.save()
-        script = Svrea_script()
-        script.run(params)
+        # info = Info(user_name = request.user.username, config=params, status='started')
+        # info.save()
+        script = Svrea_script(params = params, username = request.user.username)
+        script.run()
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 

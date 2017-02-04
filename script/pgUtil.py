@@ -16,23 +16,25 @@ class pgProcess:
 
     def __init__(self, database = 'booli1', host = '127.0.0.1', port = '5432', user = 'pguser', password = None):
 
-        self.db = database
-        self.host = host
-        self.port = port
-        self.user = user
-        self.password = password
+        # self.db = database
+        # self.host = host
+        # self.port = port
+        # self.user = user
+        # self.password = password
 
         self.pgConnection = None
-
+        #print ("Database:", database)
         try:
-            self.pgConnection = psycopg2.connect(database = self.db,
-                                                  user = self.user,
-                                                  password = self.password,
-                                                  host = self.host,
-                                                  port = self.port)
+            self.pgConnection = psycopg2.connect(database = database,
+                                                  user = user,
+                                                  password = password,
+                                                  host = host,
+                                                  port = port)
             self.pgConnection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         except Exception as e:
             logging.info('Cannot connect to Postgres\n %s' %e)
+
+        #print(self.pgConnection)
 
     def check_connection(self):
         print(self.pgConnection.status)
@@ -45,7 +47,7 @@ class pgProcess:
 
         except Exception as e:
             logging.error('Error while executing query\nQuery:\n%s\nError:\n%s' %(sql, e))
-            cursor.close()
+            #cursor.close()
             return 1
 
         if isSelect is False:

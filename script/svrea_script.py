@@ -14,14 +14,18 @@ from optparse import OptionParser
 import shutil
 
 from script import pgUtil
+import dj_database_url
+
+from svrea_script.models import Info, ScriptLog
+
 
 
 gCallerId = 'scr06as'
 gUniqueKey = '3i0WnjAooYIHhgnyUKF597moNCYnt449kZbK3YAR'
 
 BASE_FOLDER = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-gDBStruct = BASE_FOLDER + '/svrea/DBStruct.cfg'
-gDBFillRules = BASE_FOLDER + '/svrea/DBFillRules.cfg'
+gDBStruct = BASE_FOLDER + '/script/DBStruct.cfg'
+gDBFillRules = BASE_FOLDER + '/script/DBFillRules.cfg'
 
 gLimit = 3
 
@@ -55,7 +59,7 @@ def err(obj = None, msg = None):
 
 class DataBase():
 
-    def __init__(self, connection, fdbstruct, frules):
+    def __init__(self, connection, fdbstruct = None, frules = None):
         self.pgcon = connection
         self.fdbstruct = fdbstruct # file with version 0 DB structure
         self.frules = frules       # file with filling rules
@@ -919,11 +923,38 @@ class DataBase():
                 time.sleep(random.randint(15, 30))
 
 
+WARNING = 1101
+ERROR = 1102
+INFO = 1103
+
+
+def tolog(level, str):
+    if level == WARNING:
+        l = 'WARNING'
+    elif level == ERROR:
+        l = 'ERROR'
+    else:
+        l = 'INFO'
+
+    log = ScriptLog(level = l, entry = str)
+    log.save()
+
 
 
 class Svrea_script():
 
-    def __init__(self):
+    def __init__(self, params = None, username = None):
+        self.params = params
+        self.options = self.handleParams(params)
+
+        self.force = False
+        n = params.find('-f')
+        if n != -1:
+            self.force = True
+
+        self.username = username
+
+
         self.transfer = False
         self.downloadAction = None
         self.updateVersion = None
@@ -931,188 +962,239 @@ class Svrea_script():
         self.mcommand = None
         self.clean = False
         self.latest = False
-        self.force = False
-        self.options = {}
         self.config = None
 
 
-    def handleCmdLine(self):
-        usage = ("%prog <options> ...\n")
-        parser = OptionParser(usage = usage)
+    def handleParams(self, params):
+        options = {}
+        n = params.find('-d')
+        if n != -1:
+            options['download'] = params[n+3 :].split()[0]
 
-        parser.add_option("-d",
-                          "--download",
-                          type = "string",
-                          help = "To download data from internet. 'listings' or 'sold'")
+        n = params.find('-u')
+        if n != -1:
+            options['update'] = int(params[n + 3:].split()[0])
 
-        parser.add_option("-u",
-                          "--update",
-                          type="int",
-                          help="Update database until version. -1 is latest possible version")
+        n = params.find('-t')
+        if n != -1:
+            options['transfer'] = True
 
-        parser.add_option("-t",
-                          "--transfer",
-                          action="store_true",
-                          default = False,
-                          help="Fill database with new data")
+        n = params.find('-r')
+        if n != -1:
+            options['recreate'] = True
 
-        parser.add_option("-c",
-                          "--clean",
-                          action="store_true",
-                          default=False,
-                          help="Move downloaded files from data to dataHistory folder. Performed after uploading to database when used with -f.")
-
-        parser.add_option("-r",
-                          "--recreate",
-                          action="store_true",
-                          default = False,
-                          help="Clear and recreare database. Use only with -u")
-
-        parser.add_option("-l",
-                          "--latest",
-                          action="store_true",
-                          default=False,
-                          help="Download only latest data (latest 300 entries). use with -d")
-
-        parser.add_option("-f",
-                          "--force",
-                          action="store_true",
-                          default=False,
-                          help="Forse script execution")
-
-        parser.add_option("-o",
-                          "--config",
-                          type="string",
-                          help="configuration file")
-
-        (options,args) = parser.parse_args()
-        self.options = ""
-
-        if options.download == 'listings' or options.download == 'listing':
-            self.options += '-d listings '
-            self.downloadAction = LISTINGS
-        elif options.download == 'sold':
-            self.options += '-d sold '
-            self.downloadAction = SOLD
-        elif options.download == 'lastsold':
-            self.downloadAction = LASTSOLD
-
-        if options.config is not None:
-            self.config = options.config
-        else:
-            err(msg='no config was supplied')
-            return 1
-
-        if options.latest:
-            self.latest = True
-            self.options += '-l '
-
-        if options.update is not None:
-            self.updateVersion = options.update
-            self.options += '-u %s ' %self.updateVersion
-
-        if options.transfer is True:
-            self.transfer = True
-            self.options += '-t '
-
-        if options.force is True:
-            self.force = True
-            self.options += '-f '
-        #else:
-        #    return err(msg = "Action should be either update -u,  download -d, or fill -f")
-
-        if options.recreate:
-            if options.update is not None:
-                self.recreate = True
-                self.options += '-r '
-            else:
-                return err(msg = "-r option can only be used with -u")
-
-        self.clean = options.clean
-        if self.clean:
-            self.options += '-c'
-
-        return 0
+        n = params.find('-l')
+        if n != -1:
+            options['latest'] = True
 
 
 
 
-    def run(self, lparams):
-        print(lparams)
+        # usage = ("%prog <options> ...\n")
+        # parser = OptionParser(usage = usage)
+        #
+        # parser.add_option("-d",
+        #                   "--download",
+        #                   type = "string",
+        #                   help = "To download data from internet. 'listings' or 'sold'")
+        #
+        # parser.add_option("-u",
+        #                   "--update",
+        #                   type="int",
+        #                   help="Update database until version. -1 is latest possible version")
+        #
+        # parser.add_option("-t",
+        #                   "--transfer",
+        #                   action="store_true",
+        #                   default = False,
+        #                   help="Fill database with new data")
+        #
+        # parser.add_option("-c",
+        #                   "--clean",
+        #                   action="store_true",
+        #                   default=False,
+        #                   help="Move downloaded files from data to dataHistory folder. Performed after uploading to database when used with -f.")
+        #
+        # parser.add_option("-r",
+        #                   "--recreate",
+        #                   action="store_true",
+        #                   default = False,
+        #                   help="Clear and recreare database. Use only with -u")
+        #
+        # parser.add_option("-l",
+        #                   "--latest",
+        #                   action="store_true",
+        #                   default=False,
+        #                   help="Download only latest data (latest 300 entries). use with -d")
+        #
+        # parser.add_option("-f",
+        #                   "--force",
+        #                   action="store_true",
+        #                   default=False,
+        #                   help="Forse script execution")
+        #
+        # parser.add_option("-o",
+        #                   "--config",
+        #                   type="string",
+        #                   help="configuration file")
+        #
+        # (options,args) = parser.parse_args()
+        #options = {}
+        # plist = self.params.split(';')
+        #
+        # if len(plist) > 0:
+        #     for p in plist:
+        #         if len(p.split('=')) > 1:
+        #             self.options[p.split('=')[0].strip()] = p.split('=')[1].strip()
 
-        return 0
-
-        FORMAT = '%(levelname)-8s %(asctime)-15s %(message)s'
-        logging.basicConfig(level = logging.DEBUG, format=FORMAT)
-
-        if self.handleCmdLine() != 0:
-            return 1
-        print('script started with %s options' %self.options)
-        return 0
 
 
-        with open(self.config) as param_file:
-            params = json.load(param_file)
+        # if options.download == 'listings' or options.download == 'listing':
+        #     self.options += '-d listings '
+        #     self.downloadAction = LISTINGS
+        # elif options.download == 'sold':
+        #     self.options += '-d sold '
+        #     self.downloadAction = SOLD
+        # elif options.download == 'lastsold':
+        #     self.downloadAction = LASTSOLD
+        #
+        # if options.config is not None:
+        #     self.config = options.config
+        # else:
+        #     err(msg='no config was supplied')
+        #     return 1
+        #
+        # if options.latest:
+        #     self.latest = True
+        #     self.options += '-l '
+        #
+        # if options.update is not None:
+        #     self.updateVersion = options.update
+        #     self.options += '-u %s ' %self.updateVersion
+        #
+        # if options.transfer is True:
+        #     self.transfer = True
+        #     self.options += '-t '
+        #
+        # if options.force is True:
+        #     self.force = True
+        #     self.options += '-f '
+        # #else:
+        # #    return err(msg = "Action should be either update -u,  download -d, or fill -f")
+        #
+        # if options.recreate:
+        #     if options.update is not None:
+        #         self.recreate = True
+        #         self.options += '-r '
+        #     else:
+        #         return err(msg = "-r option can only be used with -u")
+        #
+        # self.clean = options.clean
+        # if self.clean:
+        #     self.options += '-c'
 
-        bparams = params["default"]
-        db = DataBase(connection = pgUtil.pgProcess(database = bparams['database'], host = bparams['host'], port = bparams['port'], user = bparams['user'], password = bparams['password']), fdbstruct = gDBStruct, frules = gDBFillRules)
+        return options
 
-        sql = """SELECT 1 FROM information_schema.tables
-                  WHERE table_schema = '%s'
-                  AND table_name = 'history' """ % db.schema
-        #print("options", self.options)
 
-        res = db.pgcon.run(sql, True)
 
-        if len(res) != 0:
-            if self.downloadAction == LISTINGS:
-                s = 'listings'
-            elif self.downloadAction == SOLD:
-                s = 'sold'
-            else:
-                s = ''
 
-            today = datetime.datetime.today().date()
-            sql = """SELECT id, status from "%s".history WHERE "date"::date = '%s' ORDER BY date DESC""" %(db.schema, today)
-            res = db.pgcon.run(sql, True)
+    def run(self):
+        # FORMAT = '%(levelname)-8s %(asctime)-15s %(message)s'
+        # logging.basicConfig(level = logging.DEBUG, format=FORMAT)
 
-            #print(res)
+        #self.options = self.handleParams()
 
-            #print (res[0][1], not self.make)
-            runbefore = False
-            for r in res:
-                if len(res) != 0 and r[1] == '%s done' %s and not self.force:
-                    logging.info("already run today for %s" %s)
+
+
+        db_from_env = dj_database_url.config()
+        db = DataBase(connection = pgUtil.pgProcess(database=db_from_env['NAME'],
+                                                    host=db_from_env['HOST'],
+                                                    user=db_from_env['USER'],
+                                                    port=db_from_env['PORT'],
+                                                    password=db_from_env['PASSWORD']), fdbstruct = gDBStruct, frules = gDBFillRules)
+
+
+        # sql = "select * from svrea_script_info "
+        # print(db.pgcon.run(sql,True))
+        #return 0
+
+        # sql = """SELECT 1 FROM information_schema.tables
+        #           WHERE table_schema = '%s'
+        #           AND table_name = 'history' """ % db.schema
+        # #print("options", self.options)
+        #
+        # res = db.pgcon.run(sql, True)
+
+        # if len(res) != 0:
+        #     if self.downloadAction == LISTINGS:
+        #         s = 'listings'
+        #     elif self.downloadAction == SOLD:
+        #         s = 'sold'
+        #     else:
+        #         s = ''
+        #
+        #     today = datetime.datetime.today().date()
+        #     sql = """SELECT id, status from "%s".history WHERE "date"::date = '%s' ORDER BY date DESC""" %(db.schema, today)
+        #     res = db.pgcon.run(sql, True)
+
+        today = datetime.date.today()
+        today_scripts = Info.objects.filter(started__date = today)
+
+        runbefore = False
+        for s in today_scripts:
+            if self.handleParams(s.config) == self.options:
+                runbefore = True
+                #print("FOrce", self.force)
+                if s.status == 'done' and not self.force: # if succesfully run before
+                    print('already run')
                     return 0
-                elif len(res) != 0 and r[1] == '%s started' %s:
-                    id = int(r[0])
-                    runbefore = True
+                else:
+                    s.status = 'started'
+                    s.save()
                     break
 
-            if not runbefore:
-                sql = """SELECT max(id) from "%s".history """ %db.schema
-                res = db.pgcon.run(sql, True)
-                id = int(res[0][0])
+        if not runbefore:
+            l = Info(user_name = self.username,
+                     config = self.params,
+                     status = 'started')
+            l.save()
 
-            if not self.force:
-                sql = """INSERT INTO "%s".history values(%s, now(), '%s', '%s started') """ % (
-                db.schema, id + 1, self.options, s)
-                # print (sql)
-                res = db.pgcon.run(sql)
-        else:
-            id = 0
-
+        # runbefore = False
+        # for r in res:
+        #     if len(res) != 0 and r[1] == '%s done' %s and not self.force:
+        #         logging.info("already run today for %s" %s)
+        #         return 0
+        #     elif len(res) != 0 and r[1] == '%s started' %s:
+        #         id = int(r[0])
+        #         runbefore = True
+        #         break
+        #
+        # if not runbefore:
+        #     sql = """SELECT max(id) from "%s".history """ %db.schema
+        #     res = db.pgcon.run(sql, True)
+        #     id = int(res[0][0])
+        #
+        # if not self.force:
+        #     sql = """INSERT INTO "%s".history values(%s, now(), '%s', '%s started') """ % (
+        #     db.schema, id + 1, self.options, s)
+        #     # print (sql)
+        #     res = db.pgcon.run(sql)
+        # # else:
+        # #     id = 0
+        #
         # -----------------------------------------------------------------------------------
 
-        if self.updateVersion is not None:
-            version = db.getMaxVersion() if self.updateVersion == -1 else self.updateVersion
+        if self.options['update']:
+            version = db.getMaxVersion() if self.options['update'] == -1 else self.options['update']
 
-            if self.recreate:
-                logging.info("Recreating Database to version %s" %version)
+            if self.options['recreate']:
+                tolog(INFO, "Recreating Database to version %s", (version))
             else:
-                logging.info("Updating Database from version %s to version %s" % (db.version, version))
+                logging.info("Updating Database from version %s to version %s", (db.version, version))
+            return 0
+            db.updateDB(toVersion = self.options['update'], startOver = self.recreate)
 
-            db.updateDB(toVersion = self.updateVersion, startOver = self.recreate)
+        return 0
 
         # -----------------------------------------------------------------------------------
 
