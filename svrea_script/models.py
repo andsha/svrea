@@ -23,3 +23,9 @@ class Rawdata(models.Model):
     type = models.CharField(max_length = 50)
     areacode = models.IntegerField()
     rawdata = JSONField()
+
+
+class Aux(models.Model):
+    changed = models.DateTimeField(auto_now=True)
+    key = models.CharField(max_length=200)
+    value = models.CharField(max_length=200)

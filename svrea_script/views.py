@@ -42,9 +42,10 @@ def script_history(request):
         logout(request)
         return redirect("index")
 
-
+    history = Info.objects.all().order_by('started')
 
     context = {
-        "text" : "You can see script history"
+        "text" : "You can see script history",
+        "history" : history
     }
     return render(request, "svrea_script/history.html", context=context)

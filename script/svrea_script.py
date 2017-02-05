@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import sys, os
+import sys, os, threading
 from urllib.request import urlopen
 import time
 from hashlib import sha1
@@ -16,7 +16,7 @@ import shutil
 from script import pgUtil
 import dj_database_url
 
-from svrea_script.models import Info, Log, Rawdata
+from svrea_script.models import Info, Log, Rawdata, Aux
 
 
 
@@ -825,100 +825,7 @@ class DataBase():
         sql = """UPDATE  "%s"."%s" SET "isActive" = 'False', "dateInactive" = '%s' WHERE "dateSold" is NULL AND "dateInactive" is NULL """ %(self.schema, 'listings', self.date)
         self.pgcon.run(sql)
 
-    def getDataFromWeb(self, type=LISTINGS, latest = False):
-        uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
-        timestamp = str(int(time.time()))
-        hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
-        urlBase = 'HTTP://api.booli.se//'
 
-        if type == LISTINGS:
-            urlBase += 'listings?'
-        elif type == SOLD or type == LASTSOLD:
-            urlBase += 'sold?'
-        else:
-            return err('Wrong API type %s' % type)
-
-        area_list = ['64',  # Skane
-                     '160',  # Halland
-                     '23',  # vastra gotalands
-                     '2',  # Stockholm lan
-                     '783',  # Kronobergs lan
-                     '45',  # Blekinge lan
-                     '381',  # Kalmar
-                     '153',  # Jonkoping
-                     '253',  # ostergotland lan
-                     '26',  # sodermanlands lan
-                     '145',  # Blekinge lan
-                     ]  #
-        # area = '64'
-        for idx, area in enumerate(area_list):
-            logging.info("Donwloading for area %s" % (area))
-            url = urlBase + \
-                  'areaId=' + area + \
-                  '&callerId=' + gCallerId + \
-                  '&time=' + timestamp + \
-                  '&unique=' + uniqueString + \
-                  '&hash=' + str(hashstr)
-            # print (url)
-            # exit()
-            data = urlopen(url).read().decode('utf-8')
-            dic = json.loads(data)
-            maxcount = int(dic['totalCount'])
-            # print (maxcount)
-
-            if type == LASTSOLD:
-                maxcount = 300
-
-            offset = 0
-            limit = 300
-
-            while 1:
-                logging.info("%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))
-                uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
-                timestamp = str(int(time.time()))
-                hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
-                url = urlBase + \
-                      'areaId=' + area + \
-                      '&offset=' + str(offset) + \
-                      '&limit=' + str(limit) + \
-                      '&callerId=' + gCallerId + \
-                      '&time=' + timestamp + \
-                      '&unique=' + uniqueString + \
-                      '&hash=' + str(hashstr)
-                # print (url)
-                data = urlopen(url).read().decode('utf-8')
-                dic = json.loads(data)
-                # today = datetime.datetime.today()
-                #data = '{"data" : 23}'
-                #print('listings' if type == LISTINGS else 'sold', area, data.replace("'", '"'))
-                sql = """
-                    INSERT INTO "%s".raw_data (download_date,
-                                          type,
-                                          countyid,
-                                          listings_data)
-                    VALUES
-                    (                     now(),'%s',%s,'%s')
-                """ % (self.schema,'listings' if type == LISTINGS else 'sold', area, ('%s' %dic).replace('True', "'True'").replace("'", '"'))
-                #print(sql)
-                res = self.pgcon.run(sql)
-                # fname = BASE_FOLDER + '/data/booli '+ str(datetime.datetime(today.year, today.month, today.day, today.hour, today.minute, today.second)).replace(':','_') + ' ' + area
-                # f = open(fname, 'w')
-                # json.dump(dic, f)
-
-                # f.close()
-                offset += limit
-
-                if offset >= maxcount:
-                    logging.info("Downloading complete")
-                    break
-                if latest:
-                    logging.info("Downloading complete")
-                    break
-
-                time.sleep(random.randint(15, 30))
-
-            if idx < len(area_list) - 1:
-                time.sleep(random.randint(15, 30))
 
 
 WARNING = 1101
@@ -943,8 +850,6 @@ class Svrea_script():
 
     def __init__(self, params = None, username = None):
         self.params = params
-
-
         self.username = username
 
 
@@ -961,131 +866,27 @@ class Svrea_script():
     def handleParams(self, params):
         options = {}
 
-        n = params.find('-d')
-        if n != -1:
-            options['download'] = params[n+3 :].split()[0]
+        if params.find('-f') != -1:
+            options['force'] = True
+        else:
+            options['force'] = False
 
-        # n = params.find('-u')
-        # if n != -1:
-        #     options['update'] = int(params[n + 3:].split()[0])
+        if params[0:3] == '-d ':
+            options['download'] = params[3:].split()
 
-        n = params.find('-t')
-        if n != -1:
-            options['transfer'] = True
+            if params.find('-l') != -1:
+                options['latest'] = True
+            else:
+                options['latest'] = False
 
-        # n = params.find('-r')
-        # if n != -1:
-        #     options['recreate'] = True
-
-        n = params.find('-l')
-        if n != -1:
-            options['latest'] = True
-
-
-
-
-        # usage = ("%prog <options> ...\n")
-        # parser = OptionParser(usage = usage)
-        #
-        # parser.add_option("-d",
-        #                   "--download",
-        #                   type = "string",
-        #                   help = "To download data from internet. 'listings' or 'sold'")
-        #
-        # parser.add_option("-u",
-        #                   "--update",
-        #                   type="int",
-        #                   help="Update database until version. -1 is latest possible version")
-        #
-        # parser.add_option("-t",
-        #                   "--transfer",
-        #                   action="store_true",
-        #                   default = False,
-        #                   help="Fill database with new data")
-        #
-        # parser.add_option("-c",
-        #                   "--clean",
-        #                   action="store_true",
-        #                   default=False,
-        #                   help="Move downloaded files from data to dataHistory folder. Performed after uploading to database when used with -f.")
-        #
-        # parser.add_option("-r",
-        #                   "--recreate",
-        #                   action="store_true",
-        #                   default = False,
-        #                   help="Clear and recreare database. Use only with -u")
-        #
-        # parser.add_option("-l",
-        #                   "--latest",
-        #                   action="store_true",
-        #                   default=False,
-        #                   help="Download only latest data (latest 300 entries). use with -d")
-        #
-        # parser.add_option("-f",
-        #                   "--force",
-        #                   action="store_true",
-        #                   default=False,
-        #                   help="Forse script execution")
-        #
-        # parser.add_option("-o",
-        #                   "--config",
-        #                   type="string",
-        #                   help="configuration file")
-        #
-        # (options,args) = parser.parse_args()
-        #options = {}
-        # plist = self.params.split(';')
-        #
-        # if len(plist) > 0:
-        #     for p in plist:
-        #         if len(p.split('=')) > 1:
-        #             self.options[p.split('=')[0].strip()] = p.split('=')[1].strip()
-
-
-
-        # if options.download == 'listings' or options.download == 'listing':
-        #     self.options += '-d listings '
-        #     self.downloadAction = LISTINGS
-        # elif options.download == 'sold':
-        #     self.options += '-d sold '
-        #     self.downloadAction = SOLD
-        # elif options.download == 'lastsold':
-        #     self.downloadAction = LASTSOLD
-        #
-        # if options.config is not None:
-        #     self.config = options.config
-        # else:
-        #     err(msg='no config was supplied')
-        #     return 1
-        #
-        # if options.latest:
-        #     self.latest = True
-        #     self.options += '-l '
-        #
-        # if options.update is not None:
-        #     self.updateVersion = options.update
-        #     self.options += '-u %s ' %self.updateVersion
-        #
-        # if options.transfer is True:
-        #     self.transfer = True
-        #     self.options += '-t '
-        #
-        # if options.force is True:
-        #     self.force = True
-        #     self.options += '-f '
-        # #else:
-        # #    return err(msg = "Action should be either update -u,  download -d, or fill -f")
-        #
-        # if options.recreate:
-        #     if options.update is not None:
-        #         self.recreate = True
-        #         self.options += '-r '
-        #     else:
-        #         return err(msg = "-r option can only be used with -u")
-        #
-        # self.clean = options.clean
-        # if self.clean:
-        #     self.options += '-c'
+        elif params[0:3] == '-u ':
+            options['upload'] = True
+        elif params[0:3] == '-s ':
+            options['stop'] = params[3:].split()
+        elif params[0:3] == '-a ':
+            options['analyze'] = True
+        else:
+            return None
 
         return options
 
@@ -1093,16 +894,9 @@ class Svrea_script():
     def run(self):
         self.options = self.handleParams(self.params)
 
-        if len(self.options) == 0:
+        if self.options is None:
             tolog(ERROR, "no known parameters were found: %s" % self.params)
             return 1
-
-        self.force = False
-        n = self.params.find('-f')
-        if n != -1:
-            self.force = True
-
-
 
         db_from_env = dj_database_url.config()
         db = DataBase(connection = pgUtil.pgProcess(database=db_from_env['NAME'],
@@ -1113,18 +907,19 @@ class Svrea_script():
 
         today = datetime.date.today()
         today_scripts = Info.objects.filter(started__date = today)
-
+        info = None
         runbefore = False
         for s in today_scripts:
-            if self.handleParams(s.config) == self.options:
+            if s.config == self.params.strip()[:-2]:
                 runbefore = True
-                if s.status == 'done' and not self.force: # if succesfully run before
+                if s.status == 'done' and not self.options['force']: # if succesfully run before
                     str = 'already run for %s' %self.params
                     tolog(INFO, str)
                     return 0
                 else:
                     s.status = 'started'
                     s.save()
+                    info = s
                     break
 
         if not runbefore:
@@ -1132,12 +927,18 @@ class Svrea_script():
                      config = self.params,
                      status = 'started')
             l.save()
+            info = l
 
         if self.options['download'] is not None:
             tolog(INFO, ("Downloading %s", self.options['download']))
 
-            if db.getDataFromWeb() !=0 :
-                return 1
+        run = Aux(key = 'DownloadRunKey', value = 'run')
+        t = threading.Thread(target = self.getDataFromWeb, args = (info,) )
+        t.start()
+
+
+
+
         return 0
         # -----------------------------------------------------------------------------------
 
@@ -1181,34 +982,32 @@ class Svrea_script():
             sql = """UPDATE "%s".history SET status = '%s done' WHERE id = %s""" %(db.schema, s, id + 1)
             res = db.pgcon.run(sql)
 
-
-
-    def getDataFromWeb(self):
+    def getDataFromWeb(self, info = None):
         uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
         timestamp = str(int(time.time()))
-        hashstr =  sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
+        hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
         urlBase = 'HTTP://api.booli.se//'
 
-        if self.options['downloads'] != 'listings' or self.options['downloads'] != 'sold':
-            tolog(ERROR, ("Wrong type of download %s", self.options['download']))
+        if not (self.options['download'] == 'listings' or self.options['download'] == 'sold'):
+            tolog(ERROR, ("Wrong type of download %s" %self.options['download']))
             return 1
 
-        urlBase += '%s?' %self.options['download']
-        area_list = ['64', #Skane
-                     '160', #Halland
-                     '23', # vastra gotalands
-                     '2',  # Stockholm lan
-                     '783', # Kronobergs lan
-                     '45', #Blekinge lan
-                     '381', # Kalmar
-                     '153', # Jonkoping
-                     '253', # ostergotland lan
-                     '26', # sodermanlands lan
-                     '145', # Blekinge lan
-                     ] #
+        urlBase += '%s?' % self.options['download']
+        area_list = ['64',  # Skane
+                     # '160', #Halland
+                     # '23', # vastra gotalands
+                     # '2',  # Stockholm lan
+                     # '783', # Kronobergs lan
+                     # '45', #Blekinge lan
+                     # '381', # Kalmar
+                     # '153', # Jonkoping
+                     # '253', # ostergotland lan
+                     # '26', # sodermanlands lan
+                     # '145', # Blekinge lan
+                     ]  #
 
         for idx, area in enumerate(area_list):
-            tolog(INFO, "Donwloading for area %s" %area)
+            tolog(INFO, "Donwloading for area %s" % area)
             url = urlBase + \
                   'areaId=' + area + \
                   '&callerId=' + gCallerId + \
@@ -1226,23 +1025,27 @@ class Svrea_script():
             limit = 300
 
             while 1:
-                tolog(INFO, "%s out of %s" %(offset / limit + 1 , int(maxcount / limit) + 1))
+                if Aux.objects.filter(key = 'DownloadRunKey').value != 'run':
+                    return 1
+
+                tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))
                 uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
                 timestamp = str(int(time.time()))
                 hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
                 url = urlBase + \
-                      'areaId=' + area +\
-                      '&offset=' + str(offset) +\
-                      '&limit=' + str(limit) +\
-                      '&callerId=' + gCallerId +\
-                      '&time=' + timestamp +\
-                      '&unique=' + uniqueString +\
+                      'areaId=' + area + \
+                      '&offset=' + str(offset) + \
+                      '&limit=' + str(limit) + \
+                      '&callerId=' + gCallerId + \
+                      '&time=' + timestamp + \
+                      '&unique=' + uniqueString + \
                       '&hash=' + str(hashstr)
 
                 data = urlopen(url).read().decode('utf-8')
                 dic = json.loads(data)
 
-                raw_data = Rawdata(areacode = area, rawdata = data, type = self.options['download'])
+                raw_data = Rawdata(areacode=area, rawdata=dic, type=self.options['download'])
+                raw_data.save()
 
                 # sql = """
                 #     INSERT INTO raw-data (download_date,
@@ -1254,11 +1057,11 @@ class Svrea_script():
                 # """ %('listings' if type == LISTINGS else 'sold', area, dic)
 
 
-                #fname = BASE_FOLDER + '/data/booli '+ str(datetime.datetime(today.year, today.month, today.day, today.hour, today.minute, today.second)).replace(':','_') + ' ' + area
-                #f = open(fname, 'w')
-                #json.dump(dic, f)
+                # fname = BASE_FOLDER + '/data/booli '+ str(datetime.datetime(today.year, today.month, today.day, today.hour, today.minute, today.second)).replace(':','_') + ' ' + area
+                # f = open(fname, 'w')
+                # json.dump(dic, f)
 
-                #f.close()
+                # f.close()
                 offset += limit
 
                 if offset >= maxcount:
@@ -1268,14 +1071,17 @@ class Svrea_script():
                     tolog(INFO, "Downloading complete")
                     break
 
-                time.sleep(random.randint(15,30))
-
-            if idx < len(area_list)-1:
                 time.sleep(random.randint(15, 30))
 
-        return 0
+            if idx < len(area_list) - 1:
+                time.sleep(random.randint(15, 30))
 
+        aux = Aux.objects.filter(key = 'DownloadRunKey')
+        aux.value = 'complete'
+        aux.save()
 
+        info.status = 'done'
+        info.save()
 
 
 

@@ -4,9 +4,21 @@
 {% block content %}
 
 
-{% if text %}
-    {{text}}
-{% endif %}
+<div class="full">
+    <div class="container-fluid ">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title text-center">Active Scripts</h3></div>
+                <div class="text-left blue">
+                    {% for script in history %}
+                        {{script.id}} | {{script.started}} | {{script.user_name}} | {{script.config}} | {{script.status}} | {{script.comment}}<br>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
 
