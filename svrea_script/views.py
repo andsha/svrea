@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import logout
+from django.contrib import messages
 
 from script.svrea_script import Svrea_script
 from svrea_script.models import Info
@@ -20,7 +21,9 @@ def script_run(request):
         # info = Info(user_name = request.user.username, config=params, status='started')
         # info.save()
         script = Svrea_script(params = params, username = request.user.username)
-        script.run()
+
+        if script.run() != 0:
+            messages.error(request, "Error. For details see logs")
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 

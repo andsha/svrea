@@ -16,7 +16,8 @@ import shutil
 from script import pgUtil
 import dj_database_url
 
-from svrea_script.models import Info, ScriptLog
+from svrea_script.models import Info, Log, Rawdata
+
 
 
 
@@ -59,17 +60,17 @@ def err(obj = None, msg = None):
 
 class DataBase():
 
-    def __init__(self, connection, fdbstruct = None, frules = None):
+    def __init__(self, connection, frules = None):
         self.pgcon = connection
-        self.fdbstruct = fdbstruct # file with version 0 DB structure
+        #self.fdbstruct = fdbstruct # file with version 0 DB structure
         self.frules = frules       # file with filling rules
 
-        self.schema = self.getSchema()
-        self.version = self.getVersion()
+        #self.schema = self.getSchema()
+        # self.version = self.getVersion()
 
-        self.tableDic = self.getTableDic()
-        self.primaryKeys = self.getPrimaryKeys()
-        self.foreignKeys = self.getForeignKeys()
+        # self.tableDic = self.getTableDic()
+        # self.primaryKeys = self.getPrimaryKeys()
+        # self.foreignKeys = self.getForeignKeys()
         self.error = 0
         self.date = ''
 
@@ -78,278 +79,275 @@ class DataBase():
         #print("select", self.pgcon.run("SELECT 10"))
 
 
-    def getSchema(self,fdbstruct = None):
-        if fdbstruct is None:
-            fdbstruct = self.fdbstruct
-
-        jsonData = open(self.fdbstruct).read()
-        dbstruct = json.loads(jsonData)
-
-        schema = dbstruct['SCHEMANAME']
-        return schema
-
-
-    #   Get current version of schema
-    def getVersion(self):
-        sql = """SELECT 1 FROM information_schema.tables
-                  WHERE table_schema = '%s'
-                  AND table_name = 'info' """ % self.schema
-
-        res = self.pgcon.run(sql, True)
-
-        if len(res) == 0:
-            return None
-
-        sql = """SELECT version FROM "%s".info where date = (SELECT MAX(date) FROM "%s".info)""" % (self.schema, self.schema)
-        res = self.pgcon.run(sql, True)
-        return res[0][0]
-
-
-    def getTableDic(self):
-        sql = """SELECT 1 FROM information_schema.tables
-                  WHERE table_schema = '%s'
-                  AND table_name = 'info' """ % self.schema
-
-        res = self.pgcon.run(sql, True)
-
-        if len(res) == 0:
-            return {}
-
-        sql = """SELECT tabledic FROM "%s".info where version = %s""" % (
-        self.schema, self.version)
-        res = self.pgcon.run(sql, True)
-        return res[0][0]
-
-
-    def getPrimaryKeys(self):
-        sql = """SELECT 1 FROM information_schema.tables
-                  WHERE table_schema = '%s'
-                  AND table_name = 'info' """ % self.schema
-
-        res = self.pgcon.run(sql, True)
-
-        if len(res) == 0:
-            return []
-
-        sql = """SELECT primarykey FROM "%s".info where version = %s""" % (
-            self.schema, self.version)
-        res = self.pgcon.run(sql, True)
-        return res[0][0].split(',')
-
-
-    def getForeignKeys(self):
-        sql = """SELECT 1 FROM information_schema.tables
-                  WHERE table_schema = '%s'
-                  AND table_name = 'info' """ % self.schema
-
-        res = self.pgcon.run(sql, True)
-
-        if len(res) == 0:
-            return {}
-
-        sql = """SELECT foreignkey FROM "%s".info where version = %s""" % (
-            self.schema, self.version)
-        res = self.pgcon.run(sql, True)
-        return res[0][0]
-
-
-
-
-
-    def updateDB(self, fdbstruct = None, toVersion = -1, startOver = False):
-
-        if fdbstruct is None:
-            fdbstruct = self.fdbstruct
-        else:
-            self.fdbstruct = fdbstruct
-
-        if toVersion == -1:
-            toVersion = self.getMaxVersion(fdbstruct)
-
-        jsonData = open(fdbstruct).read()
-        dbstruct = json.loads(jsonData)
-
-        if 'SCHEMANAME' not in dbstruct:
-            return err("SCHEMANAME could not be found in config")
-
-        schema = dbstruct['SCHEMANAME']
-        self.schema = schema
-
-        self.version = self.getVersion()
-        fromVersion = self.version
-
-        if self.version is None or startOver is True:
-            fromVersion = -1
-
-        for version in range(fromVersion, toVersion):
-            updversion = version + 1
-
-            #print ('updversion', updversion)
-
-            if updversion == 0: # new DB
-                logging.info('drop schema and start over')
-                sql = "DROP SCHEMA IF EXISTS %s CASCADE" % schema
-                res = self.pgcon.run(sql)
-
-                if res != 0:
-                    return err("Error while dropping schema %s" % schema)
-
-                logging.info("Creating SCHEMA %s" % schema)
-                sql = "CREATE SCHEMA %s;" % schema
-                res = self.pgcon.run(sql)
-
-                if res != 0:
-                    return err("Error while creating schema %s" % schema)
-
-                self.tableDic = {}
-                self.primaryKeys = []
-                self.foreignKeys = {}
-
-            dbstruct = self.getDBStruct(uversion = updversion)
-            #print (updversion, dbstruct)
-            #foreignKeys = {}
-            #primaryKeys = []
-
-            if 'TABLES' not in dbstruct:
-                continue
-
-            for t in dbstruct['TABLES']:
-                if 'NAME' not in t:
-                    return err('No table name provided in %s. Table name should be called "NAME"' % t)
-
-                table = t['NAME']
-
-                #print (self.tableDic)
-                if 'COLUMNS' in t:
-                    if table in self.tableDic:
-                        sql = """ALTER TABLE "%s"."%s" """ %(schema,table)
-
-
-                        for c in t['COLUMNS']:
-                            column = c['NAME']
-
-                            if column in self.tableDic[table]:
-                                if 'ACTION' in c and c['ACTION'] == 'DELETE':
-                                    sql += """DROP "%s", """ %column
-                                    self.tableDic[table].pop(column)
-
-                                    if "%s.%s" %(table, column) in self.foreignKeys:
-                                        self.foreignKeys.pop('%s.%s' %(table,column))
-
-                                    if "%s.%s" %(table, column) in self.primaryKeys:
-                                        self.primaryKeys.remove("%s.%s" %(table, column))
-
-                                elif 'ACTION' in c and c['ACTION'] != 'TYPE':
-                                    logging.error("undefined column operation")
-                                else:
-                                    ctype = c['TYPE']
-                                    sql += """ALTER "%s" TYPE %s, """ %(column, ctype)
-                                    self.tableDic[table][column] = ctype
-                            elif 'ACTION' in c and c['ACTION'] == 'CREATE' or 'ACTION' not in c:
-                                ctype = c['TYPE']
-                                sql += """ADD "%s" %s  """ %(column, ctype)
-                                self.tableDic[table][column] = ctype
-
-                                if 'CONSTRAINT' in c:
-                                    if c['CONSTRAINT'] == 'PRIMARY KEY':
-                                        sql += ' CONSTRAINT %s PRIMARY KEY ' % (t['NAME'] + 'key')
-                                        self.primaryKeys.append('%s.%s' % (table, column))
-                                    else:
-                                        sql += ' %s' % c['CONSTRAINT']
-
-                                sql += ','
-
-                            if 'FOREIGN KEY' in c:
-                                fkey = c['FOREIGN KEY']
-                                self.foreignKeys['%s.%s' % (table, column)] = fkey
-
-                        sql = sql.rstrip(', ')
-
-                    else:
-                        sql = """CREATE TABLE "%s"."%s"(""" % (schema, table)
-                        self.tableDic["%s" % table] = {}
-
-                        for c in t['COLUMNS']:
-                            column = c['NAME']
-                            #print (table, column)
-                            ctype = c['TYPE']
-                            sql += ' "%s" %s ' % (column, ctype)
-                            self.tableDic["%s" % table]["%s" % column] = ctype
-
-                            if 'FOREIGN KEY' in c:
-                                fkey = c["FOREIGN KEY"]
-                                self.foreignKeys["%s.%s" % (table, column)] = fkey
-
-                            if 'CONSTRAINT' in c:
-                                if c['CONSTRAINT'] == 'PRIMARY KEY':
-                                    sql += ' CONSTRAINT %s PRIMARY KEY ' % (t['NAME'] + 'key')
-                                    self.primaryKeys.append('%s.%s' % (table, column))
-                                else:
-                                    sql += ' %s' % c['CONSTRAINT']
-                            sql += ','
-                        sql = sql.rstrip(', ')
-                        sql += ')'
-
-                    #print (sql)
-                    res = self.pgcon.run(sql)
-
-                    if res != 0:
-                        return err("Error while creating table %s%s" % (schema, t))
-
-                if 'INDEXES' in t:
-                    for i in t['INDEXES']:
-                        idxname = ''
-                        if "NAME" in i:
-                            idxname = i['NAME']
-                        else:
-                            idxname = "%sidx" % i['COLUMNS'][0]
-
-                        sql = """CREATE INDEX  %s ON "%s"."%s" (""" % (idxname, schema, table)
-
-                        if 'COLUMN' not in i:
-                            return err("No information about indexes in config")
-
-                        for col in i['COLUMN']:
-                            sql += '"%s",' % col
-
-                        sql = sql.rstrip(',')
-                        sql += ')'
-
-
-                        res = self.pgcon.run(sql)
-
-                        if res != 0:
-                            return err("Error while creating index %s" % idxname)
-
-            for fkey in self.foreignKeys:  # only one level of dependence
-                if self.foreignKeys[fkey] in self.foreignKeys:
-                    return err("Interdependent Foreign Key '%s' : '%s'" % (fkey, self.foreignKeys[fkey]))
-
-            #self.foreignKeys = foreignKeys
-            #self.primaryKeys = primaryKeys
-
-            #print('primaryKeys:', self.primaryKeys)
-            #print('foreignKeys:', self.foreignKeys)
-            #print('tableDic', self.tableDic)
-
-            # create auxilary tables
-
-            sql = """CREATE TABLE IF NOT EXISTS "%s"."info" (version    int,
-                                                            date        timestamp,
-                                                            tabledic    json,
-                                                            foreignkey  json,
-                                                            primarykey  varchar(2000))""" % schema
-            res = self.pgcon.run(sql)
-
-            sql = """INSERT INTO "%s".info VALUES (%s,'%s', '%s', '%s', '%s')
-                  """ %(schema, updversion,datetime.datetime.now(), ('%s' %self.tableDic).replace("'",'"'), ('%s' %self.foreignKeys).replace("'", '"'), ",".join(self.primaryKeys))
-            res = self.pgcon.run(sql)
-
-            sql = """CREATE TABLE IF NOT EXISTS "%s".history   (id     int PRIMARY KEY,
-                                                                date    timestamp DEFAULT now(),
-                                                                script  varchar(200),
-                                                                status  varchar(2000))""" %self.schema
-            res = self.pgcon.run(sql)
+    # def getSchema(self,fdbstruct = None):
+    #     if fdbstruct is None:
+    #         fdbstruct = self.fdbstruct
+    #
+    #     jsonData = open(self.fdbstruct).read()
+    #     dbstruct = json.loads(jsonData)
+    #
+    #     schema = dbstruct['SCHEMANAME']
+    #     return schema
+
+
+    # #   Get current version of schema
+    # def getVersion(self):
+    #     sql = """SELECT 1 FROM information_schema.tables
+    #               WHERE table_schema = '%s'
+    #               AND table_name = 'info' """ % self.schema
+    #
+    #     res = self.pgcon.run(sql, True)
+    #
+    #     if len(res) == 0:
+    #         return None
+    #
+    #     sql = """SELECT version FROM "%s".info where date = (SELECT MAX(date) FROM "%s".info)""" % (self.schema, self.schema)
+    #     res = self.pgcon.run(sql, True)
+    #     return res[0][0]
+
+
+    # def getTableDic(self):
+    #     sql = """SELECT 1 FROM information_schema.tables
+    #               WHERE table_schema = '%s'
+    #               AND table_name = 'info' """ % self.schema
+    #
+    #     res = self.pgcon.run(sql, True)
+    #
+    #     if len(res) == 0:
+    #         return {}
+    #
+    #     sql = """SELECT tabledic FROM "%s".info where version = %s""" % (
+    #     self.schema, self.version)
+    #     res = self.pgcon.run(sql, True)
+    #     return res[0][0]
+
+
+    # def getPrimaryKeys(self):
+    #     sql = """SELECT 1 FROM information_schema.tables
+    #               WHERE table_schema = '%s'
+    #               AND table_name = 'info' """ % self.schema
+    #
+    #     res = self.pgcon.run(sql, True)
+    #
+    #     if len(res) == 0:
+    #         return []
+    #
+    #     sql = """SELECT primarykey FROM "%s".info where version = %s""" % (
+    #         self.schema, self.version)
+    #     res = self.pgcon.run(sql, True)
+    #     return res[0][0].split(',')
+
+
+    # def getForeignKeys(self):
+    #     sql = """SELECT 1 FROM information_schema.tables
+    #               WHERE table_schema = '%s'
+    #               AND table_name = 'info' """ % self.schema
+    #
+    #     res = self.pgcon.run(sql, True)
+    #
+    #     if len(res) == 0:
+    #         return {}
+    #
+    #     sql = """SELECT foreignkey FROM "%s".info where version = %s""" % (
+    #         self.schema, self.version)
+    #     res = self.pgcon.run(sql, True)
+    #     return res[0][0]
+
+
+    # def updateDB(self, fdbstruct = None, toVersion = -1, startOver = False):
+    #
+    #     if fdbstruct is None:
+    #         fdbstruct = self.fdbstruct
+    #     else:
+    #         self.fdbstruct = fdbstruct
+    #
+    #     if toVersion == -1:
+    #         toVersion = self.getMaxVersion(fdbstruct)
+    #
+    #     jsonData = open(fdbstruct).read()
+    #     dbstruct = json.loads(jsonData)
+    #
+    #     if 'SCHEMANAME' not in dbstruct:
+    #         return err("SCHEMANAME could not be found in config")
+    #
+    #     schema = dbstruct['SCHEMANAME']
+    #     self.schema = schema
+    #
+    #     # self.version = self.getVersion()
+    #     fromVersion = self.version
+    #
+    #     if self.version is None or startOver is True:
+    #         fromVersion = -1
+    #
+    #     for version in range(fromVersion, toVersion):
+    #         updversion = version + 1
+    #
+    #         #print ('updversion', updversion)
+    #
+    #         if updversion == 0: # new DB
+    #             logging.info('drop schema and start over')
+    #             sql = "DROP SCHEMA IF EXISTS %s CASCADE" % schema
+    #             res = self.pgcon.run(sql)
+    #
+    #             if res != 0:
+    #                 return err("Error while dropping schema %s" % schema)
+    #
+    #             logging.info("Creating SCHEMA %s" % schema)
+    #             sql = "CREATE SCHEMA %s;" % schema
+    #             res = self.pgcon.run(sql)
+    #
+    #             if res != 0:
+    #                 return err("Error while creating schema %s" % schema)
+    #
+    #             self.tableDic = {}
+    #             self.primaryKeys = []
+    #             self.foreignKeys = {}
+    #
+    #         dbstruct = self.getDBStruct(uversion = updversion)
+    #         #print (updversion, dbstruct)
+    #         #foreignKeys = {}
+    #         #primaryKeys = []
+    #
+    #         if 'TABLES' not in dbstruct:
+    #             continue
+    #
+    #         for t in dbstruct['TABLES']:
+    #             if 'NAME' not in t:
+    #                 return err('No table name provided in %s. Table name should be called "NAME"' % t)
+    #
+    #             table = t['NAME']
+    #
+    #             #print (self.tableDic)
+    #             if 'COLUMNS' in t:
+    #                 if table in self.tableDic:
+    #                     sql = """ALTER TABLE "%s"."%s" """ %(schema,table)
+    #
+    #
+    #                     for c in t['COLUMNS']:
+    #                         column = c['NAME']
+    #
+    #                         if column in self.tableDic[table]:
+    #                             if 'ACTION' in c and c['ACTION'] == 'DELETE':
+    #                                 sql += """DROP "%s", """ %column
+    #                                 self.tableDic[table].pop(column)
+    #
+    #                                 if "%s.%s" %(table, column) in self.foreignKeys:
+    #                                     self.foreignKeys.pop('%s.%s' %(table,column))
+    #
+    #                                 if "%s.%s" %(table, column) in self.primaryKeys:
+    #                                     self.primaryKeys.remove("%s.%s" %(table, column))
+    #
+    #                             elif 'ACTION' in c and c['ACTION'] != 'TYPE':
+    #                                 logging.error("undefined column operation")
+    #                             else:
+    #                                 ctype = c['TYPE']
+    #                                 sql += """ALTER "%s" TYPE %s, """ %(column, ctype)
+    #                                 self.tableDic[table][column] = ctype
+    #                         elif 'ACTION' in c and c['ACTION'] == 'CREATE' or 'ACTION' not in c:
+    #                             ctype = c['TYPE']
+    #                             sql += """ADD "%s" %s  """ %(column, ctype)
+    #                             self.tableDic[table][column] = ctype
+    #
+    #                             if 'CONSTRAINT' in c:
+    #                                 if c['CONSTRAINT'] == 'PRIMARY KEY':
+    #                                     sql += ' CONSTRAINT %s PRIMARY KEY ' % (t['NAME'] + 'key')
+    #                                     self.primaryKeys.append('%s.%s' % (table, column))
+    #                                 else:
+    #                                     sql += ' %s' % c['CONSTRAINT']
+    #
+    #                             sql += ','
+    #
+    #                         if 'FOREIGN KEY' in c:
+    #                             fkey = c['FOREIGN KEY']
+    #                             self.foreignKeys['%s.%s' % (table, column)] = fkey
+    #
+    #                     sql = sql.rstrip(', ')
+    #
+    #                 else:
+    #                     sql = """CREATE TABLE "%s"."%s"(""" % (schema, table)
+    #                     self.tableDic["%s" % table] = {}
+    #
+    #                     for c in t['COLUMNS']:
+    #                         column = c['NAME']
+    #                         #print (table, column)
+    #                         ctype = c['TYPE']
+    #                         sql += ' "%s" %s ' % (column, ctype)
+    #                         self.tableDic["%s" % table]["%s" % column] = ctype
+    #
+    #                         if 'FOREIGN KEY' in c:
+    #                             fkey = c["FOREIGN KEY"]
+    #                             self.foreignKeys["%s.%s" % (table, column)] = fkey
+    #
+    #                         if 'CONSTRAINT' in c:
+    #                             if c['CONSTRAINT'] == 'PRIMARY KEY':
+    #                                 sql += ' CONSTRAINT %s PRIMARY KEY ' % (t['NAME'] + 'key')
+    #                                 self.primaryKeys.append('%s.%s' % (table, column))
+    #                             else:
+    #                                 sql += ' %s' % c['CONSTRAINT']
+    #                         sql += ','
+    #                     sql = sql.rstrip(', ')
+    #                     sql += ')'
+    #
+    #                 #print (sql)
+    #                 res = self.pgcon.run(sql)
+    #
+    #                 if res != 0:
+    #                     return err("Error while creating table %s%s" % (schema, t))
+    #
+    #             if 'INDEXES' in t:
+    #                 for i in t['INDEXES']:
+    #                     idxname = ''
+    #                     if "NAME" in i:
+    #                         idxname = i['NAME']
+    #                     else:
+    #                         idxname = "%sidx" % i['COLUMNS'][0]
+    #
+    #                     sql = """CREATE INDEX  %s ON "%s"."%s" (""" % (idxname, schema, table)
+    #
+    #                     if 'COLUMN' not in i:
+    #                         return err("No information about indexes in config")
+    #
+    #                     for col in i['COLUMN']:
+    #                         sql += '"%s",' % col
+    #
+    #                     sql = sql.rstrip(',')
+    #                     sql += ')'
+    #
+    #
+    #                     res = self.pgcon.run(sql)
+    #
+    #                     if res != 0:
+    #                         return err("Error while creating index %s" % idxname)
+    #
+    #         for fkey in self.foreignKeys:  # only one level of dependence
+    #             if self.foreignKeys[fkey] in self.foreignKeys:
+    #                 return err("Interdependent Foreign Key '%s' : '%s'" % (fkey, self.foreignKeys[fkey]))
+    #
+    #         #self.foreignKeys = foreignKeys
+    #         #self.primaryKeys = primaryKeys
+    #
+    #         #print('primaryKeys:', self.primaryKeys)
+    #         #print('foreignKeys:', self.foreignKeys)
+    #         #print('tableDic', self.tableDic)
+    #
+    #         # create auxilary tables
+    #
+    #         sql = """CREATE TABLE IF NOT EXISTS "%s"."info" (version    int,
+    #                                                         date        timestamp,
+    #                                                         tabledic    json,
+    #                                                         foreignkey  json,
+    #                                                         primarykey  varchar(2000))""" % schema
+    #         res = self.pgcon.run(sql)
+    #
+    #         sql = """INSERT INTO "%s".info VALUES (%s,'%s', '%s', '%s', '%s')
+    #               """ %(schema, updversion,datetime.datetime.now(), ('%s' %self.tableDic).replace("'",'"'), ('%s' %self.foreignKeys).replace("'", '"'), ",".join(self.primaryKeys))
+    #         res = self.pgcon.run(sql)
+    #
+    #         sql = """CREATE TABLE IF NOT EXISTS "%s".history   (id     int PRIMARY KEY,
+    #                                                             date    timestamp DEFAULT now(),
+    #                                                             script  varchar(200),
+    #                                                             status  varchar(2000))""" %self.schema
+    #         res = self.pgcon.run(sql)
 
 
 
@@ -788,7 +786,7 @@ class DataBase():
         elif type(val) is str:
             key,path = val.split('##')
             if key == 'FILE':
-                return self.getMaxVersion(path)
+                return self.getMaxVersion(os.path.dirname(self.fdbstruct)+'/' + path)
             else:
                 return maxU - 1
         else:
@@ -936,7 +934,7 @@ def tolog(level, str):
     else:
         l = 'INFO'
 
-    log = ScriptLog(level = l, entry = str)
+    log = Log(level = l, entry = str)
     log.save()
 
 
@@ -945,12 +943,7 @@ class Svrea_script():
 
     def __init__(self, params = None, username = None):
         self.params = params
-        self.options = self.handleParams(params)
 
-        self.force = False
-        n = params.find('-f')
-        if n != -1:
-            self.force = True
 
         self.username = username
 
@@ -967,21 +960,22 @@ class Svrea_script():
 
     def handleParams(self, params):
         options = {}
+
         n = params.find('-d')
         if n != -1:
             options['download'] = params[n+3 :].split()[0]
 
-        n = params.find('-u')
-        if n != -1:
-            options['update'] = int(params[n + 3:].split()[0])
+        # n = params.find('-u')
+        # if n != -1:
+        #     options['update'] = int(params[n + 3:].split()[0])
 
         n = params.find('-t')
         if n != -1:
             options['transfer'] = True
 
-        n = params.find('-r')
-        if n != -1:
-            options['recreate'] = True
+        # n = params.find('-r')
+        # if n != -1:
+        #     options['recreate'] = True
 
         n = params.find('-l')
         if n != -1:
@@ -1096,13 +1090,17 @@ class Svrea_script():
         return options
 
 
-
-
     def run(self):
-        # FORMAT = '%(levelname)-8s %(asctime)-15s %(message)s'
-        # logging.basicConfig(level = logging.DEBUG, format=FORMAT)
+        self.options = self.handleParams(self.params)
 
-        #self.options = self.handleParams()
+        if len(self.options) == 0:
+            tolog(ERROR, "no known parameters were found: %s" % self.params)
+            return 1
+
+        self.force = False
+        n = self.params.find('-f')
+        if n != -1:
+            self.force = True
 
 
 
@@ -1111,31 +1109,7 @@ class Svrea_script():
                                                     host=db_from_env['HOST'],
                                                     user=db_from_env['USER'],
                                                     port=db_from_env['PORT'],
-                                                    password=db_from_env['PASSWORD']), fdbstruct = gDBStruct, frules = gDBFillRules)
-
-
-        # sql = "select * from svrea_script_info "
-        # print(db.pgcon.run(sql,True))
-        #return 0
-
-        # sql = """SELECT 1 FROM information_schema.tables
-        #           WHERE table_schema = '%s'
-        #           AND table_name = 'history' """ % db.schema
-        # #print("options", self.options)
-        #
-        # res = db.pgcon.run(sql, True)
-
-        # if len(res) != 0:
-        #     if self.downloadAction == LISTINGS:
-        #         s = 'listings'
-        #     elif self.downloadAction == SOLD:
-        #         s = 'sold'
-        #     else:
-        #         s = ''
-        #
-        #     today = datetime.datetime.today().date()
-        #     sql = """SELECT id, status from "%s".history WHERE "date"::date = '%s' ORDER BY date DESC""" %(db.schema, today)
-        #     res = db.pgcon.run(sql, True)
+                                                    password=db_from_env['PASSWORD']), frules = gDBFillRules)
 
         today = datetime.date.today()
         today_scripts = Info.objects.filter(started__date = today)
@@ -1144,9 +1118,9 @@ class Svrea_script():
         for s in today_scripts:
             if self.handleParams(s.config) == self.options:
                 runbefore = True
-                #print("FOrce", self.force)
                 if s.status == 'done' and not self.force: # if succesfully run before
-                    print('already run')
+                    str = 'already run for %s' %self.params
+                    tolog(INFO, str)
                     return 0
                 else:
                     s.status = 'started'
@@ -1159,48 +1133,12 @@ class Svrea_script():
                      status = 'started')
             l.save()
 
-        # runbefore = False
-        # for r in res:
-        #     if len(res) != 0 and r[1] == '%s done' %s and not self.force:
-        #         logging.info("already run today for %s" %s)
-        #         return 0
-        #     elif len(res) != 0 and r[1] == '%s started' %s:
-        #         id = int(r[0])
-        #         runbefore = True
-        #         break
-        #
-        # if not runbefore:
-        #     sql = """SELECT max(id) from "%s".history """ %db.schema
-        #     res = db.pgcon.run(sql, True)
-        #     id = int(res[0][0])
-        #
-        # if not self.force:
-        #     sql = """INSERT INTO "%s".history values(%s, now(), '%s', '%s started') """ % (
-        #     db.schema, id + 1, self.options, s)
-        #     # print (sql)
-        #     res = db.pgcon.run(sql)
-        # # else:
-        # #     id = 0
-        #
-        # -----------------------------------------------------------------------------------
+        if self.options['download'] is not None:
+            tolog(INFO, ("Downloading %s", self.options['download']))
 
-        if self.options['update']:
-            version = db.getMaxVersion() if self.options['update'] == -1 else self.options['update']
-
-            if self.options['recreate']:
-                tolog(INFO, "Recreating Database to version %s", (version))
-            else:
-                logging.info("Updating Database from version %s to version %s", (db.version, version))
-            return 0
-            db.updateDB(toVersion = self.options['update'], startOver = self.recreate)
-
+            if db.getDataFromWeb() !=0 :
+                return 1
         return 0
-
-        # -----------------------------------------------------------------------------------
-
-        if self.downloadAction is not None:
-            logging.info("Downloading %s" %('listings' if self.downloadAction == LISTINGS else 'sold'))
-            db.getDataFromWeb(type = self.downloadAction, latest = self.latest)
         # -----------------------------------------------------------------------------------
 
         if self.transfer:
@@ -1245,19 +1183,17 @@ class Svrea_script():
 
 
 
-    def getDataFromWeb(self, type = LISTINGS):
+    def getDataFromWeb(self):
         uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
         timestamp = str(int(time.time()))
         hashstr =  sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
         urlBase = 'HTTP://api.booli.se//'
 
-        if type == LISTINGS:
-            urlBase += 'listings?'
-        elif type == SOLD or type == LASTSOLD:
-            urlBase += 'sold?'
-        else:
-            return  err('Wrong API type %s' %type)
+        if self.options['downloads'] != 'listings' or self.options['downloads'] != 'sold':
+            tolog(ERROR, ("Wrong type of download %s", self.options['download']))
+            return 1
 
+        urlBase += '%s?' %self.options['download']
         area_list = ['64', #Skane
                      '160', #Halland
                      '23', # vastra gotalands
@@ -1270,30 +1206,27 @@ class Svrea_script():
                      '26', # sodermanlands lan
                      '145', # Blekinge lan
                      ] #
-        #area = '64'
+
         for idx, area in enumerate(area_list):
-            logging.info("Donwloading for area %s" %(area))
+            tolog(INFO, "Donwloading for area %s" %area)
             url = urlBase + \
                   'areaId=' + area + \
                   '&callerId=' + gCallerId + \
                   '&time=' + timestamp + \
                   '&unique=' + uniqueString + \
                   '&hash=' + str(hashstr)
-            #print (url)
-            #exit()
             data = urlopen(url).read().decode('utf-8')
             dic = json.loads(data)
             maxcount = int(dic['totalCount'])
-            #print (maxcount)
 
-            if type == LASTSOLD:
+            if self.options['latest']:
                 maxcount = 300
 
             offset = 0
             limit = 300
 
             while 1:
-                logging.info("%s out of %s" %(offset / limit + 1 , int(maxcount / limit) + 1))
+                tolog(INFO, "%s out of %s" %(offset / limit + 1 , int(maxcount / limit) + 1))
                 uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
                 timestamp = str(int(time.time()))
                 hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
@@ -1305,18 +1238,20 @@ class Svrea_script():
                       '&time=' + timestamp +\
                       '&unique=' + uniqueString +\
                       '&hash=' + str(hashstr)
-                #print (url)
+
                 data = urlopen(url).read().decode('utf-8')
                 dic = json.loads(data)
-                #today = datetime.datetime.today()
-                sql = """
-                    INSERT INTO raw-data (download_date,
-                                          type,
-                                          countyid,
-                                          lisints_data)
-                    VALUES
-                    (                     now(),%s,%s,%s)
-                """ %('listings' if type == LISTINGS else 'sold', area, dic)
+
+                raw_data = Rawdata(areacode = area, rawdata = data, type = self.options['download'])
+
+                # sql = """
+                #     INSERT INTO raw-data (download_date,
+                #                           type,
+                #                           countyid,
+                #                           lisints_data)
+                #     VALUES
+                #     (                     now(),%s,%s,%s)
+                # """ %('listings' if type == LISTINGS else 'sold', area, dic)
 
 
                 #fname = BASE_FOLDER + '/data/booli '+ str(datetime.datetime(today.year, today.month, today.day, today.hour, today.minute, today.second)).replace(':','_') + ' ' + area
@@ -1327,10 +1262,10 @@ class Svrea_script():
                 offset += limit
 
                 if offset >= maxcount:
-                    logging.info("Downloading complete")
+                    tolog(INFO, "Downloading complete")
                     break
                 if self.latest:
-                    logging.info("Downloading complete")
+                    tolog(INFO, "Downloading complete")
                     break
 
                 time.sleep(random.randint(15,30))
@@ -1338,10 +1273,12 @@ class Svrea_script():
             if idx < len(area_list)-1:
                 time.sleep(random.randint(15, 30))
 
+        return 0
 
 
 
 
-if __name__ == "__main__":
-    prog = svrea_script()
-    sys.exit(prog.run())
+
+# if __name__ == "__main__":
+#     prog = svrea_script()
+#     sys.exit(prog.run())
