@@ -849,7 +849,9 @@ def tolog(level, str):
 class Svrea_script():
 
     def __init__(self, params = None, username = None):
-        self.params = params
+        self.options = self.handleParams(params)
+        self.params = params.replace("-f", "").strip()
+
         self.username = username
 
 
@@ -872,7 +874,7 @@ class Svrea_script():
             options['force'] = False
 
         if params[0:3] == '-d ':
-            options['download'] = params[3:].split()
+            options['download'] = params[3:].split()[0]
 
             if params.find('-l') != -1:
                 options['latest'] = True
@@ -882,7 +884,7 @@ class Svrea_script():
         elif params[0:3] == '-u ':
             options['upload'] = True
         elif params[0:3] == '-s ':
-            options['stop'] = params[3:].split()
+            options['stop'] = params[3:].split()[0]
         elif params[0:3] == '-a ':
             options['analyze'] = True
         else:
@@ -892,8 +894,6 @@ class Svrea_script():
 
 
     def run(self):
-        self.options = self.handleParams(self.params)
-
         if self.options is None:
             tolog(ERROR, "no known parameters were found: %s" % self.params)
             return 1
@@ -910,12 +910,12 @@ class Svrea_script():
         info = None
         runbefore = False
         for s in today_scripts:
-            if s.config == self.params.strip()[:-2]:
+            if s.config == self.params:
                 runbefore = True
                 if s.status == 'done' and not self.options['force']: # if succesfully run before
                     str = 'already run for %s' %self.params
                     tolog(INFO, str)
-                    return 0
+                    return 1
                 else:
                     s.status = 'started'
                     s.save()
@@ -930,9 +930,11 @@ class Svrea_script():
             info = l
 
         if self.options['download'] is not None:
-            tolog(INFO, ("Downloading %s", self.options['download']))
+            tolog(INFO, ("Downloading %s" %self.options['download']))
 
-        run = Aux(key = 'DownloadRunKey', value = 'run')
+        a = Aux.objects.update_or_create(key = 'DownloadRunKey', defaults={"key" : "DownloadRunKey",
+                                                                            "value" : "run"})
+        #a.save()
         t = threading.Thread(target = self.getDataFromWeb, args = (info,) )
         t.start()
 
@@ -1025,7 +1027,7 @@ class Svrea_script():
             limit = 300
 
             while 1:
-                if Aux.objects.filter(key = 'DownloadRunKey').value != 'run':
+                if Aux.objects.get(key = 'DownloadRunKey').value != 'run':
                     return 1
 
                 tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))
@@ -1076,7 +1078,7 @@ class Svrea_script():
             if idx < len(area_list) - 1:
                 time.sleep(random.randint(15, 30))
 
-        aux = Aux.objects.filter(key = 'DownloadRunKey')
+        aux = Aux.objects.get(key = 'DownloadRunKey')
         aux.value = 'complete'
         aux.save()
 
