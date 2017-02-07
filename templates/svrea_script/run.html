@@ -30,28 +30,27 @@
 command format:<br>
 COMMAND PARAMETER [-f]
 <br><br>
-<table width = 300>
-    <tr><td>COMMAND</td> <td>PARAMETER</td></tr>
-    <tr><td colspan="2">downloads data from booli.se into rawdata table. -l parameter forces download only last 300 entries</td>
-    <tr><td>-d</td><td>sold [-l]</td></tr>
-    <tr><td></td><td>listings [-l]</td></tr>
-    <tr><td>. </td><td> </td></tr>
-    <tr><td colspan="2">uploads data from rawdata into models</td></tr>
-    <tr><td>-u</td>
-    <tr><td>. </td><td> </td></tr>
-    <tr><td colspan="2">stops execution of specific command</td></tr>
-    <tr><td>-s</td><td>download</td>
-    <tr><td></td><td>upload</td>
-    <tr><td></td><td>analyze</td>
-    <tr><td>. </td><td> </td></tr>
-    <tr><td colspan="2">Creates etl table</td></tr>
-    <tr><td>-a</td>
-    <tr><td>. </td><td> </td></tr>
-    <tr><td colspan="2">clears specific auxilary table</td></tr>
-    <tr><td>-s</td><td>log</td>
-    <tr><td></td><td>info</td>
-    <tr><td></td><td>rawdata</td>
-</table>
+<div>
+    <table width = 500 border="2">
+        <col width="100">
+        <tr><td>COMMAND</td> <td>PARAMETER</td></tr>
+        <tr><td colspan="2">downloads data from booli.se into rawdata table. -l parameter forces download only last 300 entries</td>
+        <tr><td>-d</td><td>sold [-l]</td></tr>
+        <tr><td></td><td>listings [-l]</td></tr>
+        <tr><td colspan="2">uploads data from rawdata into models</td></tr>
+        <tr><td>-u</td>
+        <tr><td colspan="2">stops execution of running script</td></tr>
+        <tr><td>-s</td>
+        <!--<tr><td></td><td>upload</td>-->
+        <!--<tr><td></td><td>analyze</td>-->
+        <tr><td colspan="2">Creates etl table</td></tr>
+        <tr><td>-a</td>
+        <tr><td colspan="2">clears specific auxilary table</td></tr>
+        <tr><td>-s</td><td>log</td>
+        <tr><td></td><td>info</td>
+        <tr><td></td><td>rawdata</td>
+    </table>
+</div>
 
 
 

@@ -851,23 +851,22 @@ class Svrea_script():
     def __init__(self, params = None, username = None):
         self.options = self.handleParams(params)
         self.params = params.replace("-f", "").strip()
-
         self.username = username
-
-
-        self.transfer = False
-        self.downloadAction = None
-        self.updateVersion = None
-        self.recreate = False
-        self.mcommand = None
-        self.clean = False
-        self.latest = False
-        self.config = None
+        #
+        #
+        # self.transfer = False
+        # self.downloadAction = None
+        # self.updateVersion = None
+        # self.recreate = False
+        # self.mcommand = None
+        # self.clean = False
+        # self.latest = False
+        # self.config = None
 
 
     def handleParams(self, params):
         options = {}
-
+        #print("parametersp",params[0:2])
         if params.find('-f') != -1:
             options['force'] = True
         else:
@@ -881,11 +880,11 @@ class Svrea_script():
             else:
                 options['latest'] = False
 
-        elif params[0:3] == '-u ':
+        elif params[0:2] == '-u':
             options['upload'] = True
-        elif params[0:3] == '-s ':
-            options['stop'] = params[3:].split()[0]
-        elif params[0:3] == '-a ':
+        elif params[0:2] == '-s':
+            options['stop'] = True
+        elif params[0:2] == '-a':
             options['analyze'] = True
         else:
             return None
@@ -898,6 +897,8 @@ class Svrea_script():
             tolog(ERROR, "no known parameters were found: %s" % self.params)
             return 1
 
+        #print(self.options)
+
         db_from_env = dj_database_url.config()
         db = DataBase(connection = pgUtil.pgProcess(database=db_from_env['NAME'],
                                                     host=db_from_env['HOST'],
@@ -909,41 +910,47 @@ class Svrea_script():
         today_scripts = Info.objects.filter(started__date = today)
         info = None
         runbefore = False
-        for s in today_scripts:
-            if s.config == self.params:
-                runbefore = True
-                if s.status == 'done' and not self.options['force']: # if succesfully run before
-                    str = 'already run for %s' %self.params
-                    tolog(INFO, str)
-                    return 1
-                else:
-                    s.status = 'started'
-                    s.save()
-                    info = s
-                    break
 
-        if not runbefore:
-            l = Info(user_name = self.username,
-                     config = self.params,
-                     status = 'started')
-            l.save()
-            info = l
+        if 'stop' not in self.options:
+            for s in today_scripts:
+                if s.config == self.params:
+                    runbefore = True
+                    if s.status == 'done' and not self.options['force']: # if succesfully run before
+                        str = 'already run for %s' %self.params
+                        tolog(INFO, str)
+                        return 1
+                    else:
+                        s.status = 'started'
+                        s.save()
+                        info = s
+                        break
 
-        if self.options['download'] is not None:
+            if not runbefore:
+                l = Info(user_name = self.username,
+                         config = self.params,
+                         status = 'started')
+                l.save()
+                info = l
+        # _________________________________________________________________________________________
+
+        if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
 
-        a = Aux.objects.update_or_create(key = 'DownloadRunKey', defaults={"key" : "DownloadRunKey",
-                                                                            "value" : "run"})
-        #a.save()
-        t = threading.Thread(target = self.getDataFromWeb, args = (info,) )
-        t.start()
+            a = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
+                                                                                "value" : "run"})
+            #print(self.options['latest'])
+            t = threading.Thread(target = self.getDataFromWeb, args = (info, self.options['latest']) )
+            t.start()
 
 
+        # -----------------------------------------------------------------------------------
+
+        if 'stop' in self.options and self.options['stop']:
+                a = Aux.objects.update_or_create(key='DownloadAuxKey', defaults={"key": "DownloadAuxKey",
+                                                                             "value": "stop"})
 
 
         return 0
-        # -----------------------------------------------------------------------------------
-
         if self.transfer:
             logging.info("Uploading data")
 
@@ -984,7 +991,7 @@ class Svrea_script():
             sql = """UPDATE "%s".history SET status = '%s done' WHERE id = %s""" %(db.schema, s, id + 1)
             res = db.pgcon.run(sql)
 
-    def getDataFromWeb(self, info = None):
+    def getDataFromWeb(self, info = None, latest = False):
         uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
         timestamp = str(int(time.time()))
         hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
@@ -1020,14 +1027,17 @@ class Svrea_script():
             dic = json.loads(data)
             maxcount = int(dic['totalCount'])
 
-            if self.options['latest']:
+            if latest:
                 maxcount = 300
 
             offset = 0
             limit = 300
 
             while 1:
-                if Aux.objects.get(key = 'DownloadRunKey').value != 'run':
+                if Aux.objects.get(key = 'DownloadAuxKey').value != 'run':
+                    info.status = 'stopped'
+                    info.save()
+                    print('stop thread')
                     return 1
 
                 tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))
@@ -1045,31 +1055,15 @@ class Svrea_script():
 
                 data = urlopen(url).read().decode('utf-8')
                 dic = json.loads(data)
-
                 raw_data = Rawdata(areacode=area, rawdata=dic, type=self.options['download'])
                 raw_data.save()
-
-                # sql = """
-                #     INSERT INTO raw-data (download_date,
-                #                           type,
-                #                           countyid,
-                #                           lisints_data)
-                #     VALUES
-                #     (                     now(),%s,%s,%s)
-                # """ %('listings' if type == LISTINGS else 'sold', area, dic)
-
-
-                # fname = BASE_FOLDER + '/data/booli '+ str(datetime.datetime(today.year, today.month, today.day, today.hour, today.minute, today.second)).replace(':','_') + ' ' + area
-                # f = open(fname, 'w')
-                # json.dump(dic, f)
-
-                # f.close()
                 offset += limit
 
                 if offset >= maxcount:
                     tolog(INFO, "Downloading complete")
                     break
-                if self.latest:
+                if latest:
+                    #print('latest only')
                     tolog(INFO, "Downloading complete")
                     break
 
@@ -1078,7 +1072,7 @@ class Svrea_script():
             if idx < len(area_list) - 1:
                 time.sleep(random.randint(15, 30))
 
-        aux = Aux.objects.get(key = 'DownloadRunKey')
+        aux = Aux.objects.get(key = 'DownloadAuxKey')
         aux.value = 'complete'
         aux.save()
 
