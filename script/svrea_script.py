@@ -949,6 +949,11 @@ class Svrea_script():
                 a = Aux.objects.update_or_create(key='DownloadAuxKey', defaults={"key": "DownloadAuxKey",
                                                                              "value": "stop"})
 
+        if 'upload' in self.options and self.options['upload']:
+            tolog((INFO, 'Uploading data'))
+            t = threading.Thread(target = db.uploadData)
+            t.start()
+
 
         return 0
         if self.transfer:
