@@ -35,9 +35,9 @@ class Aux(models.Model):
 class Listings(models.Model):
     booliid             = models.IntegerField(primary_key=True)
     datepublished       = models.DateTimeField(db_index=True, default=None)
-    sourceid            = models.ForeignKey('Source', on_delete=models.CASCADE)
-    addressid           = models.ForeignKey('Address', on_delete=models.CASCADE)
-    latitude            = models.DecimalField(max_digits=10, decimal_places=8, default=None)
+    sourceid            = models.ForeignKey('Source', on_delete=models.CASCADE, null=True, blank=True)
+    addressid           = models.ForeignKey('Address', on_delete=models.CASCADE, null=True, blank=True)
+    latitude            = models.DecimalField(max_digits=10, decimal_places=8, default=0)
     longitude           = models.DecimalField(max_digits=10, decimal_places=8, default=None)
     constructionyear    = models.IntegerField(default=None)
     rent                = models.IntegerField(default=None)
