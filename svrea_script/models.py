@@ -63,10 +63,11 @@ class Source(models.Model):
 
 
 class Address(models.Model):
+    addressid           = models.AutoField(primary_key=True)
     house               = models.CharField(max_length=10)
     street              = models.CharField(max_length=250)
     city                = models.CharField(max_length=50)
-    municipality         = models.CharField(max_length=50)
+    municipality        = models.CharField(max_length=50)
     county              = models.CharField(max_length=50)
     areaname            = models.CharField(max_length=50)
 
