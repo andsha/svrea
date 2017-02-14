@@ -34,25 +34,25 @@ class Aux(models.Model):
 
 class Listings(models.Model):
     booliid             = models.IntegerField(primary_key=True)
-    datepublished       = models.DateTimeField(db_index=True)
+    datepublished       = models.DateTimeField(db_index=True, default=None)
     sourceid            = models.ForeignKey('Source', on_delete=models.CASCADE)
     addressid           = models.ForeignKey('Address', on_delete=models.CASCADE)
-    latitude            = models.DecimalField(max_digits=10, decimal_places=8)
-    longitude           = models.DecimalField(max_digits=10, decimal_places=8)
-    constructionyear    = models.IntegerField()
-    rent                = models.IntegerField()
-    url                 = models.CharField(max_length=250)
-    rooms               = models.CharField(max_length=10)
-    propertytype        = models.CharField(max_length=50)
-    plotarea            = models.DecimalField(max_digits=5, decimal_places=1)
-    additionalarea      = models.DecimalField(max_digits=5, decimal_places=1)
-    livingarea          = models.DecimalField(max_digits=5, decimal_places=1)
-    floor               = models.CharField(max_length=10)
-    isnewconstruction   = models.BooleanField()
-    datesold            = models.DateTimeField()
-    isactive            = models.BooleanField(db_index=True)
-    dateinactive        = models.DateTimeField()
-    latestprice         = models.IntegerField()
+    latitude            = models.DecimalField(max_digits=10, decimal_places=8, default=None)
+    longitude           = models.DecimalField(max_digits=10, decimal_places=8, default=None)
+    constructionyear    = models.IntegerField(default=None)
+    rent                = models.IntegerField(default=None)
+    url                 = models.CharField(max_length=250, default=None)
+    rooms               = models.CharField(max_length=10, default=None)
+    propertytype        = models.CharField(max_length=50, default=None)
+    plotarea            = models.DecimalField(max_digits=5, decimal_places=1, default=None)
+    additionalarea      = models.DecimalField(max_digits=5, decimal_places=1, default=None)
+    livingarea          = models.DecimalField(max_digits=5, decimal_places=1, default=None)
+    floor               = models.CharField(max_length=10, default=None)
+    isnewconstruction   = models.BooleanField(default=None)
+    datesold            = models.DateTimeField(default=None)
+    isactive            = models.BooleanField(db_index=True, default=None)
+    dateinactive        = models.DateTimeField(default=None)
+    latestprice         = models.IntegerField(default=None)
 
 
 class Source(models.Model):
@@ -63,7 +63,6 @@ class Source(models.Model):
 
 
 class Address(models.Model):
-    addressid           = models.AutoField(primary_key=True)
     house               = models.CharField(max_length=10)
     street              = models.CharField(max_length=250)
     city                = models.CharField(max_length=50)

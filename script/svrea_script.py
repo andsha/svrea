@@ -16,7 +16,7 @@ import shutil
 from script import pgUtil
 import dj_database_url
 
-from svrea_script.models import Info, Log, Rawdata, Aux
+from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 
 
 
@@ -351,43 +351,48 @@ class DataBase():
 
 
 
-    #def uploadData(self):
+    def uploadData(self):
+        data_to_upload = Rawdata.objects.filter(uploaded__exact = False)
+
+        for data in data_to_upload:
+            for listing in data.rawdata[data.type]:
+                source, created = Source.objects.get_or_create(
+                    sourceid    = listing['source']['id'],
+                    name        = listing['source']['name'],
+                    sourcetype  = listing['source']['type'],
+                    url         = listing['source']['url']
+                )
+
+                Listings.objects.update_or_create(
+                    booliid             = listing['booliId'],
+                    datepublished       = listing['published'],
+                    sourceid            = source
+
+                )
+
+    # booliid = models.IntegerField(primary_key=True)
+    # datepublished = models.DateTimeField(db_index=True)
+    # sourceid = models.ForeignKey('Source', on_delete=models.CASCADE)
+    # addressid = models.ForeignKey('Address', on_delete=models.CASCADE)
+    # latitude = models.DecimalField(max_digits=10, decimal_places=8)
+    # longitude = models.DecimalField(max_digits=10, decimal_places=8)
+    # constructionyear = models.IntegerField()
+    # rent = models.IntegerField()
+    # url = models.CharField(max_length=250)
+    # rooms = models.CharField(max_length=10)
+    # propertytype = models.CharField(max_length=50)
+    # plotarea = models.DecimalField(max_digits=5, decimal_places=1)
+    # additionalarea = models.DecimalField(max_digits=5, decimal_places=1)
+    # livingarea = models.DecimalField(max_digits=5, decimal_places=1)
+    # floor = models.CharField(max_length=10)
+    # isnewconstruction = models.BooleanField()
+    # datesold = models.DateTimeField()
+    # isactive = models.BooleanField(db_index=True)
+    # dateinactive = models.DateTimeField()
+    # latestprice = models.IntegerField()
 
 
-
-
-
-
-    def fillDB(self, frules = None, source = None):
-
-        # if frules is None:
-        #     frules = self.frules
-        # else:
-        #     self.frules = frules
-        #
-        # jsonData = open(frules).read()
-        # rules = json.loads(jsonData)
-
-        # Call creteDB to create/update foreignKeys, primaryKeys, tableDic
-        #self.updateDB(updateRulesOnly = True)
-
-        # if source is None:
-        #     return err("No source file is given")
-        #
-        # self.source = source
-        # jsonData = open(source).read()
-        # data = json.loads(jsonData)
-        # #print (data)
-        # #exit()
-        #
-        # if 'listings' in data:
-        #     data = data['listings']
-        # elif 'sold' in data:
-        #     data = data['sold']
-        # else:
-        #     return err('file %s contains neither "listings" nor "sold" keys' %source)
-        # #-----------------------------------------------
-
+    def qq(self):
 
         for dic in data: # individual data entry from json library
             valueDic = {}
@@ -955,7 +960,7 @@ class Svrea_script():
                                                                              "value": "stop"})
 
         if 'upload' in self.options and self.options['upload']:
-            tolog((INFO, 'Uploading data'))
+            tolog(INFO, 'Uploading data')
             t = threading.Thread(target = db.uploadData)
             t.start()
 
