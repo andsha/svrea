@@ -351,37 +351,42 @@ class DataBase():
 
 
 
+    #def uploadData(self):
+
+
+
+
 
 
     def fillDB(self, frules = None, source = None):
 
-        if frules is None:
-            frules = self.frules
-        else:
-            self.frules = frules
-
-        jsonData = open(frules).read()
-        rules = json.loads(jsonData)
+        # if frules is None:
+        #     frules = self.frules
+        # else:
+        #     self.frules = frules
+        #
+        # jsonData = open(frules).read()
+        # rules = json.loads(jsonData)
 
         # Call creteDB to create/update foreignKeys, primaryKeys, tableDic
         #self.updateDB(updateRulesOnly = True)
 
-        if source is None:
-            return err("No source file is given")
-
-        self.source = source
-        jsonData = open(source).read()
-        data = json.loads(jsonData)
-        #print (data)
-        #exit()
-
-        if 'listings' in data:
-            data = data['listings']
-        elif 'sold' in data:
-            data = data['sold']
-        else:
-            return err('file %s contains neither "listings" nor "sold" keys' %source)
-        #-----------------------------------------------
+        # if source is None:
+        #     return err("No source file is given")
+        #
+        # self.source = source
+        # jsonData = open(source).read()
+        # data = json.loads(jsonData)
+        # #print (data)
+        # #exit()
+        #
+        # if 'listings' in data:
+        #     data = data['listings']
+        # elif 'sold' in data:
+        #     data = data['sold']
+        # else:
+        #     return err('file %s contains neither "listings" nor "sold" keys' %source)
+        # #-----------------------------------------------
 
 
         for dic in data: # individual data entry from json library

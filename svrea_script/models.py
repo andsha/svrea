@@ -19,16 +19,17 @@ class Log(models.Model):
 
 
 class Rawdata(models.Model):
-    downloaded = models.DateTimeField(auto_now=True)
-    type = models.CharField(max_length = 50)
-    areacode = models.IntegerField()
-    rawdata = JSONField()
+    downloaded          = models.DateTimeField(auto_now=True)
+    uploaded            = models.BooleanField(default=False)
+    type                = models.CharField(max_length = 50)
+    areacode            = models.IntegerField()
+    rawdata             = JSONField()
 
 
 class Aux(models.Model):
-    changed = models.DateTimeField(auto_now=True)
-    key = models.CharField(max_length=200)
-    value = models.CharField(max_length=200)
+    changed             = models.DateTimeField(auto_now=True)
+    key                 = models.CharField(max_length=200)
+    value               = models.CharField(max_length=200)
 
 
 class Listings(models.Model):
