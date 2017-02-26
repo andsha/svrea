@@ -402,9 +402,9 @@ class DataBase():
                     house = house,
                     street = street,
                     city = city,
+                    municipality = municipality,
                     county = county,
                     defaults = {
-                        "municipality"  : municipality,
                         "areaname"      : areaname
                     }
                 )
