@@ -381,7 +381,7 @@ class DataBase():
                         house = None
 
                     street = re.sub('\\d+[^ ]*', '', listing['location']['address']['streetAddress'])
-                    
+
                 if 'city' in listing['location']['address']:
                     city = listing['location']['address']['city']
                 if 'countyName' in listing['location']['region']:
