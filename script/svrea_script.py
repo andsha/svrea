@@ -357,7 +357,7 @@ class DataBase():
 
         for data in data_to_upload:
             for listing in data.rawdata[data.type]:
-                source, soure_created = Source.objects.get_or_create(
+                source, source_created = Source.objects.get_or_create(
                     sourceid    = listing['source']['id'],
                     name        = listing['source']['name'],
                     sourcetype  = listing['source']['type'],
@@ -388,33 +388,38 @@ class DataBase():
                     county = listing['location']['region']['countyName']
                 if 'municipalityName' in listing['location']['region']:
                     municipality = listing['location']['region']['municipalityName']
+                    if city is None:
+                        city = municipality
                 if 'namedAreas' in listing['location']:
                     areaname = listing['location']['namedAreas']
 
-                try:
-                    address = Address.objects.get(
-                        house           = house,
-                        street          = street,
-                        city            = city,
-                        county          = county,
-                    )
-                except Address.DoesNotExist:
-                    address = Address(
-                        house           = house,
-                        street          = street,
-                        city            = city,
-                        municipality    = municipality,
-                        county          = county,
-                        areaname        = areaname
-                    )
-                    address.save()
+                booliid = listing['booliId']
+                datepublished = listing['published']
 
-                Listings.objects.update_or_create(
-                    booliid             = listing['booliId'],
-                    datepublished       = listing['published'],
-                    sourceid            = source,
-                    addressid           = address
+                #######################################################
+
+                address = Address.objects.update_or_create(
+                    house = house,
+                    street = street,
+                    city = city,
+                    county = county,
+                    defaults = {
+                        "municipality"  : municipality,
+                        "areaname"      : areaname
+                    }
                 )
+
+                listings, listings_created = Listings.objects.update_or_create(
+                    booliid  = booliid,
+                    defaults = {
+                        "datepublished" : datepublished,
+                        "sourceid"      : source,
+                        "addressid"     : address
+                    }
+                )
+
+
+
 
             # {"url": "https://www.booli.se/annons/2249713",
             # "rent": 2774, "floor": 3, "rooms": 1,
