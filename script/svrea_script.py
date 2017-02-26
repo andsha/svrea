@@ -12,6 +12,7 @@ import random
 import re
 from optparse import OptionParser
 import shutil
+import re
 
 from script import pgUtil
 import dj_database_url
@@ -356,19 +357,87 @@ class DataBase():
 
         for data in data_to_upload:
             for listing in data.rawdata[data.type]:
-                source, created = Source.objects.get_or_create(
+                source, soure_created = Source.objects.get_or_create(
                     sourceid    = listing['source']['id'],
                     name        = listing['source']['name'],
                     sourcetype  = listing['source']['type'],
                     url         = listing['source']['url']
                 )
 
+                # *********************************************
+                house = None
+                street = None
+                city = None
+                county = None
+                municipality = None
+                areaname = None
+
+                if 'streetAddress' in listing['location']['address']:
+                    house = re.search('\\d+[^ ]*', listing['location']['address']['streetAddress'])
+
+                    if house is not None:
+                        house = house.group(0)
+                    else:
+                        house = None
+
+                    street = re.sub('\\d+[^ ]*', '', listing['location']['address']['streetAddress'])
+                    
+                if 'city' in listing['location']['address']:
+                    city = listing['location']['address']['city']
+                if 'countyName' in listing['location']['region']:
+                    county = listing['location']['region']['countyName']
+                if 'municipalityName' in listing['location']['region']:
+                    municipality = listing['location']['region']['municipalityName']
+                if 'namedAreas' in listing['location']:
+                    areaname = listing['location']['namedAreas']
+
+                try:
+                    address = Address.objects.get(
+                        house           = house,
+                        street          = street,
+                        city            = city,
+                        county          = county,
+                    )
+                except Address.DoesNotExist:
+                    address = Address(
+                        house           = house,
+                        street          = street,
+                        city            = city,
+                        municipality    = municipality,
+                        county          = county,
+                        areaname        = areaname
+                    )
+                    address.save()
+
                 Listings.objects.update_or_create(
                     booliid             = listing['booliId'],
                     datepublished       = listing['published'],
-                    sourceid            = source
-
+                    sourceid            = source,
+                    addressid           = address
                 )
+
+            # {"url": "https://www.booli.se/annons/2249713",
+            # "rent": 2774, "floor": 3, "rooms": 1,
+            # "source": {"id": 204,
+            #           "url": "http://www.maklarhuset.se/",
+            #           "name": "Mäklarhuset",
+            #           "type": "Broker"},
+            # "booliId": 2249713,
+            # "location": { "region": {  "countyName": "Skåne län",
+            #                           "municipalityName": "Trelleborg"},
+            #               "address": {"city": "Trelleborg",
+            #                           "streetAddress": "Borggården 7"},
+            #               "distance": {"ocean": 737},
+            #               "position": {"latitude": 55.37551117,
+            #                             "longitude": 13.17156029},
+            #               "namedAreas": ["Trelleborg"]},
+            # "soldDate": "2017-02-05",
+            # "listPrice": 419000,
+            # "published": "2017-01-30 21:09:14",
+            # "soldPrice": 650000,
+            # "livingArea": 36.8,
+            # "objectType": "Lägenhet",
+            # "constructionYear": 1948}
 
     # booliid = models.IntegerField(primary_key=True)
     # datepublished = models.DateTimeField(db_index=True)

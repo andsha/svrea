@@ -57,19 +57,19 @@ class Listings(models.Model):
 
 class Source(models.Model):
     sourceid            = models.AutoField(primary_key=True)
-    name                = models.CharField(max_length=250)
-    sourcetype          = models.CharField(max_length=50)
-    url                 = models.CharField(max_length=250)
+    name                = models.CharField(max_length=250, null=True, blank=True)
+    sourcetype          = models.CharField(max_length=50, null=True, blank=True)
+    url                 = models.CharField(max_length=250, null=True, blank=True)
 
 
 class Address(models.Model):
     addressid           = models.AutoField(primary_key=True)
-    house               = models.CharField(max_length=10)
-    street              = models.CharField(max_length=250)
-    city                = models.CharField(max_length=50)
-    municipality        = models.CharField(max_length=50)
-    county              = models.CharField(max_length=50)
-    areaname            = models.CharField(max_length=50)
+    house               = models.CharField(max_length=10, null=True, blank=True)
+    street              = models.CharField(max_length=250, null=True, blank=True)
+    city                = models.CharField(max_length=50, null=True, blank=True)
+    municipality        = models.CharField(max_length=50, null=True, blank=True)
+    county              = models.CharField(max_length=50, null=True, blank=True)
+    areaname            = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         index_together = ['street', 'city', 'municipality', 'county' ]
