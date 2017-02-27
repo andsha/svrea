@@ -467,24 +467,24 @@ class DataBase():
                     datesold = listing['soldDate']
                     dateinactive = datesold
 
-                print(listing['booliId'],
-                      listing['published'],
-                      listing['location']['position']['latitude'],
-                      listing['location']['position']['longitude'],
-                      constructionYear,
-                      rent,
-                      listing['url'],
-                      rooms,
-                      listing['objectType'],
-                      plotarea,
-                      additionalarea,
-                      livingarea,
-                      floor,
-                      isnewconstruction,
-                      datesold,
-                      isactive,
-                      latestprice,
-                      dateinactive)
+                # print(listing['booliId'],
+                #       listing['published'],
+                #       listing['location']['position']['latitude'],
+                #       listing['location']['position']['longitude'],
+                #       constructionYear,
+                #       rent,
+                #       listing['url'],
+                #       rooms,
+                #       listing['objectType'],
+                #       plotarea,
+                #       additionalarea,
+                #       livingarea,
+                #       floor,
+                #       isnewconstruction,
+                #       datesold,
+                #       isactive,
+                #       latestprice,
+                #       dateinactive)
 
 
                 listings, listings_created = Listings.objects.update_or_create(
