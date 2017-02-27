@@ -460,10 +460,10 @@ class DataBase():
                     isnewconstruction = listing['isNewConstruction']
                 if data.type == 'listings':
                     isactive = True
-                    latestprice = listing['listPrice']
+                    latestprice = int(listing['listPrice'])
                 if data.type == 'sold':
                     isactive = False
-                    latestprice = listing['soldPrice']
+                    latestprice = int(listing['soldPrice'])
                     datesold = listing['soldDate']
                     dateinactive = datesold
 
