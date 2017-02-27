@@ -467,6 +467,8 @@ class DataBase():
                     datesold = listing['soldDate']
                     dateinactive = datesold
 
+                print(latestprice)
+
 
                 listings, listings_created = Listings.objects.update_or_create(
                     booliid  = listing['booliId'],
