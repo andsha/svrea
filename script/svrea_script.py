@@ -443,7 +443,7 @@ class DataBase():
                 rooms = None
 
                 if 'rent' in listing:
-                    rent = listing['rent']
+                    rent = int(listing['rent'])
                 if 'constructionYear' in listing:
                     constructionYear = listing['constructionYear']
                 if 'rooms' in listing:
@@ -467,7 +467,24 @@ class DataBase():
                     datesold = listing['soldDate']
                     dateinactive = datesold
 
-                print(latestprice)
+                print(listing['booliId'],
+                      listing['published'],
+                      listing['location']['position']['latitude'],
+                      listing['location']['position']['longitude'],
+                      constructionYear,
+                      rent,
+                      listing['url'],
+                      rooms,
+                      listing['objectType'],
+                      plotarea,
+                      additionalarea,
+                      livingarea,
+                      floor,
+                      isnewconstruction,
+                      datesold,
+                      isactive,
+                      latestprice,
+                      dateinactive)
 
 
                 listings, listings_created = Listings.objects.update_or_create(
@@ -485,20 +502,26 @@ class DataBase():
                         "propertytype"      : listing['objectType'],
                         "plotarea"          : plotarea,
                         "additionalarea"    : additionalarea,
-                        "livingarea"         : livingarea,
+                        "livingarea"        : livingarea,
                         "floor"             : floor,
                         "isnewconstruction" : isnewconstruction,
                         "datesold"          : datesold,
                         "isactive"          : isactive,
-                        "dateinactive"      : dateinactive,
-                        "latestprice"       : latestprice
-
-
+                        "latestprice"       : latestprice,
+                        "dateinactive"      : dateinactive
                     }
                 )
 
-
-
+                # {"url": "https://www.booli.se/annons/1946014", "rooms": 9,
+                #  "source": {"id": 64, "url": "http://www.lansfast.se/", "name": "Länsförsäkringar Fastighetsförmedling",
+                #             "type": "Broker"}, "booliId": 1946014,
+                #  "location": {"region": {"countyName": "Skåne län", "municipalityName": "Kävlinge"},
+                #               "address": {"city": "Hofterup", "streetAddress": "Hästgårdsvägen 8"},
+                #               "distance": {"ocean": 3884},
+                #               "position": {"latitude": 55.80965104, "longitude": 12.99322941},
+                #               "namedAreas": ["Hofterup"]}, "plotArea": 27100, "soldDate": "2017-02-22",
+                #  "listPrice": 13000000, "published": "2016-08-02 17:24:41", "soldPrice": 13000000, "livingArea": 400,
+                #  "objectType": "Gård", "additionalArea": 60, "constructionYear": 1999}
 
             # {"url": "https://www.booli.se/annons/2249713",
             # "rent": 2774,
