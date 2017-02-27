@@ -79,6 +79,6 @@ class Pricehistory(models.Model):
     booliid             = models.ForeignKey('Listings', on_delete=models.CASCADE)
     price               = models.IntegerField()
     date                = models.DateTimeField()
-    ifsoldprice         = models.BooleanField()
+    issoldprice         = models.BooleanField()
 
 

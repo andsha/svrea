@@ -17,6 +17,8 @@ import re
 from script import pgUtil
 import dj_database_url
 
+from django.db.models import F,Q, Func
+
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 
 
@@ -42,6 +44,11 @@ LISTINGS = 3001
 SOLD = 3002
 LASTSOLD = 3003
 LASTSOLD = 3003
+
+
+class Datetime_to_date(Func):
+    function = 'EXTRACT'
+    template = '%(expressions)s::date'
 
 
 def err(obj = None, msg = None):
@@ -353,18 +360,35 @@ class DataBase():
 
 
     def uploadData(self):
-        data_to_upload = Rawdata.objects.filter(uploaded__exact = False)
+        data_to_upload = Rawdata.objects.filter(uploaded__exact = False).\
+            annotate(downloaded_date=Datetime_to_date('downloaded')).\
+            order_by('downloaded_date', '-type', 'areacode')
 
         for data in data_to_upload:
+            if data.type == 'sold':
+                Listings.objects.filter(isactive=True). \
+                    update(isactive=False, dateinactive=datetime.datetime.now())
+            #print(data.downloaded, data.uploaded, data.type, data.areacode)
+
             for listing in data.rawdata[data.type]:
-                source, source_created = Source.objects.get_or_create(
-                    sourceid    = listing['source']['id'],
-                    name        = listing['source']['name'],
-                    sourcetype  = listing['source']['type'],
-                    url         = listing['source']['url']
-                )
 
                 # *********************************************
+
+                sourceid = listing['source']['id']
+                sourcename = listing['source']['name']
+                sourcetype = listing['source']['type']
+                sourceurl = listing['source']['url']
+                #print(sourceid, sourcename,sourcetype, sourceurl )
+
+                (source, source_created) = Source.objects.get_or_create(
+                    sourceid=sourceid,
+                    name=sourcename,
+                    sourcetype=sourcetype,
+                    url=sourceurl
+                )
+
+                #####################################################
+
                 house = None
                 street = None
                 city = None
@@ -393,28 +417,81 @@ class DataBase():
                 if 'namedAreas' in listing['location']:
                     areaname = listing['location']['namedAreas']
 
-                booliid = listing['booliId']
-                datepublished = listing['published']
-
-                #######################################################
-
-                address = Address.objects.update_or_create(
-                    house = house,
-                    street = street,
-                    city = city,
-                    municipality = municipality,
-                    county = county,
-                    defaults = {
-                        "areaname"      : areaname
+                address, address_created = Address.objects.update_or_create(
+                    house=house,
+                    street=street,
+                    city=city,
+                    municipality=municipality,
+                    county=county,
+                    defaults={
+                        "areaname": areaname
                     }
                 )
 
+                #######################################################
+                plotarea = None
+                additionalarea = None
+                livingarea = None
+                floor = None
+                isnewconstruction = False
+                isactive = False
+                datesold = None
+                dateinactive = None
+                latestprice = None
+                rent = None
+                constructionYear = None
+                rooms = None
+
+                if 'rent' in listing:
+                    rent = listing['rent']
+                if 'constructionYear' in listing:
+                    constructionYear = listing['constructionYear']
+                if 'rooms' in listing:
+                    rooms = listing['rooms']
+                if 'plotArea' in listing:
+                    plotarea = listing['plotArea']
+                if 'additionalArea' in listing:
+                    additionalarea = listing['additionalArea']
+                if 'livingArea' in listing:
+                    livingarea = listing['livingArea']
+                if 'floor' in listing:
+                    floor = listing['floor']
+                if 'isNewConstruction' in listing:
+                    isnewconstruction = listing['isNewConstruction']
+                if data.type == 'listings':
+                    isactive = True
+                    latestprice = listing['listPrice']
+                if data.type == 'sold':
+                    isactive = False
+                    latestprice = listing['soldPrice']
+                    datesold = listing['soldDate']
+                    dateinactive = datesold
+
+
                 listings, listings_created = Listings.objects.update_or_create(
-                    booliid  = booliid,
+                    booliid  = listing['booliId'],
                     defaults = {
-                        "datepublished" : datepublished,
-                        "sourceid"      : source,
-                        "addressid"     : address
+                        "datepublished"     : listing['published'],
+                        "source"            : source,
+                        "address"           : address,
+                        "latitude"          : listing['location']['position']['latitude'],
+                        "longitude"         : listing['location']['position']['longitude'],
+                        "constructionyear"  : constructionYear,
+                        "rent"              : rent,
+                        "url"               : listing['url'],
+                        "rooms"             : rooms,
+                        "propertytype"      : listing['objectType'],
+                        "plotarea"          : plotarea,
+                        "additionalarea"    : additionalarea,
+                        "livingarea"         : livingarea,
+                        "floor"             : floor,
+                        "isnewconstruction" : isnewconstruction,
+                        "datesold"          : datesold,
+                        "isactive"          : isactive,
+                        "dateinactive"      : dateinactive,
+                        "latestprice"       : latestprice
+
+
                     }
                 )
 
@@ -422,7 +499,9 @@ class DataBase():
 
 
             # {"url": "https://www.booli.se/annons/2249713",
-            # "rent": 2774, "floor": 3, "rooms": 1,
+            # "rent": 2774,
+            # "floor": 3,
+            # "rooms": 1,
             # "source": {"id": 204,
             #           "url": "http://www.maklarhuset.se/",
             #           "name": "Mäklarhuset",
@@ -1092,7 +1171,7 @@ class Svrea_script():
 
         urlBase += '%s?' % self.options['download']
         area_list = ['64',  # Skane
-                     # '160', #Halland
+                     '160', #Halland
                      # '23', # vastra gotalands
                      # '2',  # Stockholm lan
                      # '783', # Kronobergs lan
