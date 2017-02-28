@@ -77,8 +77,8 @@ class Address(models.Model):
 
 class Pricehistory(models.Model):
     booliid             = models.ForeignKey('Listings', on_delete=models.CASCADE)
-    price               = models.IntegerField()
-    date                = models.DateTimeField()
-    issoldprice         = models.BooleanField()
+    price               = models.IntegerField(null=True, blank=True)
+    date                = models.DateTimeField(null=True, blank=True)
+    issoldprice         = models.BooleanField(null=True, blank=True)
 
 
