@@ -365,9 +365,10 @@ class DataBase():
             order_by('downloaded_date', '-type', 'areacode')
 
         for data in data_to_upload:
+            today = data.downloaded
             if data.type == 'sold':
                 Listings.objects.filter(isactive=True). \
-                    update(isactive=False, dateinactive=datetime.datetime.now())
+                    update(isactive=False, dateinactive=today)
             #print(data.downloaded, data.uploaded, data.type, data.areacode)
 
             for listing in data.rawdata[data.type]:
@@ -441,6 +442,9 @@ class DataBase():
                 rent = None
                 constructionYear = None
                 rooms = None
+                soldprice = None
+                listprice = None
+
 
                 if 'rent' in listing:
                     rent = int(listing['rent'])
@@ -460,10 +464,12 @@ class DataBase():
                     isnewconstruction = listing['isNewConstruction']
                 if data.type == 'listings':
                     isactive = True
-                    latestprice = int(listing['listPrice'])
+                    listprice = int(listing['listPrice'])
+                    latestprice = listprice
                 if data.type == 'sold':
                     isactive = False
-                    latestprice = int(listing['soldPrice'])
+                    soldprice = int(listing['soldPrice'])
+                    latestprice = soldprice
                     datesold = listing['soldDate']
                     dateinactive = datesold
 
@@ -512,6 +518,46 @@ class DataBase():
                     }
                 )
 
+                priceobj = Pricehistory.objects.filter(booliid = listing['booliId']).order_by('-date')
+
+                newprice = latestprice
+                newdate = today
+                newissoldprice = False
+
+                if priceobj.count() > 0:
+                    priceobj = priceobj[0]
+                    if priceobj.issoldprice: # last is sold
+                        if data.type == 'sold': # current is sold
+                            if priceobj.date == datesold:
+                                if priceobj.price == latestprice:
+                                    newissoldprice = None
+                                else:
+                                    priceobj.date = datesold
+                                    priceobj.price = latestprice
+                                    priceobj.save()
+                            else:
+                                priceobj.date = datesold
+                                priceobj.price = latestprice
+                                priceobj.save()
+                    else: # last is listing
+                        if data.type == 'sold': # current is sold
+                            newissoldprice = True
+                        else: # current is listing
+                            if latestprice == priceobj.price:
+                                newissoldprice = None
+                else:
+                    if data.type == 'sold':
+                        newissoldprice = True
+                if newissoldprice is not None:
+                    newpriceobj = Pricehistory(
+                        booliid = listing['booliId'],
+                        price = newprice,
+                        date = newdate,
+                        issoldprice = newissoldprice
+                    )
+                    newpriceobj.save()
+
+
                 # {"url": "https://www.booli.se/annons/1946014", "rooms": 9,
                 #  "source": {"id": 64, "url": "http://www.lansfast.se/", "name": "Länsförsäkringar Fastighetsförmedling",
                 #             "type": "Broker"}, "booliId": 1946014,
@@ -547,6 +593,28 @@ class DataBase():
             # "livingArea": 36.8,
             # "objectType": "Lägenhet",
             # "constructionYear": 1948}
+
+            # "url": "https://www.booli.se/annons/2263518",
+            # "rent": 3539,
+            # "floor": 3,
+            # "rooms": 2,
+            #  "source": {"id": 64,
+            #             "url": "http://www.lansfast.se/",
+            #             "name": "Länsförsäkringar Fastighetsförmedling",
+            #             "type": "Broker"},
+            # "booliId": 2263518,
+            # "location": {"region": {"countyName":
+                #                     "Skåne län",
+                #                     "municipalityName": "Malmö"},
+            #               "address": {"streetAddress": "Nobelvägen 6A"},
+            #               "position": {"latitude": 55.58520979,
+                #                        "longitude": 13.00816561},
+            #               "namedAreas": ["Södra Innerstaden"]},
+            # "listPrice": 1395000,
+            #  "published": "2017-02-22 12:26:43",
+            # "livingArea": 72,
+            # "objectType": "Lägenhet",
+            # "constructionYear": 1937}
 
     # booliid = models.IntegerField(primary_key=True)
     # datepublished = models.DateTimeField(db_index=True)
