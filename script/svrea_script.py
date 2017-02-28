@@ -523,6 +523,7 @@ class DataBase():
                 newprice = latestprice
                 newdate = today
                 newissoldprice = False
+                createnewprice = True
 
                 if priceobj.count() > 0:
                     priceobj = priceobj[0]
@@ -530,25 +531,28 @@ class DataBase():
                         if data.type == 'sold': # current is sold
                             if priceobj.date.date() == datesold.date():
                                 if priceobj.price == latestprice:
-                                    newissoldprice = None
+                                    createnewprice = False
                                 else:
                                     priceobj.date = datesold.date()
                                     priceobj.price = latestprice
                                     priceobj.save()
+                                    createnewprice = False
                             else:
                                 priceobj.date = datesold.date()
                                 priceobj.price = latestprice
                                 priceobj.save()
+                                createnewprice = False
                     else: # last is listing
                         if data.type == 'sold': # current is sold
                             newissoldprice = True
                         else: # current is listing
                             if latestprice == priceobj.price:
-                                newissoldprice = None
+                                createnewprice = False
                 else:
                     if data.type == 'sold':
                         newissoldprice = True
-                if newissoldprice is not None:
+
+                if createnewprice:
                     newpriceobj = Pricehistory(
                         booliid = listings,
                         price = newprice,
