@@ -552,6 +552,9 @@ class DataBase():
                     if data.type == 'sold':
                         newissoldprice = True
 
+                if listings.booliid == 2254106:
+                    print(listings, newprice, newdate, newissoldprice, createnewprice)
+
                 if createnewprice:
                     newpriceobj = Pricehistory(
                         booliid = listings,
