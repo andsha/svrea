@@ -464,11 +464,13 @@ class DataBase():
                     isnewconstruction = listing['isNewConstruction']
                 if data.type == 'listings':
                     isactive = True
-                    listprice = int(listing['listPrice'])
+                    if 'listPrice' in listing:
+                        listprice = int(listing['listPrice'])
                     latestprice = listprice
                 if data.type == 'sold':
                     isactive = False
-                    soldprice = int(listing['soldPrice'])
+                    if 'soldPrice' in listing:
+                        soldprice = int(listing['soldPrice'])
                     latestprice = soldprice
                     datesold = datetime.datetime.strptime(listing['soldDate'], '%Y-%m-%d')
                     dateinactive = datesold
