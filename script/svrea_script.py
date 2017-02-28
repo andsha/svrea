@@ -263,42 +263,30 @@ class DataBase():
                         if data.type == 'sold': # current is sold
                             if priceobj.date.date() == datesold.date():
                                 if priceobj.price == latestprice:
-                                    if listings.booliid == 2254106:
-                                        print("1", listings, newprice, newdate, newissoldprice,
-                                              createnewprice)
                                     createnewprice = False
                                 else:
                                     priceobj.date = datesold.date()
                                     priceobj.price = latestprice
                                     priceobj.save()
-                                    if listings.booliid == 2254106:
-                                        print("2", listings, newprice, newdate, newissoldprice,
-                                              createnewprice)
                                     createnewprice = False
                             else:
                                 priceobj.date = datesold.date()
                                 priceobj.price = latestprice
                                 priceobj.save()
-                                if listings.booliid == 2254106:
-                                    print("3", listings, newprice, newdate, newissoldprice,
-                                          createnewprice)
                                 createnewprice = False
                     else: # last is listing
                         if data.type == 'sold': # current is sold
                             newissoldprice = True
                         else: # current is listing
                             if latestprice == priceobj.price:
-                                if listings.booliid == 2254106:
-                                    print("4", listings, newprice, newdate, newissoldprice,
-                                          createnewprice)
                                 createnewprice = False
                 else:
                     if data.type == 'sold':
                         newissoldprice = True
 
                 if createnewprice:
-                    if listings.booliid == 2254106:
-                        print("create new entry", listings, newprice, newdate, newissoldprice, createnewprice)
+                    # if listings.booliid == 2254106:
+                    #     print("create new entry", listings, newprice, newdate, newissoldprice, createnewprice)
                     newpriceobj = Pricehistory(
                         booliid = listings,
                         price = newprice,
@@ -307,13 +295,16 @@ class DataBase():
                     )
                     newpriceobj.save()
 
+            data.uploaded = True
+            data.save()
+
         aux = Aux.objects.get(key='UploadAuxKey')
         aux.value = 'complete'
         aux.save()
 
         info.status = 'done'
         info.save()
-        
+
 
 WARNING = 1101
 ERROR = 1102
