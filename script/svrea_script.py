@@ -365,10 +365,10 @@ class DataBase():
             order_by('downloaded_date', '-type', 'areacode')
 
         for data in data_to_upload:
-            today = data.downloaded
+            today = data.downloaded.date()
             if data.type == 'sold':
                 Listings.objects.filter(isactive=True). \
-                    update(isactive=False, dateinactive=today)
+                    update(isactive = False, dateinactive = today)
             #print(data.downloaded, data.uploaded, data.type, data.areacode)
 
             for listing in data.rawdata[data.type]:
@@ -470,7 +470,7 @@ class DataBase():
                     isactive = False
                     soldprice = int(listing['soldPrice'])
                     latestprice = soldprice
-                    datesold = listing['soldDate']
+                    datesold = datetime.datetime.strptime(listing['soldDate'], '%Y-%m-%d')
                     dateinactive = datesold
 
                 # print(listing['booliId'],
@@ -493,7 +493,7 @@ class DataBase():
                 #       dateinactive)
 
 
-                listings, listings_created = Listings.objects.update_or_create(
+                (listings, listings_created) = Listings.objects.update_or_create(
                     booliid  = listing['booliId'],
                     defaults = {
                         "datepublished"     : listing['published'],
@@ -528,15 +528,15 @@ class DataBase():
                     priceobj = priceobj[0]
                     if priceobj.issoldprice: # last is sold
                         if data.type == 'sold': # current is sold
-                            if priceobj.date == datesold:
+                            if priceobj.date.date() == datesold.date():
                                 if priceobj.price == latestprice:
                                     newissoldprice = None
                                 else:
-                                    priceobj.date = datesold
+                                    priceobj.date = datesold.date()
                                     priceobj.price = latestprice
                                     priceobj.save()
                             else:
-                                priceobj.date = datesold
+                                priceobj.date = datesold.date()
                                 priceobj.price = latestprice
                                 priceobj.save()
                     else: # last is listing
@@ -550,7 +550,7 @@ class DataBase():
                         newissoldprice = True
                 if newissoldprice is not None:
                     newpriceobj = Pricehistory(
-                        booliid = listing['booliId'],
+                        booliid = listings,
                         price = newprice,
                         date = newdate,
                         issoldprice = newissoldprice
