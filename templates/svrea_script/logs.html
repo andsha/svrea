@@ -1,0 +1,55 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+<style>
+    .debuglog {
+        color: orange
+    }
+    .errorlog {
+        color: red
+    }
+
+    .infolog {
+        color: green
+    }
+</style>
+
+
+
+<div class="full">
+    <div class="container-fluid ">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title text-center">Script History</h3></div>
+                <div class="text-left blue">
+                    <table width="100%">
+                        <tr>
+                            <th>id</th>
+                            <th>Date</th>
+                            <th>Level</th>
+                            <th>Log</th>
+                        </tr>
+                        {% for log in logs %}
+                            <tr {% if log.level == 'INFO' %} class="infolog"
+                                {% elif log.level == 'ERROR' %} class="errorlog"
+                                {% elif script.status == 'DEBUG' %} class="debuglog"
+                                {% endif %}>
+                                <td>{{log.id}}</td>
+                                <td>{{log.when}}</td>
+                                <td>{{log.level}}</td>
+                                <td>{{log.entry}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+

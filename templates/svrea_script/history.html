@@ -10,6 +10,10 @@
     .stoppedscript {
         color: red
     }
+
+    .successfulscript {
+        color: green
+    }
 </style>
 
 
@@ -32,6 +36,7 @@
                         {% for script in history %}
                             <tr {% if script.status == 'started' %} class="runningscript"
                                 {% elif script.status == 'stopped' %} class="stoppedscript"
+                                {% elif script.status == 'done' %} class="successfulscript"
                                 {% endif %}>
                                 <td>{{script.id}}</td>
                                 <td>{{script.started}}</td>

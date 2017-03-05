@@ -79,6 +79,9 @@
                                     {% if perms.svrea_script.can_run_script %}
                                         <li><a href='{% url "script_run"  %}'>Run</a></li>
                                     {% endif %}
+                                    {% if perms.svrea_script.can_see_script_logs %}
+                                        <li><a href='{% url "script_logs"  %}'>Logs</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
                             {% endif %}

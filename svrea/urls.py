@@ -26,6 +26,7 @@ from .views import (
 
 from svrea_script.views import script_history as svrea_script_history
 from svrea_script.views import script_run as svrea_script_run
+from svrea_script.views import script_logs as svrea_script_logs
 
 from uauth.views import uregister
 
@@ -39,5 +40,6 @@ urlpatterns = [
     url(r'price_density_map$', price_density_map, name = 'price_density_map'),
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
     url(r'script_history$', svrea_script_history, name = 'script_history'),
-    url(r'script_run$', svrea_script_run, name = 'script_run')
+    url(r'script_run$', svrea_script_run, name = 'script_run'),
+    url(r'script_loga$', svrea_script_logs, name = 'script_logs')
 ]

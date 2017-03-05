@@ -10,7 +10,9 @@ class Info(models.Model):
     comment = models.CharField(max_length=500, default='None')
 
     class Meta:
-        permissions = (("can_run_script", "Can run script"), ("can_see_history", "Can See History"), )
+        permissions = (("can_run_script", "Can run script"),
+                       ("can_see_history", "Can See History"),
+                       ("can_see_script_logs", "Can See Script Logs"))
 
 class Log(models.Model):
     when = models.DateTimeField(auto_now=True)

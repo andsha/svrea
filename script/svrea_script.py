@@ -383,7 +383,7 @@ class Svrea_script():
         runtoday = False
 
         for s in today_scripts:
-            #print(s.config, self.options, s.config == str(self.options) )
+            #print(s.config, self.options, s.config == self.options )
             if s.config == self.options:
                 runtoday = True
                 if s.status == 'done' and not self.forced: # if succesfully run before
@@ -404,15 +404,13 @@ class Svrea_script():
             info = l
         # _________________________________________________________________________________________
         #print(self.options)
-        for opt in self.options:
-            if type(opt) == dict:
-                if 'download' in opt:
-                    tolog(INFO, ("Downloading %s" %opt['download']))
-                    a = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
-                                                                                        "value" : "run"})
-                    #print(self.options['latest'])
-                    t = threading.Thread(target = self.getDataFromWeb, args = (info, True if 'downloadLast' in self.options else False))
-                    t.start()
+        if 'download' in self.options:
+            tolog(INFO, ("Downloading %s" %self.options['download']))
+            a = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
+                                                                                "value" : "run"})
+            #print(self.options['latest'])
+            t = threading.Thread(target = self.getDataFromWeb, args = (info, True if 'downloadLast' in self.options else False))
+            t.start()
         # -----------------------------------------------------------------------------------
         if 'upload' in self.options and self.options['upload']:
             tolog(INFO, 'Uploading data')
@@ -464,7 +462,7 @@ class Svrea_script():
             res = db.pgcon.run(sql)
 
     def getDataFromWeb(self, info = None, latest = False):
-        print('downloading')
+        #print('downloading')
         uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
         timestamp = str(int(time.time()))
         hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
