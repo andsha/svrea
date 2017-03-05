@@ -3,6 +3,15 @@
 {% load static %}
 {% block content %}
 
+<style>
+    .runningscript {
+        color: orange
+    }
+
+    .btns{
+        margin-top: 10px
+    }
+</style>
 
 <form method="post" > {% csrf_token %}
     <div class="full">
@@ -11,15 +20,37 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading"><h3 class="panel-title text-center">Active Scripts</h3></div>
                         <div class="text-left blue">
-                            {% for script in running_scripts %}
-                                {{script.id}} | {{script.started}} | {{script.user_name}} | {{script.config}} | {{script.status}} | {{script.comment}}<br>
-                            {% endfor %}
+                            <table width="100%">
+                                <tr>
+                                    <th>id</th>
+                                    <th>Date Started</th>
+                                    <th>User</th>
+                                    <th>Command</th>
+                                    <th>Status</th>
+                                    <th>Comment</th>
+                                    <th></th>
+                                </tr>
+                                {% for script in running_scripts %}
+                                    <tr {% if script.status == 'started' %} class="runningscript" {% endif %}>
+                                        <td>{{script.id}}</td>
+                                        <td>{{script.started}}</td>
+                                        <td>{{script.user_name}}</td>
+                                        <td>{{script.config}}</td>
+                                        <td>{{script.status}}</td>
+                                        <td>{{script.comment}}</td>
+                                        <td><button type="submit" name="stopScript" value="stopScript_{{script.id}}">Stop</button><td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <input type="text" name="script_params">
-                    <button type="submit" name="run_script" class="btn btn-default">Run Script</button>
+                    <div class="btns">Download <button type="submit" name="download" value="listings">Listings</button>
+                    <button type="submit" name="download" value="sold">Sold</button>
+                    Last only <input type="checkbox" name="downloadLast" value="downloadLast" checked><br></div>
+                    <div class="btns"><button type="submit" name="upload" value="upload">Upload</button></div>
+                    <div class="btns"><button type="submit" name="etl" value="etl">Do ETL</button></div>
                 </div>
 
         </div>
@@ -27,30 +58,30 @@
 
 </form>
 
-command format:<br>
-COMMAND PARAMETER [-f]
-<br><br>
-<div>
-    <table width = 500 border="2">
-        <col width="100">
-        <tr><td>COMMAND</td> <td>PARAMETER</td></tr>
-        <tr><td colspan="2">downloads data from booli.se into rawdata table. -l parameter forces download only last 300 entries</td>
-        <tr><td>-d</td><td>sold [-l]</td></tr>
-        <tr><td></td><td>listings [-l]</td></tr>
-        <tr><td colspan="2">uploads data from rawdata into models</td></tr>
-        <tr><td>-u</td>
-        <tr><td colspan="2">stops execution of running script</td></tr>
-        <tr><td>-s</td>
-        <!--<tr><td></td><td>upload</td>-->
-        <!--<tr><td></td><td>analyze</td>-->
-        <tr><td colspan="2">Creates etl table</td></tr>
-        <tr><td>-a</td>
-        <tr><td colspan="2">clears specific auxilary table</td></tr>
-        <tr><td>-s</td><td>log</td>
-        <tr><td></td><td>info</td>
-        <tr><td></td><td>rawdata</td>
-    </table>
-</div>
+<!--command format:<br>-->
+<!--COMMAND PARAMETER [-f]-->
+<!--<br><br>-->
+<!--<div>-->
+    <!--<table width = 500 border="2">-->
+        <!--<col width="100">-->
+        <!--<tr><td>COMMAND</td> <td>PARAMETER</td></tr>-->
+        <!--<tr><td colspan="2">downloads data from booli.se into rawdata table. -l parameter forces download only last 300 entries</td>-->
+        <!--<tr><td>-d</td><td>sold [-l]</td></tr>-->
+        <!--<tr><td></td><td>listings [-l]</td></tr>-->
+        <!--<tr><td colspan="2">uploads data from rawdata into models</td></tr>-->
+        <!--<tr><td>-u</td>-->
+        <!--<tr><td colspan="2">stops execution of running script</td></tr>-->
+        <!--<tr><td>-s</td>-->
+        <!--&lt;!&ndash;<tr><td></td><td>upload</td>&ndash;&gt;-->
+        <!--&lt;!&ndash;<tr><td></td><td>analyze</td>&ndash;&gt;-->
+        <!--<tr><td colspan="2">Creates etl table</td></tr>-->
+        <!--<tr><td>-a</td>-->
+        <!--<tr><td colspan="2">clears specific auxilary table</td></tr>-->
+        <!--<tr><td>-s</td><td>log</td>-->
+        <!--<tr><td></td><td>info</td>-->
+        <!--<tr><td></td><td>rawdata</td>-->
+    <!--</table>-->
+<!--</div>-->
 
 
 

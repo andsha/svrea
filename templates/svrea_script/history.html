@@ -3,6 +3,16 @@
 {% load static %}
 {% block content %}
 
+<style>
+    .runningscript {
+        color: orange
+    }
+    .stoppedscript {
+        color: red
+    }
+</style>
+
+
 
 <div class="full">
     <div class="container-fluid ">
@@ -10,9 +20,28 @@
             <div class="panel panel-primary">
                 <div class="panel-heading"><h3 class="panel-title text-center">Script History</h3></div>
                 <div class="text-left blue">
-                    {% for script in history %}
-                        {{script.id}} | {{script.started}} | {{script.user_name}} | {{script.config}} | {{script.status}} | {{script.comment}}<br>
-                    {% endfor %}
+                    <table width="100%">
+                        <tr>
+                            <th>id</th>
+                            <th>Date Started</th>
+                            <th>User</th>
+                            <th>Command</th>
+                            <th>Status</th>
+                            <th>Comment</th>
+                        </tr>
+                        {% for script in history %}
+                            <tr {% if script.status == 'started' %} class="runningscript"
+                                {% elif script.status == 'stopped' %} class="stoppedscript"
+                                {% endif %}>
+                                <td>{{script.id}}</td>
+                                <td>{{script.started}}</td>
+                                <td>{{script.user_name}}</td>
+                                <td>{{script.config}}</td>
+                                <td>{{script.status}}</td>
+                                <td>{{script.comment}}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         </div>
