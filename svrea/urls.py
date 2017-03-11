@@ -41,5 +41,5 @@ urlpatterns = [
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
     url(r'script_history$', svrea_script_history, name = 'script_history'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
-    url(r'script_loga$', svrea_script_logs, name = 'script_logs')
+    url(r'script_logs$', svrea_script_logs, name = 'script_logs')
 ]

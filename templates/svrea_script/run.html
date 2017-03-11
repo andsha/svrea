@@ -46,10 +46,16 @@
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <div class="btns">Download <button type="submit" name="download" value="listings">Listings</button>
-                    <button type="submit" name="download" value="sold">Sold</button>
-                    Last only <input type="checkbox" name="downloadLast" value="downloadLast" checked><br></div>
-                    <div class="btns"><button type="submit" name="upload" value="upload">Upload</button></div>
+                    <div class="btns">Download:<br>
+                        <button type="submit" name="download" value="listings">Listings</button>
+                        <button type="submit" name="download" value="sold">Sold</button><br>
+                        <input type="checkbox" name="downloadLast" value="downloadLast" checked> Last only<br>
+                        <input type="checkbox" name="forced" value="forced" checked> Force run
+                    </div>
+                    <div class="btns">
+                        Upload:<br>
+                        <button type="submit" name="upload" value="upload">Upload</button>
+                    </div>
                     <div class="btns"><button type="submit" name="etl" value="etl">Do ETL</button></div>
                 </div>
 

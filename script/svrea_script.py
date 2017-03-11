@@ -9,6 +9,7 @@ import json
 import datetime
 import logging
 import random
+import time
 import re
 from optparse import OptionParser
 import shutil
@@ -328,44 +329,22 @@ class Svrea_script():
         self.options = params#self.handleParams(params)
         self.forced = False
 
-        if self.options['forced']:
+        if 'forced' in self.options and self.options['forced']:
              self.forced = True
              self.options.pop('forced', None)
 
-        #self.params = params.replace("-f", "").strip()
         self.username = username
-
-    #
-    # def handleParams(self, params):
-    #     options = {}
-    #     #print("parametersp",params[0:2])
-    #     if 'forced' in params
-    #     if params.find('forced') != -1:
-    #         options['forced'] = True
-    #     else:
-    #         options['forced'] = False
-    #
-    #     if params[0:3] == '-d ':
-    #         options['download'] = params[3:].split()[0]
-    #
-    #         if params.find('-l') != -1:
-    #             options['latest'] = True
-    #         else:
-    #             options['latest'] = False
-    #
-    #     elif params[0:2] == '-u':
-    #         options['upload'] = True
-    #     elif params[0:2] == '-s':
-    #         options['stop'] = True
-    #     elif params[0:2] == '-a':
-    #         options['analyze'] = True
-    #     else:
-    #         return None
-    #
-    #     return options
 
 
     def run(self):
+
+        for i in range(10):
+            print(i)
+            time.sleep(1)
+        return 0
+
+
+
         if self.options is None:
             tolog(ERROR, "no known parameters were found: %s" % self.options)
             return 1
@@ -419,47 +398,9 @@ class Svrea_script():
             t = threading.Thread(target = db.uploadData, args = (info,))
             t.start()
 
-
         return 0
-        if self.transfer:
-            logging.info("Uploading data")
 
 
-            flist = os.listdir(BASE_FOLDER + '/data/')
-            idx = 0
-
-            while flist[idx][:5] != 'booli':
-                idx += 1
-
-            db.date = (datetime.datetime.strptime(flist[idx].split()[1], "%Y-%m-%d") - datetime.timedelta(days = 1)).strftime("%Y-%m-%d")
-            #print(db.date)
-            db.initFill()
-
-            for idx, file in enumerate(flist):
-                if file[:5] == 'booli':
-                    # logging.info("Uploading file %s %s/%s" %(file,idx,len(flist)))
-                    logging.info("Uploading file %s %s/%s" % (file, idx + 1, len(flist)))
-                    db.fillDB(source=BASE_FOLDER + '/data/' + file)
-
-        # -----------------------------------------------------------------------------------
-
-        if self.clean:
-            logging.info("Cleaning data folder")
-            flist = os.listdir(BASE_FOLDER + '/data/')
-
-            if flist is not None:
-                for file in flist:
-                    #print(file)
-                    print(BASE_FOLDER + '/data/' + file, BASE_FOLDER + '/dataHistory/' + file)
-                    shutil.copyfile('' + BASE_FOLDER + '/data/' + file + '', '' + BASE_FOLDER + '/dataHistory/' + file + '')
-                    os.remove(BASE_FOLDER + '/data/' + file)
-
-        if self.recreate:
-            sql = sql = """INSERT INTO "%s".history values(%s,now(), '%s', 'DB created') """ %(db.schema, 1, self.options)
-            res = db.pgcon.run(sql)
-        elif not self.force:
-            sql = """UPDATE "%s".history SET status = '%s done' WHERE id = %s""" %(db.schema, s, id + 1)
-            res = db.pgcon.run(sql)
 
     def getDataFromWeb(self, info = None, latest = False):
         #print('downloading')
@@ -508,7 +449,7 @@ class Svrea_script():
                 if Aux.objects.get(key = 'DownloadAuxKey').value != 'run':
                     info.status = 'stopped'
                     info.save()
-                    print('stop thread')
+                    #print('stop thread')
                     return 1
 
                 tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))

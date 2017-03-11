@@ -5,6 +5,10 @@ from django.contrib import messages
 
 from script.svrea_script import Svrea_script
 from svrea_script.models import Info, Aux, Log
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from rq import Queue
+from worker import conn
 
 
 
@@ -20,12 +24,12 @@ def script_run(request):
         id = request.POST.get('stopScript').split('_')[1]
         info = Info.objects.get(id = id)
 
-        if 'update' in info.config:
+        if 'upload' in info.config:
             aux = Aux.objects.get(key='UploadAuxKey')
         elif 'download' in info.config:
             aux = Aux.objects.get(key='DownloadAuxKey')
         else:
-            return 0
+            messages.error(request, "neither upload nor download was found in config")
 
         aux.value='stopped'
         aux.save()
@@ -33,27 +37,24 @@ def script_run(request):
         info.save()
 
     if request.POST.get('download'):
-        params = {'download': request.POST.get('download'),
-                  'forced' : True,
-                  'downloadLast' : True if request.POST.get('downloadLast') else False}
+        q = Queue(connection = conn)
+        params = {1:2, 3:4}
         script = Svrea_script(params=params, username=request.user.username)
-        if script.run() != 0:
-            messages.error(request, "Error. For details see logs")
-
-    if request.POST.get('upload'):
-        params = {'upload' : True,
-                  'forced' : True}
-        script = Svrea_script(params=params, username=request.user.username)
-        if script.run() != 0:
-            messages.error(request, "Error. For details see logs")
-
-    # if request.POST.get('run_script') == '':
-    #     params = request.POST.get('script_params')
-    #     # info = Info(user_name = request.user.username, config=params, status='started')
-    #     # info.save()
-    #     script = Svrea_script(params = params, username = request.user.username)
-
-
+        res = q.enqueue(script.run)
+    # if request.POST.get('download'):
+    #     params = {'download': request.POST.get('download'),
+    #               'forced' : True if request.POST.get('forced') is not None else False,
+    #               'downloadLast' : True if request.POST.get('downloadLast') else False}
+    #     script = Svrea_script(params=params, username=request.user.username)
+    #     if script.run() != 0:
+    #         messages.error(request, "Error. For details see logs")
+    #
+    # if request.POST.get('upload'):
+    #     params = {'upload' : True,
+    #               'forced' : True}
+    #     script = Svrea_script(params=params, username=request.user.username)
+    #     if script.run() != 0:
+    #         messages.error(request, "Error. For details see logs")
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
@@ -89,7 +90,17 @@ def script_logs(request):
         logout(request)
         return redirect("index")
 
-    logs = Log.objects.order_by('-when')
+    alllogs = Log.objects.order_by('-when')
+    paginator = Paginator(alllogs, 20, orphans=9)
+    page = request.GET.get('page')
+    try:
+        logs = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        logs = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        logs = paginator.page(paginator.num_pages)
 
     context = {
         "logs" : logs
