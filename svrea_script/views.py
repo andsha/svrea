@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import logout
 from django.contrib import messages
 
-from script.svrea_script import Svrea_script
+from script.svrea_script import Svrea_script, area_list
 from svrea_script.models import Info, Aux, Log, Rawdata
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Func
@@ -23,6 +23,7 @@ class Len_Of_JSON_Field(Func):
 @login_required(redirect_field_name = "", login_url="/")
 @permission_required('svrea_script.can_run_script')
 def script_run(request):
+    #print(request.POST)
 
     if request.POST.get('submit') == 'Log Out':
         logout(request)
@@ -46,17 +47,13 @@ def script_run(request):
             info.status = 'stopped'
             info.save()
 
-    # if request.POST.get('download'):
-    #
-    #     #params = {1:2, 3:4}
-    #     #script = Svrea_script(params=params, username=request.user.username)
-    #     #res = q.enqueue(script.run)
-
     if request.POST.get('download'):
         q = Queue(connection=conn)
         params = {'download': request.POST.get('download'),
                   'forced' : True if request.POST.get('forced') is not None else False,
-                  'downloadLast' : True if request.POST.get('downloadLast') else False}
+                  'downloadLast' : True if request.POST.get('downloadLast') else False,
+                  'area' : request.POST.getlist('area')
+                  }
         script = Svrea_script(params=params, username=request.user.username)
         res = q.enqueue(script.run)
 
@@ -72,7 +69,8 @@ def script_run(request):
 
     context = {
         "text" : '',
-        "running_scripts" : running_scripts
+        "running_scripts" : running_scripts,
+        "area_list" : area_list
     }
     time.sleep(.1)
     return render(request, "svrea_script/run.html", context=context)
@@ -129,9 +127,8 @@ def script_data(request):
         logout(request)
         return redirect("index")
 
-    info = Rawdata.objects.annotate(sizeofdata=Len_Of_JSON_Field('rawdata')).order_by('downloaded').all()
-    #for i in info:
-        #print(i.id, i.sizeofdata)
+    #info = Rawdata.objects.annotate(sizeofdata=Len_Of_JSON_Field('rawdata')).order_by('downloaded').all()
+    info = Rawdata.objects.order_by('downloaded').defer('rawdata')
 
     context = {
         "text" : "You can see script data",

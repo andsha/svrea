@@ -13,83 +13,85 @@
     }
 </style>
 
-<form method="post" > {% csrf_token %}
-    <div class="full">
-        <div class="container-fluid ">
-                <div class="col-md-12">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading"><h3 class="panel-title text-center">Active Scripts</h3></div>
-                        <div class="text-left blue">
-                            <table width="100%">
-                                <tr>
-                                    <th>id</th>
-                                    <th>Date Started</th>
-                                    <th>User</th>
-                                    <th>Command</th>
-                                    <th>Status</th>
-                                    <th>Comment</th>
-                                    <th></th>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+
+<div class="full">
+    <div class="container-fluid ">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Active Scripts</h3></div>
+                    <div class="text-left blue">
+                        <table width="100%">
+                            <tr>
+                                <th>id</th>
+                                <th>Date Started</th>
+                                <th>User</th>
+                                <th>Command</th>
+                                <th>Status</th>
+                                <th>Comment</th>
+                                <th></th>
+                            </tr>
+                            {% for script in running_scripts %}
+                                <tr {% if script.status == 'started' %} class="runningscript" {% endif %}>
+                                    <td>{{script.id}}</td>
+                                    <td>{{script.started}}</td>
+                                    <td>{{script.user_name}}</td>
+                                    <td>{{script.config}}</td>
+                                    <td>{{script.status}}</td>
+                                    <td>{{script.comment}}</td>
+                                    <td><button type="submit" name="stopScript" value="stopScript_{{script.id}}">Stop</button><td>
                                 </tr>
-                                {% for script in running_scripts %}
-                                    <tr {% if script.status == 'started' %} class="runningscript" {% endif %}>
-                                        <td>{{script.id}}</td>
-                                        <td>{{script.started}}</td>
-                                        <td>{{script.user_name}}</td>
-                                        <td>{{script.config}}</td>
-                                        <td>{{script.status}}</td>
-                                        <td>{{script.comment}}</td>
-                                        <td><button type="submit" name="stopScript" value="stopScript_{{script.id}}">Stop</button><td>
-                                    </tr>
-                                {% endfor %}
-                            </table>
-                        </div>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
-                <div class="col-md-12">
-                    <div class="btns">Download:<br>
-                        <button type="submit" name="download" value="listings">Listings</button>
-                        <button type="submit" name="download" value="sold">Sold</button><br>
-                        <input type="checkbox" name="downloadLast" value="downloadLast" checked> Last only<br>
-                        <input type="checkbox" name="forced" value="forced" checked> Force run
-                    </div>
-                    <div class="btns">
-                        Upload:<br>
-                        <button type="submit" name="upload" value="upload">Upload</button>
-                    </div>
-                    <div class="btns"><button type="submit" name="etl" value="etl">Do ETL</button></div>
-                </div>
-
+            </div>
         </div>
+        <form method="post" > {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center"> Download</div>
+                         <div class="btns">
+                             <select class="selectpicker" multiple name="area" multiple data-selected-text-format="count">
+                             {% for area in area_list %}
+                                <option data-subtext="{{area.1}}" selected>{{area.0}}</option>
+                             {% endfor %}
+                             </select>
+                             <button type="submit" name="download" value="listings">Listings</button>
+                             <button type="submit" name="download" value="sold">Sold</button><br>
+                             <input type="checkbox" name="downloadLast" value="downloadLast" checked> Last only
+                             <input type="checkbox" name="forced" value="forced" checked> Force run
+                         </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">Upload</div>
+                         <div class="btns"><button type="submit" name="upload" value="upload">Upload</button></div>
+                    </div>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">ETL</div>
+                        <div class="btns"><button type="submit" name="etl" value="etl">Do ETL</button></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </form>
     </div>
-
-</form>
-
-<!--command format:<br>-->
-<!--COMMAND PARAMETER [-f]-->
-<!--<br><br>-->
-<!--<div>-->
-    <!--<table width = 500 border="2">-->
-        <!--<col width="100">-->
-        <!--<tr><td>COMMAND</td> <td>PARAMETER</td></tr>-->
-        <!--<tr><td colspan="2">downloads data from booli.se into rawdata table. -l parameter forces download only last 300 entries</td>-->
-        <!--<tr><td>-d</td><td>sold [-l]</td></tr>-->
-        <!--<tr><td></td><td>listings [-l]</td></tr>-->
-        <!--<tr><td colspan="2">uploads data from rawdata into models</td></tr>-->
-        <!--<tr><td>-u</td>-->
-        <!--<tr><td colspan="2">stops execution of running script</td></tr>-->
-        <!--<tr><td>-s</td>-->
-        <!--&lt;!&ndash;<tr><td></td><td>upload</td>&ndash;&gt;-->
-        <!--&lt;!&ndash;<tr><td></td><td>analyze</td>&ndash;&gt;-->
-        <!--<tr><td colspan="2">Creates etl table</td></tr>-->
-        <!--<tr><td>-a</td>-->
-        <!--<tr><td colspan="2">clears specific auxilary table</td></tr>-->
-        <!--<tr><td>-s</td><td>log</td>-->
-        <!--<tr><td></td><td>info</td>-->
-        <!--<tr><td></td><td>rawdata</td>-->
-    <!--</table>-->
-<!--</div>-->
-
-
+</div>
 
 {% endblock %}
 
