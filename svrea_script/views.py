@@ -1,3 +1,4 @@
+import time
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import logout
@@ -11,7 +12,6 @@ from rq import Queue
 from worker import conn
 
 
-
 @login_required(redirect_field_name = "", login_url="/")
 @permission_required('svrea_script.can_run_script')
 def script_run(request):
@@ -23,6 +23,7 @@ def script_run(request):
     if request.POST.get('stopScript'):
         id = request.POST.get('stopScript').split('_')[1]
         info = Info.objects.get(id = id)
+        aux = None
 
         if 'upload' in info.config:
             aux = Aux.objects.get(key='UploadAuxKey')
@@ -31,30 +32,33 @@ def script_run(request):
         else:
             messages.error(request, "neither upload nor download was found in config")
 
-        aux.value='stopped'
-        aux.save()
-        info.status = 'stopped'
-        info.save()
+        if aux is not None:
+            aux.value='stopped'
+            aux.save()
+            info.status = 'stopped'
+            info.save()
+
+    # if request.POST.get('download'):
+    #
+    #     #params = {1:2, 3:4}
+    #     #script = Svrea_script(params=params, username=request.user.username)
+    #     #res = q.enqueue(script.run)
 
     if request.POST.get('download'):
-        q = Queue(connection = conn)
-        params = {1:2, 3:4}
+        q = Queue(connection=conn)
+        params = {'download': request.POST.get('download'),
+                  'forced' : True if request.POST.get('forced') is not None else False,
+                  'downloadLast' : True if request.POST.get('downloadLast') else False}
         script = Svrea_script(params=params, username=request.user.username)
         res = q.enqueue(script.run)
-    # if request.POST.get('download'):
-    #     params = {'download': request.POST.get('download'),
-    #               'forced' : True if request.POST.get('forced') is not None else False,
-    #               'downloadLast' : True if request.POST.get('downloadLast') else False}
-    #     script = Svrea_script(params=params, username=request.user.username)
-    #     if script.run() != 0:
-    #         messages.error(request, "Error. For details see logs")
-    #
-    # if request.POST.get('upload'):
-    #     params = {'upload' : True,
-    #               'forced' : True}
-    #     script = Svrea_script(params=params, username=request.user.username)
-    #     if script.run() != 0:
-    #         messages.error(request, "Error. For details see logs")
+
+
+    if request.POST.get('upload'):
+        q = Queue(connection=conn)
+        params = {'upload' : True,
+                  'forced' : True}
+        script = Svrea_script(params=params, username=request.user.username)
+        res = q.enqueue(script.run())
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
@@ -62,6 +66,7 @@ def script_run(request):
         "text" : '',
         "running_scripts" : running_scripts
     }
+    time.sleep(.01)
     return render(request, "svrea_script/run.html", context=context)
 
 
