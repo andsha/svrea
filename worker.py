@@ -8,10 +8,10 @@ from rq import Worker, Queue, Connection
 
 from manage import DEFAULT_SETTINGS_MODULE
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-f = open(BASE_DIR + '/svrea/.env', 'r')
-DATABASE_URL = f.readline().split('=')[1].strip().strip("'")
-os.environ.setdefault("DATABASE_URL", DATABASE_URL)
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# f = open(BASE_DIR + '/svrea/.env', 'r')
+# DATABASE_URL = f.readline().split('=')[1].strip().strip("'")
+# os.environ.setdefault("DATABASE_URL", DATABASE_URL)
 
 #**********************************************************************************
 
