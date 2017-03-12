@@ -27,15 +27,15 @@ INFO = 1103
 
 area_list = [['64', 'Skane'],
              ['160', 'Halland'],
-             # ['23', 'Vastra Gotalands'],
-             # ['2',  'Stockholm lan'],
-             # ['783', 'Kronobergs lan'],
-             # ['45', 'Blekinge lan'],
-             # ['381', 'Kalmar'],
-             # ['153', 'Jonkoping'],
-             # ['253', 'Ostergotland lan'],
-             # ['26', 'Sodermanlands lan'],
-             # ['145', 'Blekinge lan'],
+             ['23', 'Vastra Gotalands'],
+             ['2',  'Stockholm lan'],
+             ['783', 'Kronobergs lan'],
+             ['45', 'Blekinge lan'],
+             ['381', 'Kalmar'],
+             ['153', 'Jonkoping'],
+             ['253', 'Ostergotland lan'],
+             ['26', 'Sodermanlands lan'],
+             ['145', 'Blekinge lan'],
              ]
 area_list.sort(key = lambda x: int(x[0]) )
 
