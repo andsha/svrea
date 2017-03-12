@@ -55,7 +55,7 @@ def script_run(request):
                   'area' : request.POST.getlist('area')
                   }
         script = Svrea_script(params=params, username=request.user.username)
-        res = q.enqueue(script.run)
+        res = q.enqueue(script.run, timeout=7200)
 
 
     if request.POST.get('upload'):
@@ -63,7 +63,7 @@ def script_run(request):
         params = {'upload' : True,
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
-        res = q.enqueue(script.run)
+        res = q.enqueue(script.run, timeout=7200)
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
