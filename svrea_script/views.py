@@ -13,9 +13,11 @@ from django.db.models.functions import Length
 from rq import Queue
 from worker import conn
 
-class Len_Of_Field(Func):
-    function = 'EXTRACT'
-    template = '%(expressions)s::date'
+class Len_Of_JSON_Field(Func):
+    # function = 'length'
+    # template = "%(function)s(%(expressions)s::text)"
+    # select
+    template = "jsonb_array_length(COALESCE(%(expressions)s->'sold', %(expressions)s->'listings') )"
 
 
 @login_required(redirect_field_name = "", login_url="/")
@@ -127,7 +129,9 @@ def script_data(request):
         logout(request)
         return redirect("index")
 
-    info = Rawdata.objects.all().order_by('started').annotate(sizeofdata=Length('rawdata'))
+    info = Rawdata.objects.annotate(sizeofdata=Len_Of_JSON_Field('rawdata')).order_by('downloaded').all()
+    #for i in info:
+        #print(i.id, i.sizeofdata)
 
     context = {
         "text" : "You can see script data",

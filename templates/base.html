@@ -82,7 +82,7 @@
                                     {% if perms.svrea_script.can_see_script_logs %}
                                         <li><a href='{% url "script_logs"  %}'>Logs</a></li>
                                     {% endif %}
-                                    {% if perms.svrea_script.can_see_script_data %}
+                                    {% if perms.svrea_script.can_see_data %}
                                         <li><a href='{% url "script_data"  %}'>Data</a></li>
                                     {% endif %}
                                 </ul>

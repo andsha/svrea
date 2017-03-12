@@ -384,13 +384,13 @@ class Svrea_script():
         #print(self.options)
         if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
-            a = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
+            a, created = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
                                                                                 "value" : "run"})
             err += self.getDataFromWeb(info = info, latest = True if 'downloadLast' in self.options else False)
       # -----------------------------------------------------------------------------------
         if 'upload' in self.options and self.options['upload']:
             tolog(INFO, 'Uploading data')
-            a = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
+            a, created = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
                                                                          "value": "run"})
             err += self.uploadData(info=info)
 

@@ -26,15 +26,15 @@
                             <th>Area Code</th>
                             <th>Raw Data Size</th>
                         </tr>
-                        {% for data in rawdata %}
-                            <tr {% if script.uploaded == 't' %} class="uploadeddata"
+                        {% for i in info %}
+                            <tr {% if i.uploaded == True %} class="uploadeddata"
                                 {% endif %}>
-                                <td>{{script.id}}</td>
-                                <td>{{script.downloaded}}</td>
-                                <td>{{script.uploaded}}</td>
-                                <td>{{script.type}}</td>
-                                <td>{{script.area}}</td>
-                                <td>{{script.sizeofdata}}</td>
+                                <td>{{i.id}}</td>
+                                <td>{{i.downloaded}}</td>
+                                <td>{{i.uploaded}}</td>
+                                <td>{{i.type}}</td>
+                                <td>{{i.areacode}}</td>
+                                <td>{{i.sizeofdata}}</td>
                             </tr>
                         {% endfor %}
                     </table>
