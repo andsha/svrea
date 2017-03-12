@@ -58,7 +58,7 @@ def script_run(request):
         params = {'upload' : True,
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
-        res = q.enqueue(script.run())
+        res = q.enqueue(script.run)
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 

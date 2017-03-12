@@ -359,7 +359,7 @@ class Svrea_script():
         err = 0
         a = None
 
-        print(today_scripts)
+        #print(today_scripts)
         for s in today_scripts:
             #print(s.config, self.options, s.config == self.options )
             if s.config == self.options:
