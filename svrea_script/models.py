@@ -12,7 +12,9 @@ class Info(models.Model):
     class Meta:
         permissions = (("can_run_script", "Can run script"),
                        ("can_see_info", "Can See Info"),
-                       ("can_see_script_logs", "Can See Script Logs"))
+                       ("can_see_script_logs", "Can See Script Logs"),
+                       ("can_see_data", "Can See Data")
+                       )
 
 class Log(models.Model):
     when = models.DateTimeField(auto_now=True)

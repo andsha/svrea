@@ -25,6 +25,7 @@ from .views import (
 )
 
 from svrea_script.views import script_info as svrea_script_info
+from svrea_script.views import script_data as svrea_script_data
 from svrea_script.views import script_run as svrea_script_run
 from svrea_script.views import script_logs as svrea_script_logs
 
@@ -41,5 +42,6 @@ urlpatterns = [
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
     url(r'script_info$', svrea_script_info, name = 'script_info'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
-    url(r'script_logs$', svrea_script_logs, name = 'script_logs')
+    url(r'script_logs$', svrea_script_logs, name = 'script_logs'),
+    url(r'script_data$', svrea_script_data, name = 'script_data')
 ]

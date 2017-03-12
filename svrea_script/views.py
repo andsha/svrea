@@ -5,11 +5,17 @@ from django.contrib.auth import logout
 from django.contrib import messages
 
 from script.svrea_script import Svrea_script
-from svrea_script.models import Info, Aux, Log
+from svrea_script.models import Info, Aux, Log, Rawdata
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Func
+from django.db.models.functions import Length
 
 from rq import Queue
 from worker import conn
+
+class Len_Of_Field(Func):
+    function = 'EXTRACT'
+    template = '%(expressions)s::date'
 
 
 @login_required(redirect_field_name = "", login_url="/")
@@ -82,7 +88,7 @@ def script_info(request):
 
     context = {
         "text" : "You can see script info",
-        "history" : info
+        "info" : info
     }
     return render(request, "svrea_script/info.html", context=context)
 
@@ -111,3 +117,20 @@ def script_logs(request):
         "logs" : logs
     }
     return render(request, "svrea_script/logs.html", context=context)
+
+
+@login_required(redirect_field_name = "", login_url="/")
+@permission_required('svrea_script.can_see_data')
+def script_data(request):
+
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect("index")
+
+    info = Rawdata.objects.all().order_by('started').annotate(sizeofdata=Length('rawdata'))
+
+    context = {
+        "text" : "You can see script data",
+        "info" : info
+    }
+    return render(request, "svrea_script/data.html", context=context)
