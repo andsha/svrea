@@ -66,7 +66,7 @@ def script_run(request):
         "text" : '',
         "running_scripts" : running_scripts
     }
-    time.sleep(.01)
+    time.sleep(.1)
     return render(request, "svrea_script/run.html", context=context)
 
 

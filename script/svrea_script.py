@@ -710,6 +710,8 @@ class Svrea_script():
         info.status = 'done'
         info.save()
 
+        return 0
+
 
 
 # if __name__ == "__main__":
