@@ -71,20 +71,20 @@ def script_run(request):
 
 
 @login_required(redirect_field_name = "", login_url="/")
-@permission_required('svrea_script.can_see_history')
-def script_history(request):
+@permission_required('svrea_script.can_see_info')
+def script_info(request):
 
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect("index")
 
-    history = Info.objects.all().order_by('started')
+    info = Info.objects.all().order_by('started')
 
     context = {
-        "text" : "You can see script history",
-        "history" : history
+        "text" : "You can see script info",
+        "history" : info
     }
-    return render(request, "svrea_script/history.html", context=context)
+    return render(request, "svrea_script/info.html", context=context)
 
 
 @login_required(redirect_field_name = "", login_url="/")

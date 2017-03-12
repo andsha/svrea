@@ -33,7 +33,7 @@
                             <th>Status</th>
                             <th>Comment</th>
                         </tr>
-                        {% for script in history %}
+                        {% for script in info %}
                             <tr {% if script.status == 'started' %} class="runningscript"
                                 {% elif script.status == 'stopped' %} class="stoppedscript"
                                 {% elif script.status == 'done' %} class="successfulscript"

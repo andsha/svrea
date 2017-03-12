@@ -74,7 +74,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Script <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     {% if perms.svrea_script.can_see_history %}
-                                        <li><a href='{% url "script_history"  %}'>History</a></li>
+                                        <li><a href='{% url "script_info"  %}'>Info</a></li>
                                     {% endif %}
                                     {% if perms.svrea_script.can_run_script %}
                                         <li><a href='{% url "script_run"  %}'>Run</a></li>

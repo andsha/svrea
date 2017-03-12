@@ -11,7 +11,7 @@ class Info(models.Model):
 
     class Meta:
         permissions = (("can_run_script", "Can run script"),
-                       ("can_see_history", "Can See History"),
+                       ("can_see_info", "Can See Info"),
                        ("can_see_script_logs", "Can See Script Logs"))
 
 class Log(models.Model):
