@@ -198,7 +198,10 @@ class Svrea_script():
 
                 data = urlopen(url).read().decode('utf-8')
                 dic = json.loads(data)
-                raw_data = Rawdata(areacode=area, rawdata=dic, type=self.options['download'])
+                raw_data = Rawdata(areacode=area,
+                                   rawdata=dic,
+                                   type=self.options['download'],
+                                   downloaded=datetime.datetime.now())
                 raw_data.save()
                 offset += limit
 
@@ -429,7 +432,8 @@ class Svrea_script():
                     )
                     newpriceobj.save()
 
-            data.uploaded = True
+            data.uploaded = datetime.datetime.now()
+            data.isuploaded = True
             data.save()
 
         # aux = Aux.objects.get(key='UploadAuxKey')

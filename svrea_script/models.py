@@ -23,10 +23,11 @@ class Log(models.Model):
 
 
 class Rawdata(models.Model):
-    downloaded          = models.DateTimeField(auto_now=True)
-    uploaded            = models.BooleanField(default=False)
-    type                = models.CharField(max_length = 50)
-    areacode            = models.IntegerField()
+    downloaded          = models.DateTimeField(null=True, blank=True)
+    uploaded            = models.DateTimeField(null=True, blank=True)
+    isuploaded          = models.BooleanField(default=False)
+    type                = models.CharField(max_length = 50, null=True, blank=True)
+    areacode            = models.IntegerField(null=True, blank=True)
     rawdata             = JSONField()
 
 
