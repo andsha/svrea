@@ -225,7 +225,7 @@ class Svrea_script():
 
 
     def uploadData(self, info=None):
-        data_to_upload = Rawdata.objects.filter(uploaded__exact=False). \
+        data_to_upload = Rawdata.objects.filter(isuploaded__exact=False). \
             annotate(downloaded_date=Datetime_to_date('downloaded')). \
             order_by('downloaded_date', '-type', 'areacode')
 
