@@ -28,7 +28,7 @@
                             <th>Raw Data Size</th>
                         </tr>
                         {% for i in info %}
-                            <tr {% if i.uploaded == True %} class="uploadeddata"
+                            <tr {% if i.isuploaded == True %} class="uploadeddata"
                                 {% endif %}>
                                 <td>{{i.id}}</td>
                                 <td>{{i.downloaded}}</td>
