@@ -3,9 +3,10 @@ import os
 from manage import DEFAULT_SETTINGS_MODULE
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
 import django
-django.setup()
+
 
 def job():
+    django.setup()
     alist = [x[0] for x in area_list]
     uname = 'dailyjob'
     #********************************************************************
