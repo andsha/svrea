@@ -25,17 +25,16 @@ WARNING = 1101
 ERROR = 1102
 INFO = 1103
 
-area_list = [['64', 'Skane'],
+area_list = [#['64', 'Skane'],
              ['160', 'Halland'],
-             ['23', 'Vastra Gotalands'],
-             ['2',  'Stockholm lan'],
-             ['783', 'Kronobergs lan'],
+             #['23', 'Vastra Gotalands'],
+             #['2',  'Stockholm lan'],
+             #['783', 'Kronobergs lan'],
              ['45', 'Blekinge lan'],
-             ['381', 'Kalmar'],
-             ['153', 'Jonkoping'],
-             ['253', 'Ostergotland lan'],
-             ['26', 'Sodermanlands lan'],
-             ['145', 'Blekinge lan'],
+             # ['381', 'Kalmar'],
+             # ['153', 'Jonkoping'],
+             # ['253', 'Ostergotland lan'],
+             # ['26', 'Sodermanlands lan'],
              ]
 area_list.sort(key = lambda x: int(x[0]) )
 
