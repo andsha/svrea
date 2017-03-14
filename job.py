@@ -1,4 +1,4 @@
-from script.svrea_script import area_list, Svrea_script
+
 import os
 from manage import DEFAULT_SETTINGS_MODULE
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
@@ -7,6 +7,7 @@ import django
 
 def job():
     django.setup()
+    from script.svrea_script import area_list, Svrea_script
     alist = [x[0] for x in area_list]
     uname = 'dailyjob'
     #********************************************************************

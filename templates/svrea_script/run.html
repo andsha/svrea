@@ -19,7 +19,7 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
-
+<form method="post" > {% csrf_token %}
 <div class="full">
     <div class="container-fluid ">
         <div class="row">
@@ -45,7 +45,7 @@
                                     <td>{{script.config}}</td>
                                     <td>{{script.status}}</td>
                                     <td>{{script.comment}}</td>
-                                    <td><button type="submit" name="stopScript" value="stopScript_{{script.id}}">Stop</button><td>
+                                    <td><button type="submit" name="stopScript" value="stopScript_{{script.id}}">Stop</button></td>
                                 </tr>
                             {% endfor %}
                         </table>
@@ -53,7 +53,7 @@
                 </div>
             </div>
         </div>
-        <form method="post" > {% csrf_token %}
+
             <div class="row">
                 <div class="col-sm-4 text-center">
                     <div class="panel panel-primary">
@@ -84,14 +84,9 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-        </form>
     </div>
 </div>
+</form>
 
 {% endblock %}
 
