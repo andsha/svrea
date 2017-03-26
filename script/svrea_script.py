@@ -115,13 +115,13 @@ class Svrea_script():
             a, created = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
                                                                                 "value" : "run"})
             err += self.getDataFromWeb(info = info, latest = True if 'downloadLast' in self.options else False)
-      # -----------------------------------------------------------------------------------
+        # -----------------------------------------------------------------------------------
         if 'upload' in self.options and self.options['upload']:
             tolog(INFO, 'Uploading data')
             a, created = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
                                                                          "value": "run"})
             err += self.uploadData(info=info)
-
+        # -----------------------------------------------------------------------------------
         if a is not None:
             a.value = 'stop'
             a.save()
@@ -444,8 +444,3 @@ class Svrea_script():
 
         return 0
 
-
-
-# if __name__ == "__main__":
-#     prog = svrea_script()
-#     sys.exit(prog.run())

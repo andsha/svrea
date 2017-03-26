@@ -86,6 +86,8 @@ DATABASES = {
 
 
 db_from_env = dj_database_url.config()
+db_from_env['OPTIONS'] = {'options':'-c search_path=svrea_data'}
+#print(db_from_env)
 DATABASES['default'].update(db_from_env)
 
 # *************************************  Password validation **************************

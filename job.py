@@ -7,10 +7,11 @@ import django
 
 def job():
     django.setup()
-    from script.svrea_script import area_list, Svrea_script
+    from script.svrea_script import area_list, Svrea_script, tolog, INFO
     alist = [x[0] for x in area_list]
     uname = 'dailyjob'
     #********************************************************************
+    tolog(INFO, 'start job')
     params = {'download': 'sold',
               'downloadLast': True,
               'forced': False,
@@ -29,3 +30,4 @@ def job():
               'forced': True}
     script = Svrea_script(params=params, username=uname)
     script.run()
+    tolog(INFO, 'finish job')
