@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-SCHEMA_DATA = 'svrea'
-
 class Info(models.Model):
     started = models.DateTimeField(auto_now=True)
     user_name = models.CharField(max_length=50, default='None')
@@ -11,7 +9,6 @@ class Info(models.Model):
     comment = models.CharField(max_length=500, default='None')
 
     class Meta:
-        db_table = SCHEMA_DATA+'.info'
         permissions = (("can_run_script", "Can Run Script"),
                        ("can_see_info", "Can See Info"),
                        ("can_see_script_logs", "Can See Script Logs"),
@@ -23,9 +20,6 @@ class Log(models.Model):
     level = models.CharField(max_length=20)
     entry = models.CharField(max_length=500, default="None")
 
-    class Meta:
-        db_table = SCHEMA_DATA + 'log'
-
 
 class Rawdata(models.Model):
     downloaded          = models.DateTimeField(null=True, blank=True)
@@ -35,17 +29,11 @@ class Rawdata(models.Model):
     areacode            = models.IntegerField(null=True, blank=True)
     rawdata             = JSONField()
 
-    class Meta:
-        db_table = SCHEMA_DATA + 'rawdata'
-
 
 class Aux(models.Model):
     changed             = models.DateTimeField(auto_now=True)
     key                 = models.CharField(max_length=200)
     value               = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = SCHEMA_DATA + 'aux'
 
 
 class Listings(models.Model):
@@ -70,18 +58,12 @@ class Listings(models.Model):
     dateinactive        = models.DateTimeField(null=True, blank=True)
     latestprice         = models.IntegerField(null=True, blank=True)
 
-    class Meta:
-        db_table = SCHEMA_DATA + 'listings'
-
 
 class Source(models.Model):
     sourceid            = models.AutoField(primary_key=True)
     name                = models.CharField(max_length=250, null=True, blank=True)
     sourcetype          = models.CharField(max_length=50, null=True, blank=True)
     url                 = models.CharField(max_length=250, null=True, blank=True)
-
-    class Meta:
-        db_table = SCHEMA_DATA + 'source'
 
 
 class Address(models.Model):
@@ -94,7 +76,6 @@ class Address(models.Model):
     areaname            = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
-        db_table = SCHEMA_DATA + 'address'
         index_together = ['street', 'city', 'municipality', 'county' ]
 
 
@@ -103,9 +84,5 @@ class Pricehistory(models.Model):
     price               = models.IntegerField(null=True, blank=True)
     date                = models.DateTimeField(null=True, blank=True)
     issoldprice         = models.BooleanField()
-
-    class Meta:
-        db_table = SCHEMA_DATA + 'pricehistory'
-
 
 
