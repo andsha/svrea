@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-SCHEMA_DATA = 'svrea_data'
+SCHEMA_DATA = 'svrea'
 
 class Info(models.Model):
     started = models.DateTimeField(auto_now=True)
@@ -24,7 +24,7 @@ class Log(models.Model):
     entry = models.CharField(max_length=500, default="None")
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"log'
+        db_table = SCHEMA_DATA + 'log'
 
 
 class Rawdata(models.Model):
@@ -36,7 +36,7 @@ class Rawdata(models.Model):
     rawdata             = JSONField()
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"rawdata'
+        db_table = SCHEMA_DATA + 'rawdata'
 
 
 class Aux(models.Model):
@@ -45,7 +45,7 @@ class Aux(models.Model):
     value               = models.CharField(max_length=200)
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"aux'
+        db_table = SCHEMA_DATA + 'aux'
 
 
 class Listings(models.Model):
@@ -71,7 +71,7 @@ class Listings(models.Model):
     latestprice         = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"listings'
+        db_table = SCHEMA_DATA + 'listings'
 
 
 class Source(models.Model):
@@ -81,7 +81,7 @@ class Source(models.Model):
     url                 = models.CharField(max_length=250, null=True, blank=True)
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"source'
+        db_table = SCHEMA_DATA + 'source'
 
 
 class Address(models.Model):
@@ -94,7 +94,7 @@ class Address(models.Model):
     areaname            = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"address'
+        db_table = SCHEMA_DATA + 'address'
         index_together = ['street', 'city', 'municipality', 'county' ]
 
 
@@ -105,7 +105,7 @@ class Pricehistory(models.Model):
     issoldprice         = models.BooleanField()
 
     class Meta:
-        db_table = SCHEMA_DATA + '\".\"pricehistory'
+        db_table = SCHEMA_DATA + 'pricehistory'
 
 
 
