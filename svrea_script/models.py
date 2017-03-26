@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-SCHEMA_DATA = 'svrea_data'
+SCHEMA_DATA = '"svrea_data"'
 
 class Info(models.Model):
     started = models.DateTimeField(auto_now=True)
@@ -71,7 +71,7 @@ class Listings(models.Model):
     latestprice         = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        db_table = SCHEMA_DATA + '.listings'
+        db_table = SCHEMA_DATA + '."listings"'
 
 
 class Source(models.Model):
