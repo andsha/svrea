@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'svrea_data',
-    'svrea_script'
+    'svrea_script',
+    'svrea_etl',
 ]
 
 MIDDLEWARE = [

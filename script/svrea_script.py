@@ -13,6 +13,7 @@ import re
 
 from django.db.models import Func
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
+from svrea_etl.models import EtlHistory, EtlListings
 
 gCallerId = 'scr06as'
 gUniqueKey = '3i0WnjAooYIHhgnyUKF597moNCYnt449kZbK3YAR'
@@ -67,6 +68,7 @@ class Svrea_script():
              self.options.pop('forced', None)
 
         self.username = username
+        self.today = datetime.date.today()
 
     def run(self):
         if self.options is None:
@@ -121,6 +123,12 @@ class Svrea_script():
             a, created = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
                                                                          "value": "run"})
             err += self.uploadData(info=info)
+        # -----------------------------------------------------------------------------------
+        if 'analyze' in self.options and self.options['analyze']:
+            tolog(INFO, 'Analyzing Data')
+            a, created = Aux.objects.update_or_create(key='AnalyzeAuxKey', defaults={"key": "AnalyzeAuxKey",
+                                                                         "value": "run"})
+            err += self.analyzeData(info=info)
         # -----------------------------------------------------------------------------------
         if a is not None:
             a.value = 'stop'
@@ -443,4 +451,72 @@ class Svrea_script():
         info.save()
 
         return 0
+
+    def analyzeData(self, info):
+
+        stages = [
+            'init',
+            'check_tables',
+            'fill_listings_daily_stats',
+            'finish'
+        ]
+
+        for idx, stage in enumerate(stages):
+            (hist, created) = EtlHistory.objects.get_or_create(
+                historydate__date = self.today,
+                stage = stage,
+                defaults = {
+                    'historydate'   : self.today,
+                    'stage'         : stage,
+                    'status'        : 'started'
+                }
+            )
+
+            if not created:
+                if hist.status == 'done' and not self.forced:
+                    tolog(INFO, 'Already run for %s' %self.today)
+                    return 1
+                else:
+                    hist.historydate = self.today
+                    hist.status = 'started'
+                    hist.save()
+
+            if getattr(self, stage)() == 0:
+                hist.status = 'done'
+                hist.save()
+            else:
+                hist.status = 'error'
+                hist.save()
+
+
+    def init(self):
+        return 0
+
+
+    def chackTables(self):
+        return 0
+
+
+    def fill_listings_daily_stats(self):
+
+        return 0
+
+
+    def finish(self):
+        return 0
+
+
+
+
+
+
+
+
+
+
+
+
+        (etl, etl_updated) = EtlListings.objects.update_or_create(
+
+        )
 
