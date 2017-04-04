@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-import os
+import os,sys
 from urllib.request import urlopen
 from hashlib import sha1
 import string
@@ -11,9 +11,10 @@ import random
 import time
 import re
 
-from django.db.models import Func
+from django.db.models import Func, Count, F
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
+import logging
 
 gCallerId = 'scr06as'
 gUniqueKey = '3i0WnjAooYIHhgnyUKF597moNCYnt449kZbK3YAR'
@@ -63,14 +64,22 @@ class Svrea_script():
         self.options = params#self.handleParams(params)
         self.forced = False
 
-        if 'forced' in self.options and self.options['forced']:
-             self.forced = True
+        if 'forced' in self.options:
+             if self.options['forced']:
+                self.forced = True
              self.options.pop('forced', None)
 
         self.username = username
         self.today = datetime.date.today()
 
+
     def run(self):
+        logging.basicConfig(filename='/tmp/log',
+                           filemode='a',
+                           format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                           datefmt='%H:%M:%S',
+                           level=logging.DEBUG)
+
         if self.options is None:
             tolog(ERROR, "no known parameters were found: %s" % self.options)
             return 1
@@ -111,7 +120,7 @@ class Svrea_script():
             l.save()
             info = l
         # _________________________________________________________________________________________
-        #print(self.options)
+        print(self.options)
         if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
             a, created = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
@@ -474,7 +483,7 @@ class Svrea_script():
 
             if not created:
                 if hist.status == 'done' and not self.forced:
-                    tolog(INFO, 'Already run for %s' %self.today)
+                    tolog(INFO, '%s Already run for %s' %(stage, self.today))
                     return 1
                 else:
                     hist.historydate = self.today
@@ -488,16 +497,73 @@ class Svrea_script():
                 hist.status = 'error'
                 hist.save()
 
+        info.status = 'done'
+        info.save()
+        return 0
+
 
     def init(self):
         return 0
 
 
-    def chackTables(self):
+    def check_tables(self):
         return 0
 
 
     def fill_listings_daily_stats(self):
+        geographic_types = ['county', 'municipality']
+        logging.info('bebebe')
+
+        for gtype in geographic_types:
+            listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality')\
+                .filter(isactive__exact=True)\
+                .annotate(listing_counts=Count('booliid'))
+
+            for l in listing:
+                logging.info(l)
+
+            for l in listing:
+
+                etllisting = EtlListings.objects.update_or_create(
+                    record_date             = self.today,
+                    geographic_type         = gtype,
+                    geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
+                    active_listings         = l['listing_counts'] )
+
+            #     sold_today
+            #     listing_price_avg
+            #     listing_price_85
+            #     listing_price_15
+            #     listing_price_med
+            #     listing_price_sqm_avg
+            #     listing_price_sqm_med
+            #     listing_price_sqm_85 =
+            #     listing_price_sqm_15 =
+            #     listing_area_avg =
+            #     listing_area_max =
+            #     listing_area_min =
+            #     listing_area_med =
+            #     listing_rent_avg =
+            #     listing_rent_max =
+            #     listing_rent_min =
+            #     listing_rent_med =
+            #     sold_price_avg =
+            #     sold_price_med =
+            #     sold_price_85 =
+            #     sold_price_15 =
+            #     sold_price_sqm_avg =
+            #     sold_price_sqm_med =
+            #     sold_price_sqm_85 =
+            #     sold_price_sqm_15 =
+            #     sold_area_avg =
+            #     sold_area_max =
+            #     sold_area_min =
+            #     sold_area_med =
+            #     sold_rent_avg =
+            #     sold_rent_max =
+            #     sold_rent_min =
+            #     sold_rent_med =
+            # )
 
         return 0
 
@@ -508,15 +574,4 @@ class Svrea_script():
 
 
 
-
-
-
-
-
-
-
-
-        (etl, etl_updated) = EtlListings.objects.update_or_create(
-
-        )
 

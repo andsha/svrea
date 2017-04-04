@@ -65,6 +65,14 @@ def script_run(request):
         script = Svrea_script(params=params, username=request.user.username)
         res = q.enqueue(script.run, timeout=7200)
 
+    if request.POST.get('analyze'):
+        q = Queue(connection=conn)
+        params = {'analyze' : True,
+                  'forced' : True}
+        script = Svrea_script(params=params, username=request.user.username)
+
+        res = q.enqueue(script.run, timeout=7200)
+
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
     context = {
