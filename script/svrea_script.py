@@ -120,12 +120,11 @@ class Svrea_script():
             l.save()
             info = l
         # _________________________________________________________________________________________
-        print(self.options)
         if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
             a, created = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
                                                                                 "value" : "run"})
-            err += self.getDataFromWeb(info = info, latest = True if 'downloadLast' in self.options else False)
+            err += self.getDataFromWeb(info = info, latest = True if 'downloadLast' in self.options and self.options['downloadLast'] else False)
         # -----------------------------------------------------------------------------------
         if 'upload' in self.options and self.options['upload']:
             tolog(INFO, 'Uploading data')
@@ -173,6 +172,7 @@ class Svrea_script():
         #              # '145', # Blekinge lan
         #              ]  #
 
+        #tolog(INFO,latest)
         for idx, area in enumerate(self.options['area']):
             tolog(INFO, "Donwloading for area %s" % area)
             url = urlBase + \
