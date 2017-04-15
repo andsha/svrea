@@ -190,8 +190,10 @@ class Svrea_script():
 
             offset = 0
             limit = 300
+            offset = limit*225
 
             while 1:
+                tolog(INFO, "\n Beginning of cycle. offset=" + str(offset)+' limit='+str(limit))
                 if Aux.objects.get(key = 'DownloadAuxKey').value != 'run':
                     info.status = 'stopped'
                     info.save()
@@ -212,13 +214,16 @@ class Svrea_script():
                       '&unique=' + uniqueString + \
                       '&hash=' + str(hashstr)
 
+                tolog(INFO,'trying to tetch url %s' %url)
                 data = urlopen(url).read().decode('utf-8')
+                tolog(INFO,'fetch OK')
                 dic = json.loads(data)
                 raw_data = Rawdata(areacode=area,
                                    rawdata=dic,
                                    type=self.options['download'],
                                    downloaded=datetime.datetime.now())
                 raw_data.save()
+                tolog(INFO,'data saved. waiting')
                 offset += limit
 
                 if offset >= maxcount:
