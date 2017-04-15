@@ -3,4 +3,4 @@ from worker import conn
 from job import job
 
 q = Queue(connection=conn)
-q.enqueue(job, timeout=7200)
+q.enqueue(job, timeout=36000)
