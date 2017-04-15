@@ -190,7 +190,7 @@ class Svrea_script():
 
             offset = 0
             limit = 300
-            offset = limit*225
+            #offset = limit*225
 
             while 1:
                 tolog(INFO, "\n Beginning of cycle. offset=" + str(offset)+' limit='+str(limit))
