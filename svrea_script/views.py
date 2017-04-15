@@ -13,6 +13,8 @@ from django.db.models.functions import Length
 from rq import Queue
 from worker import conn
 
+workertimeout = 36000
+
 class Len_Of_JSON_Field(Func):
     # function = 'length'
     # template = "%(function)s(%(expressions)s::text)"
@@ -55,7 +57,7 @@ def script_run(request):
                   'area' : request.POST.getlist('area')
                   }
         script = Svrea_script(params=params, username=request.user.username)
-        res = q.enqueue(script.run, timeout=7200)
+        res = q.enqueue(script.run, timeout=workertimeout)
 
 
     if request.POST.get('upload'):
@@ -63,7 +65,7 @@ def script_run(request):
         params = {'upload' : True,
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
-        res = q.enqueue(script.run, timeout=7200)
+        res = q.enqueue(script.run, timeout=workertimeout)
 
     if request.POST.get('analyze'):
         q = Queue(connection=conn)
@@ -71,7 +73,7 @@ def script_run(request):
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
 
-        res = q.enqueue(script.run, timeout=7200)
+        res = q.enqueue(script.run, timeout=workertimeout)
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
