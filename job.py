@@ -17,7 +17,10 @@ def job():
               'forced': False,
               'area': alist}
     script = Svrea_script(params=params, username=uname)
-    script.run()
+    try:
+        script.run()
+    except Exception as e:
+        tolog(INFO, e)
     # ********************************************************************
     params = {'download': 'listings',
               'downloadLast': False,
