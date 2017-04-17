@@ -54,7 +54,7 @@ class Listings(models.Model):
     floor               = models.CharField(max_length=10, null=True, blank=True)
     isnewconstruction   = models.NullBooleanField(null=True, blank=True)
     datesold            = models.DateTimeField(null=True, blank=True)
-    isactive            = models.NullBooleanField(db_index=True, null=True, blank=True)
+    isactive            = models.NullBooleanField(null=True, blank=True)
     dateinactive        = models.DateTimeField(null=True, blank=True)
     latestprice         = models.IntegerField(null=True, blank=True)
 

@@ -1,6 +1,35 @@
 {% extends '../base.html' %}
 {% load humanize %}
 {% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+    $(function(){
+        $("#etlFromDate").datepicker({
+            defaultDate: new Date(),
+            dateFormat: "yy-mm-dd",
+            onSelect: function(dateStr)
+            {
+                $("#etlToDate").datepicker("option",{ minDate: new Date(dateStr)})
+            }
+        });
+        $("#etlFromDate").datepicker("setDate", new Date());
+        $('#etlToDate').datepicker({
+            defaultDate: new Date(),
+            dateFormat: "yy-mm-dd",
+            onSelect: function(dateStr) {
+                toDate = new Date(dateStr);
+            }
+        });
+        $("#etlToDate").datepicker("setDate", new Date());
+    });
+
+    </script>
+{% endblock %}
+
 {% block content %}
 
 <style>
@@ -18,6 +47,8 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+
 
 <form method="post" > {% csrf_token %}
 <div class="full">
@@ -63,7 +94,7 @@
                              {% for area in area_list %}
                                 <option data-subtext="{{area.1}}" selected>{{area.0}}</option>
                              {% endfor %}
-                             </select>
+                             </select><br/>
                              <button type="submit" name="download" value="listings">Listings</button>
                              <button type="submit" name="download" value="sold">Sold</button><br>
                              <input type="checkbox" name="downloadLast" value="downloadLast" checked> Last only
@@ -80,6 +111,8 @@
                 <div class="col-sm-4 text-center">
                     <div class="panel panel-primary">
                         <div class="panel-heading text-center">ETL</div>
+                        From<input type="text" id="etlFromDate" name="etlFromDate"><br/>
+                        To<input type="text" id="etlToDate" name="etlToDate">
                         <div class="btns"><button type="submit" name="analyze" value="analyze">Do ETL</button></div>
                     </div>
                 </div>

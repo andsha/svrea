@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, F
+from django.db.models import Func, Count, Q
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
 import logging
@@ -193,7 +193,7 @@ class Svrea_script():
             #offset = limit*225
 
             while 1:
-                tolog(INFO, "\n Beginning of cycle. offset=" + str(offset)+' limit='+str(limit))
+                #tolog(INFO, "\n Beginning of cycle. offset=" + str(offset)+' limit='+str(limit))
                 if Aux.objects.get(key = 'DownloadAuxKey').value != 'run':
                     info.status = 'stopped'
                     info.save()
@@ -214,16 +214,16 @@ class Svrea_script():
                       '&unique=' + uniqueString + \
                       '&hash=' + str(hashstr)
 
-                tolog(INFO,'trying to tetch url %s' %url)
+                #tolog(INFO,'trying to tetch url %s' %url)
                 data = urlopen(url).read().decode('utf-8')
-                tolog(INFO,'fetch OK')
+                #tolog(INFO,'fetch OK')
                 dic = json.loads(data)
                 raw_data = Rawdata(areacode=area,
                                    rawdata=dic,
                                    type=self.options['download'],
                                    downloaded=datetime.datetime.now())
                 raw_data.save()
-                tolog(INFO,'data saved. waiting')
+                #tolog(INFO,'data saved. waiting')
                 offset += limit
 
                 if offset >= maxcount:
@@ -467,70 +467,72 @@ class Svrea_script():
         return 0
 
     def analyzeData(self, info):
-
         stages = [
             'init',
             'check_tables',
             'fill_listings_daily_stats',
             'finish'
         ]
+        datefrom = datetime.datetime.strptime(self.options['etlRange'].split(':')[0], "%Y-%m-%d")
+        dateto = datetime.datetime.strptime(self.options['etlRange'].split(':')[1], "%Y-%m-%d")
+        today = datefrom
 
-        for idx, stage in enumerate(stages):
-            (hist, created) = EtlHistory.objects.get_or_create(
-                historydate__date = self.today,
-                stage = stage,
-                defaults = {
-                    'historydate'   : self.today,
-                    'stage'         : stage,
-                    'status'        : 'started'
-                }
-            )
+        while today <= dateto:
+            for idx, stage in enumerate(stages):
+                (hist, created) = EtlHistory.objects.get_or_create(
+                    historydate__date = self.today,
+                    etldate = today,
+                    stage = stage,
+                    defaults = {
+                        'historydate'   : self.today,
+                        'stage'         : stage,
+                        'status'        : 'started'
+                    }
+                )
 
-            if not created:
-                if hist.status == 'done' and not self.forced:
-                    tolog(INFO, '%s Already run for %s' %(stage, self.today))
-                    return 1
-                else:
-                    hist.historydate = self.today
-                    hist.status = 'started'
+                if not created:
+                    if hist.status == 'done' and not self.forced:
+                        tolog(INFO, '%s Already run for %s' %(stage, self.today))
+                        return 1
+                    else:
+                        hist.historydate = self.today
+                        hist.status = 'started'
+                        hist.save()
+
+                if getattr(self, stage)(today) == 0:
+                    hist.status = 'done'
                     hist.save()
-
-            if getattr(self, stage)() == 0:
-                hist.status = 'done'
-                hist.save()
-            else:
-                hist.status = 'error'
-                hist.save()
+                else:
+                    hist.status = 'error'
+                    hist.save()
 
         info.status = 'done'
         info.save()
         return 0
 
 
-    def init(self):
+    def init(self, *args):
         return 0
 
 
-    def check_tables(self):
+    def check_tables(self, *args):
         return 0
 
 
-    def fill_listings_daily_stats(self):
+    def fill_listings_daily_stats(self, today):
         geographic_types = ['county', 'municipality']
-        logging.info('bebebe')
+        #logging.info('bebebe')
 
         for gtype in geographic_types:
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality')\
-                .filter(isactive__exact=True)\
+                .filter(Q(datepublished__date_lte = today) &
+                        (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
                 .annotate(listing_counts=Count('booliid'))
 
             for l in listing:
-                logging.info(l)
 
-            for l in listing:
-
-                etllisting = EtlListings.objects.update_or_create(
-                    record_date             = self.today,
+                (etllisting, created) = EtlListings.objects.update_or_create(
+                    record_date             = today,
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
                     active_listings         = l['listing_counts'] )

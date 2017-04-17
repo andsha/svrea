@@ -26,7 +26,7 @@ class Len_Of_JSON_Field(Func):
 @permission_required('svrea_script.can_run_script')
 def script_run(request):
     #print(request.POST)
-
+    # return 0
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect("index")
@@ -40,8 +40,10 @@ def script_run(request):
             aux = Aux.objects.get(key='UploadAuxKey')
         elif 'download' in info.config:
             aux = Aux.objects.get(key='DownloadAuxKey')
+        elif 'analyze' in info.config:
+            aux = Aux.objects.get(key='AnalyzeAuxKey')
         else:
-            messages.error(request, "neither upload nor download was found in config")
+            messages.error(request, "Action is not one of those: Upload, Download, Analyze")
 
         if aux is not None:
             aux.value='stopped'
@@ -70,7 +72,9 @@ def script_run(request):
     if request.POST.get('analyze'):
         q = Queue(connection=conn)
         params = {'analyze' : True,
-                  'forced' : True}
+                  'forced' : True,
+                  'etlRange' : "%s:%s" %(request.POST.get('etlFromDate'), request.POST.get('etlToDate'))
+                  }
         script = Svrea_script(params=params, username=request.user.username)
 
         res = q.enqueue(script.run, timeout=workertimeout)
