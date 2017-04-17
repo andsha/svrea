@@ -13,7 +13,7 @@ from django.db.models.functions import Length
 from rq import Queue
 from worker import conn
 
-workertimeout = 36000
+from globalvars import workertimeout
 
 class Len_Of_JSON_Field(Func):
     # function = 'length'
