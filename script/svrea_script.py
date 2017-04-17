@@ -506,6 +506,8 @@ class Svrea_script():
                     hist.status = 'error'
                     hist.save()
 
+            today += datetime.timedelta(days=1)
+
         info.status = 'done'
         info.save()
         return 0
@@ -525,7 +527,7 @@ class Svrea_script():
 
         for gtype in geographic_types:
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality')\
-                .filter(Q(datepublished__date_lte = today) &
+                .filter(Q(datepublished__date__lte = today) &
                         (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
                 .annotate(listing_counts=Count('booliid'))
 
@@ -575,7 +577,7 @@ class Svrea_script():
         return 0
 
 
-    def finish(self):
+    def finish(self, *args):
         return 0
 
 
