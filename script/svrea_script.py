@@ -301,7 +301,7 @@ class Svrea_script():
                 if 'city' in listing['location']['address']:
                     city = listing['location']['address']['city']
 
-                if 'region' is in listing['location']:
+                if 'region' in listing['location']:
                     if 'countyName' in listing['location']['region']:
                         county = listing['location']['region']['countyName']
                     if 'municipalityName' in listing['location']['region']:
