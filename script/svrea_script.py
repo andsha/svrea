@@ -300,12 +300,15 @@ class Svrea_script():
 
                 if 'city' in listing['location']['address']:
                     city = listing['location']['address']['city']
-                if 'countyName' in listing['location']['region']:
-                    county = listing['location']['region']['countyName']
-                if 'municipalityName' in listing['location']['region']:
-                    municipality = listing['location']['region']['municipalityName']
-                    if city is None:
-                        city = municipality
+
+                if 'region' is in listing['location']:
+                    if 'countyName' in listing['location']['region']:
+                        county = listing['location']['region']['countyName']
+                    if 'municipalityName' in listing['location']['region']:
+                        municipality = listing['location']['region']['municipalityName']
+                        if city is None:
+                            city = municipality
+
                 if 'namedAreas' in listing['location']:
                     areaname = listing['location']['namedAreas']
 
