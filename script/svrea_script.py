@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q
+from django.db.models import Func, Count, Q, Avg
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
 import logging
@@ -532,7 +532,7 @@ class Svrea_script():
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality')\
                 .filter(Q(datepublished__date__lte = today) &
                         (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
-                .annotate(listing_counts=Count('booliid'))
+                .annotate(listing_counts=Count('booliid'), listing_price_avg = Avg('latestprice'))
 
             for l in listing:
 
@@ -540,9 +540,10 @@ class Svrea_script():
                     record_date             = today,
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
-                    active_listings         = l['listing_counts'] )
+                    active_listings         = l['listing_counts'],
+                    listing_price_avg       = l['listing_price_avg'] )
 
-            #     sold_today
+
             #     listing_price_avg
             #     listing_price_85
             #     listing_price_15
@@ -559,6 +560,8 @@ class Svrea_script():
             #     listing_rent_max =
             #     listing_rent_min =
             #     listing_rent_med =
+            #
+                # sold_today
             #     sold_price_avg =
             #     sold_price_med =
             #     sold_price_85 =
