@@ -7,7 +7,7 @@ import datetime
 
 
 def job():
-    today = datetime.date.today()
+    yesterday = datetime.date.today() - datetime.timedelta(days=1)
     django.setup()
     from script.svrea_script import area_list, Svrea_script, tolog, INFO
     alist = [x[0] for x in area_list]
@@ -43,8 +43,9 @@ def job():
         tolog(INFO, e)
     #********************************************************************
     params = {'analyze': True,
-              'etlRange': '%s:%s' %(today.strftime('%Y-%m-%d'),
-                                    today.strftime('%Y-%m-%d'))}
+              'etlRange': '%s:%s' %(yesterday.strftime('%Y-%m-%d'),
+                                    yesterday.strftime('%Y-%m-%d')),
+              'forced' : True}
     script = Svrea_script(params=params, username=uname)
     try:
         script.run()
