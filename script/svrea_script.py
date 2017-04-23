@@ -272,11 +272,17 @@ class Svrea_script():
                 sourceurl = listing['source']['url']
                 # print(sourceid, sourcename,sourcetype, sourceurl )
 
-                (source, source_created) = Source.objects.get_or_create(
+                (source, source_created) = Source.objects.update_or_create(
                     sourceid=sourceid,
                     name=sourcename,
                     sourcetype=sourcetype,
-                    url=sourceurl
+                    url=sourceurl,
+                    defaults = {
+                        'sourceid' : sourceid,
+                        'name' : sourcename,
+                        'sourcetype' : sourcetype,
+                        'url' : sourceurl
+                    }
                 )
 
                 #####################################################
