@@ -3,9 +3,11 @@ import os
 from manage import DEFAULT_SETTINGS_MODULE
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", DEFAULT_SETTINGS_MODULE)
 import django
+import datetime
 
 
 def job():
+    today = datetime.date.today()
     django.setup()
     from script.svrea_script import area_list, Svrea_script, tolog, INFO
     alist = [x[0] for x in area_list]
@@ -27,10 +29,26 @@ def job():
               'forced': False,
               'area': alist}
     script = Svrea_script(params=params, username=uname)
-    script.run()
+    try:
+        script.run()
+    except Exception as e:
+        tolog(INFO, e)
     # ********************************************************************
     params = {'upload': True,
               'forced': True}
     script = Svrea_script(params=params, username=uname)
-    script.run()
+    try:
+        script.run()
+    except Exception as e:
+        tolog(INFO, e)
+    #********************************************************************
+    params = {'analyze': True,
+              'etlRange': '%s:%s' %(datetime.datetime.strptime(today, '%Y-%m-%d'),
+                                    datetime.datetime.strptime(today, '%Y-%m-%d'))}
+    script = Svrea_script(params=params, username=uname)
+    try:
+        script.run()
+    except Exception as e:
+        tolog(INFO, e)
+
     tolog(INFO, 'finish job')
