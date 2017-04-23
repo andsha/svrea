@@ -621,7 +621,7 @@ class Svrea_script():
                 (etlsold, created) = EtlListings.objects.update_or_create(
                     record_date=today,
                     geographic_type=gtype,
-                    geographic_name=l['address__county' if gtype == 'county' else 'address__municipality'],
+                    geographic_name=s['address__county' if gtype == 'county' else 'address__municipality'],
                     defaults={
                         'sold_today'            : s['sold_counts'],
                         'sold_price_avg'        : s['sold_price_avg'],
