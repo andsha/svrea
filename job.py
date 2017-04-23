@@ -43,8 +43,8 @@ def job():
         tolog(INFO, e)
     #********************************************************************
     params = {'analyze': True,
-              'etlRange': '%s:%s' %(datetime.datetime.strptime(today, '%Y-%m-%d'),
-                                    datetime.datetime.strptime(today, '%Y-%m-%d'))}
+              'etlRange': '%s:%s' %(datetime.datetime.strftime(today, '%Y-%m-%d'),
+                                    datetime.datetime.strftime(today, '%Y-%m-%d'))}
     script = Svrea_script(params=params, username=uname)
     try:
         script.run()
