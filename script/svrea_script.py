@@ -571,6 +571,27 @@ class Svrea_script():
                           listing_rent_85=Percentile(expression='rent', percentiles=.85),
                           )
 
+            sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality') \
+                .filter(Q(datesold__date=today)) \
+                .annotate(sold_counts=Count('booliid'),
+                          sold_price_avg=Avg('latestprice'),
+                          sold_price_med=Percentile(expression='latestprice', percentiles=0.5),
+                          sold_price_85=Percentile(expression='latestprice', percentiles=0.85),
+                          sold_price_15=Percentile(expression='latestprice', percentiles=0.15),
+                          sold_price_sqm_avg=Avg(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),
+                          sold_price_sqm_med=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.5),
+                          sold_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
+                          sold_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
+                          sold_area_avg=Avg('livingarea'),
+                          sold_area_med=Percentile(expression='livingarea', percentiles=.5),
+                          sold_area_15=Percentile(expression='livingarea', percentiles=.15),
+                          sold_area_85=Percentile(expression='livingarea', percentiles=.85),
+                          sold_rent_avg=Avg('rent'),
+                          sold_rent_med=Percentile(expression='rent', percentiles=.5),
+                          sold_rent_15=Percentile(expression='rent', percentiles=.15),
+                          sold_rent_85=Percentile(expression='rent', percentiles=.85),
+                          )
+
             for l in listing:
 
                 (etllisting, created) = EtlListings.objects.update_or_create(
@@ -595,6 +616,23 @@ class Svrea_script():
                         'listing_rent_med'      : l['listing_rent_med'],
                         'listing_rent_15'       : l['listing_rent_15'],
                         'listing_rent_85'       : l['listing_rent_85'],
+                        'sold_today'            : l['sold_counts'],
+                        'sold_price_avg'        : l['sold_price_avg'],
+                        'sold_price_med'        : l['sold_price_med'],
+                        'sold_price_85'         : l['sold_price_85'],
+                        'sold_price_15'         : l['sold_price_15'],
+                        'sold_price_sqm_avg'    : l['sold_price_sqm_avg'],
+                        'sold_price_sqm_med'    : l['sold_price_sqm_med'],
+                        'sold_price_sqm_15'     : l['sold_price_sqm_15'],
+                        'sold_price_sqm_85'     : l['sold_price_sqm_85'],
+                        'sold_area_avg'         : l['sold_area_avg'],
+                        'sold_area_med'         : l['sold_area_med'],
+                        'sold_area_15'          : l['sold_area_15'],
+                        'sold_area_85'          : l['sold_area_85'],
+                        'sold_rent_avg'         : l['sold_rent_avg'],
+                        'sold_rent_med'         : l['sold_rent_med'],
+                        'sold_rent_15'          : l['sold_rent_15'],
+                        'sold_rent_85'          : l['sold_rent_85'],
                     }
                 )
 
