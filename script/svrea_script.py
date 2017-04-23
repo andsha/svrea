@@ -557,7 +557,8 @@ class Svrea_script():
                           listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
                           listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
                           listing_price_15=Percentile(expression='latestprice', percentiles=0.15),
-                          listing_price_sqm_avg = Avg(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None))
+                          listing_price_sqm_avg = Avg(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)),
+                          listing_price_sqm_med = Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)))
                           )
 
             for l in listing:
@@ -572,7 +573,8 @@ class Svrea_script():
                         'listing_price_med' : l['listing_price_med'],
                         'listing_price_85' : l['listing_price_85'],
                         'listing_price_15' : l['listing_price_15'],
-                        'listing_price_sqm_avg' : l['listing_price_sqm_avg']
+                        'listing_price_sqm_avg' : l['listing_price_sqm_avg'],
+                        'listing_peice_sqm_med' : l['listing_price_sqm_med']
                     }
                 )
 
