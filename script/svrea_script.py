@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case
+from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
@@ -558,7 +558,17 @@ class Svrea_script():
                           listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
                           listing_price_15=Percentile(expression='latestprice', percentiles=0.15),
                           listing_price_sqm_avg = Avg(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)),
-                          listing_price_sqm_med = Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)), percentiles=.5)
+                          listing_price_sqm_med = Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)), percentiles=.5),
+                          listing_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
+                          listing_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
+                          listing_area_avg = Avg('livingarea'),
+                          listing_area_med = Percentile(expression='livingarea', percentiles=.5),
+                          listing_area_15=Percentile(expression='livingarea', percentiles=.15),
+                          listing_area_85=Percentile(expression='livingarea', percentiles=.85),
+                          listing_rent_avg=Avg('rent'),
+                          listing_rent_med=Percentile(expression='rent', percentiles=.5),
+                          listing_rent_15=Percentile(expression='rent', percentiles=.15),
+                          listing_rent_85=Percentile(expression='rent', percentiles=.85),
                           )
 
             for l in listing:
@@ -568,29 +578,27 @@ class Svrea_script():
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
                     defaults                = {
-                        'active_listings' : l['listing_counts'],
-                        'listing_price_avg' : l['listing_price_avg'],
-                        'listing_price_med' : l['listing_price_med'],
-                        'listing_price_85' : l['listing_price_85'],
-                        'listing_price_15' : l['listing_price_15'],
+                        'active_listings'       : l['listing_counts'],
+                        'listing_price_avg'     : l['listing_price_avg'],
+                        'listing_price_med'     : l['listing_price_med'],
+                        'listing_price_85'      : l['listing_price_85'],
+                        'listing_price_15'      : l['listing_price_15'],
                         'listing_price_sqm_avg' : l['listing_price_sqm_avg'],
-                        'listing_price_sqm_med' : l['listing_price_sqm_med']
+                        'listing_price_sqm_med' : l['listing_price_sqm_med'],
+                        'listing_price_sqm_15'  : l['listing_price_sqm_15'],
+                        'listing_price_sqm_85'  : l['listing_price_sqm_85'],
+                        'listing_area_avg'      : l['listing_area_avg'],
+                        'listing_area_med'      : l['listing_area_med'],
+                        'listing_area_15'       : l['listing_area_15'],
+                        'listing_area_85'       : l['listing_area_85'],
+                        'listing_rent_avg'      : l['listing_rent_avg'],
+                        'listing_rent_med'      : l['listing_rent_med'],
+                        'listing_rent_15'       : l['listing_rent_15'],
+                        'listing_rent_85'       : l['listing_rent_85'],
                     }
                 )
 
 
-            #     listing_price_sqm_avg
-            #     listing_price_sqm_med
-            #     listing_price_sqm_85 =
-            #     listing_price_sqm_15 =
-            #     listing_area_avg =
-            #     listing_area_max =
-            #     listing_area_min =
-            #     listing_area_med =
-            #     listing_rent_avg =
-            #     listing_rent_max =
-            #     listing_rent_min =
-            #     listing_rent_med =
             #
                 # sold_today
             #     sold_price_avg =
