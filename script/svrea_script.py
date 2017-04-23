@@ -593,7 +593,6 @@ class Svrea_script():
                           )
 
             for l in listing:
-
                 (etllisting, created) = EtlListings.objects.update_or_create(
                     record_date             = today,
                     geographic_type         = gtype,
@@ -616,6 +615,14 @@ class Svrea_script():
                         'listing_rent_med'      : l['listing_rent_med'],
                         'listing_rent_15'       : l['listing_rent_15'],
                         'listing_rent_85'       : l['listing_rent_85'],
+                    })
+
+            for s in sold:
+                (etlsold, created) = EtlListings.objects.update_or_create(
+                    record_date=today,
+                    geographic_type=gtype,
+                    geographic_name=l['address__county' if gtype == 'county' else 'address__municipality'],
+                    defaults={
                         'sold_today'            : l['sold_counts'],
                         'sold_price_avg'        : l['sold_price_avg'],
                         'sold_price_med'        : l['sold_price_med'],
