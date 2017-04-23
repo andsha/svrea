@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q, Avg
+from django.db.models import Func, Count, Q, Avg, Aggregate
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
 import logging
@@ -44,6 +44,22 @@ area_list.sort(key = lambda x: int(x[0]) )
 class Datetime_to_date(Func):
     function = 'EXTRACT'
     template = '%(expressions)s::date'
+
+
+class Percentile(Aggregate):
+    function = None
+    name = "percentile"
+    template = "%(function)s(%(percentiles)s) WITHIN GROUP (ORDER BY %(" \
+               "expressions)s)"
+
+    def __init__(self, expression, percentiles, continuous=True, **extra):
+        if isinstance(percentiles, (list, tuple)):
+            percentiles = "array%(percentiles)s" % {'percentiles': percentiles}
+        if continuous:
+            extra['function'] = 'PERCENTILE_CONT'
+        else:
+            extra['function'] = 'PERCENTILE_DISC'
+        super().__init__(expression, percentiles=percentiles, **extra)
 
 
 def tolog(level, str):
@@ -538,7 +554,9 @@ class Svrea_script():
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality')\
                 .filter(Q(datepublished__date__lte = today) &
                         (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
-                .annotate(listing_counts=Count('booliid'), listing_price_avg = Avg('latestprice'))
+                .annotate(listing_counts=Count('booliid'),
+                          listing_price_avg = Avg('latestprice'),
+                          listing_price_med = Percentile(expression='latestprice', percentiles=0.5))
 
             for l in listing:
 
@@ -547,7 +565,8 @@ class Svrea_script():
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
                     active_listings         = l['listing_counts'],
-                    listing_price_avg       = l['listing_price_avg'] )
+                    listing_price_avg       = l['listing_price_avg'],
+                    listing_price_med       = l['listings_price_med'])
 
 
             #     listing_price_avg
