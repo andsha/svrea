@@ -563,7 +563,7 @@ class Svrea_script():
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
                     active_listings         = l['listing_counts'],
                     listing_price_avg       = l['listing_price_avg'],
-                    listing_price_med       = l['listings_price_med'])
+                    listing_price_med       = l['listing_price_med'])
 
 
             #     listing_price_avg
