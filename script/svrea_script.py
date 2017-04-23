@@ -574,7 +574,7 @@ class Svrea_script():
                         'listing_price_85' : l['listing_price_85'],
                         'listing_price_15' : l['listing_price_15'],
                         'listing_price_sqm_avg' : l['listing_price_sqm_avg'],
-                        'listing_peice_sqm_med' : l['listing_price_sqm_med']
+                        'listing_price_sqm_med' : l['listing_price_sqm_med']
                     }
                 )
 
