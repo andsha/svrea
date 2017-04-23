@@ -290,9 +290,6 @@ class Svrea_script():
 
                 (source, source_created) = Source.objects.update_or_create(
                     sourceid=sourceid,
-                    name=sourcename,
-                    sourcetype=sourcetype,
-                    url=sourceurl,
                     defaults = {
                         'sourceid' : sourceid,
                         'name' : sourcename,
