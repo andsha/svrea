@@ -44,8 +44,8 @@ def job():
     #********************************************************************
     params = {'analyze': True,
               'etlRange': '%s:%s' %(yesterday.strftime('%Y-%m-%d'),
-                                    yesterday.strftime('%Y-%m-%d')),
-              'forced' : True}
+                                    yesterday.strftime('%Y-%m-%d'))
+              }
     script = Svrea_script(params=params, username=uname)
     try:
         script.run()
