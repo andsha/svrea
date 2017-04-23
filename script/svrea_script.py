@@ -553,7 +553,10 @@ class Svrea_script():
                         (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
                 .annotate(listing_counts=Count('booliid'),
                           listing_price_avg = Avg('latestprice'),
-                          listing_price_med = Percentile(expression='latestprice', percentiles=0.5))
+                          listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
+                          listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
+                          listing_price_15=Percentile(expression='latestprice', percentiles=0.15)
+                          )
 
             for l in listing:
 
@@ -561,10 +564,14 @@ class Svrea_script():
                     record_date             = today,
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality'],
-                    active_listings         = l['listing_counts'],
-                    listing_price_avg       = l['listing_price_avg'],
-                    listing_price_med       = l['listing_price_med'])
-
+                    defaults                = {
+                        'active_listings' : l['listing_counts'],
+                        'listing_price_avg' : l['listing_price_avg'],
+                        'listing_price_med' : l['listing_price_med'],
+                        'listing_price_85' : l['listing_price_85'],
+                        'listing_price_15' : l['listing_price_15']
+                    }
+                )
 
             #     listing_price_avg
             #     listing_price_85
