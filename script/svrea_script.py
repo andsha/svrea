@@ -11,7 +11,8 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q, Avg, Aggregate
+from django.db.models import Func, Count, Q, F, Avg, Aggregate, When
+from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListings
 import logging
@@ -555,7 +556,8 @@ class Svrea_script():
                           listing_price_avg = Avg('latestprice'),
                           listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
                           listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
-                          listing_price_15=Percentile(expression='latestprice', percentiles=0.15)
+                          listing_price_15=Percentile(expression='latestprice', percentiles=0.15),
+                          listing_price_sqm_avg = Avg(F('latestprice') / When(~Q(livingarea__iexact = 0), then='livingarea'))
                           )
 
             for l in listing:
@@ -569,14 +571,12 @@ class Svrea_script():
                         'listing_price_avg' : l['listing_price_avg'],
                         'listing_price_med' : l['listing_price_med'],
                         'listing_price_85' : l['listing_price_85'],
-                        'listing_price_15' : l['listing_price_15']
+                        'listing_price_15' : l['listing_price_15'],
+                        'listing_price_sqm_avg' : l['listing_price_sqm_avg']
                     }
                 )
 
-            #     listing_price_avg
-            #     listing_price_85
-            #     listing_price_15
-            #     listing_price_med
+
             #     listing_price_sqm_avg
             #     listing_price_sqm_med
             #     listing_price_sqm_85 =
