@@ -642,6 +642,9 @@ class Svrea_script():
                         'sold_rent_85'          : s['sold_rent_85'],
                     }
                 )
+        Listings.objects.filter(record_date__date = today, active_listings__isnull = True).update(active_listings=0)
+        Listings.objects.filter(record_date__date=today, sold_today__isnull=True).update(sold_today=0)
+
 
 
             #
