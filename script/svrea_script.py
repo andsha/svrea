@@ -115,46 +115,52 @@ class Svrea_script():
         err = 0
         a = None
 
-        #print(today_scripts)
+        # looking for script matching current config
+        # if no script matching current config is found, then generate new Info entry
         for s in today_scripts:
-            #print(s.config, self.options, s.config == self.options )
             if s.config == self.options:
                 runtoday = True
-                if s.status == 'done' and not self.forced: # if succesfully run before
-                    st = 'already run for %s' %self.options
+                if s.status == 'done' and not self.forced: # if succesfully run before by any user
+                    st = 'already run for %s by %s' %(self.options, self.username)
                     tolog(INFO, st)
                     return 1
                 else:
-                    s.status = 'started'
+                    s.status = 'started' # if not run or previous error then restart
+                    s.user_name = self.username  # current user name
                     s.save()
                     info = s
                     break
 
+        # New entry since no script matching current config was found
         if not runtoday:
             l = Info(user_name = self.username,
                      config = self.options,
                      status = 'started')
             l.save()
             info = l
-        # _________________________________________________________________________________________
+
+        # ___ First, download data from web ___
         if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
             a, created = Aux.objects.update_or_create(key = 'DownloadAuxKey', defaults={"key" : "DownloadAuxKey",
                                                                                 "value" : "run"})
             err += self.getDataFromWeb(info = info, latest = True if 'downloadLast' in self.options and self.options['downloadLast'] else False)
-        # -----------------------------------------------------------------------------------
+
+        # ___ Second, upload downloaded data from data table to Listings, Address etc ___
         if 'upload' in self.options and self.options['upload']:
             tolog(INFO, 'Uploading data')
             a, created = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
                                                                          "value": "run"})
             err += self.uploadData(info=info)
-        # -----------------------------------------------------------------------------------
+
+        # ___ Third, do ETL on uploaded data ___
         if 'analyze' in self.options and self.options['analyze']:
             tolog(INFO, 'Analyzing Data')
             a, created = Aux.objects.update_or_create(key='AnalyzeAuxKey', defaults={"key": "AnalyzeAuxKey",
                                                                          "value": "run"})
             err += self.analyzeData(info=info)
         # -----------------------------------------------------------------------------------
+
         if a is not None:
             a.value = 'stop'
             a.save()
@@ -533,9 +539,11 @@ class Svrea_script():
 
         info.status = 'done'
         info.save()
+        tolog(INFO, 'Analysis completed')
         return 0
 
-
+#************************************************************************
+    #Code for ETL stages
     def init(self, *args):
         return 0
 
@@ -644,34 +652,13 @@ class Svrea_script():
                 )
         EtlListings.objects.filter(record_date__date = today, active_listings__isnull = True).update(active_listings=0)
         EtlListings.objects.filter(record_date__date=today, sold_today__isnull=True).update(sold_today=0)
-
-
-
-            #
-                # sold_today
-            #     sold_price_avg =
-            #     sold_price_med =
-            #     sold_price_85 =
-            #     sold_price_15 =
-            #     sold_price_sqm_avg =
-            #     sold_price_sqm_med =
-            #     sold_price_sqm_85 =
-            #     sold_price_sqm_15 =
-            #     sold_area_avg =
-            #     sold_area_max =
-            #     sold_area_min =
-            #     sold_area_med =
-            #     sold_rent_avg =
-            #     sold_rent_max =
-            #     sold_rent_min =
-            #     sold_rent_med =
-            # )
-
         return 0
 
 
     def finish(self, *args):
         return 0
+
+#************************************************************************************
 
 
 
