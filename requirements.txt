@@ -10,3 +10,16 @@ redis==2.10.5
 rq==0.7.1
 six==1.10.0
 whitenoise==3.3.0
+appdirs==1.4.0
+click==6.7
+dj-database-url==0.4.2
+Django==1.10.5
+gunicorn==19.6.0
+numpy==1.12.1
+packaging==16.8
+psycopg2==2.7.1
+pyparsing==2.1.10
+redis==2.10.5
+rq==0.7.1
+six==1.10.0
+whitenoise==3.3.0
