@@ -1,0 +1,307 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block content %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="{% static "js/js.cookie.js" %}"></script>
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart', 'line']});
+google.charts.setOnLoadCallback(listings_price_hist);
+
+function listings_price_hist() {
+var data = google.visualization.arrayToDataTable({{ listings_hist | safe}});
+var options = {
+    title : '',
+    legend : {position : 'right'},
+    bar : {groupWidth: '100%'},
+    hAxis:{
+        title : '{{x_axis_title}}'
+    },
+    vAxis:{
+        title : 'Frequency'
+    }
+    }
+
+
+var chart = new google.visualization.{{chart_type | safe}}Chart(document.getElementById('listings_price_hist'));
+chart.draw(data, options);
+}
+
+//$(document).ready(mselect());
+window.onload = mselect
+
+function mselect(){
+        $('.county-select').multiselect({
+        enableClickableOptGroups: true,
+        buttonClass: 'btn btn-primary',
+        nonSelectedText: 'Choose County',
+        numberDisplayed: 1}
+        );
+}
+
+function displayPeriodForm(sel){
+    //alert(1);
+    document.getElementById('period_day_' + sel).style.display='none';
+    document.getElementById('period_week_' + sel).style.display='none';
+    document.getElementById('period_month_' + sel).style.display='none';
+    document.getElementById('period_year_' + sel).style.display='none';
+    document.getElementById('period_dayfrom_'+ sel).style.display='none';
+    document.getElementById('period_dayto_'+ sel).style.display='none';
+
+    switch (document.getElementById('period_type_' + sel).selectedIndex){
+        case 0:
+            document.getElementById('period_day_' + sel).style.display='';
+            break;
+        case 1:
+            document.getElementById('period_week_' + sel).style.display='';
+            break;
+        case 2:
+            document.getElementById('period_month_' + sel).style.display='';
+            break;
+        case 3:
+            document.getElementById('period_year_' + sel).style.display='';
+            break;
+        case 4:
+            document.getElementById('period_dayfrom_' + sel).style.display='';
+            document.getElementById('period_dayto_' + sel).style.display='';
+            break;
+    };
+}
+
+
+function removeHist(num){
+    //alert(document.getElementById('div_hist_' + num))
+    elem = document.getElementById('div_hist_' + num)
+    elem.parentNode.removeChild(elem)
+}
+
+var g_child = {{histInfo|length}}
+
+function newHist() {
+    var e = g_child
+    container = document.getElementById('new_hist_list');
+    div = document.createElement('div');
+    div.id = 'div_hist_' + g_child
+        h5 = document.createElement('H5');
+
+        index = document.createElement('input')
+        index.type = 'hidden'
+        index.name = 'index_' + e
+        index.value = e
+        h5.appendChild(index)
+
+        h5.appendChild(document.createTextNode(g_child + '. Dates '));
+
+            period_type = document.createElement('select');
+            period_type.name = "period_type_" + g_child;
+            period_type.id = "period_type_" + g_child;
+            period_type.onchange = function(){displayPeriodForm(e)}
+                option0 = document.createElement('option');
+                option0.text = 'Day'
+                period_type.add(option0)
+                option1 = document.createElement('option');
+                option1.text = 'Week'
+                period_type.add(option1)
+                option2 = document.createElement('option');
+                option2.text = 'Month'
+                period_type.add(option2)
+                option3 = document.createElement('option');
+                option3.text = 'Year'
+                period_type.add(option3)
+                option4 = document.createElement('option');
+                option4.text = 'Period'
+                period_type.add(option4)
+        h5.appendChild(period_type)
+
+            input_day = document.createElement('input')
+            input_day.type = 'date'
+            input_day.name = 'period_day_' + e
+            input_day.id = 'period_day_' + e
+            input_day.style = 'display:""'
+            input_day.value = '{{defHistInfo.period_day}}'
+        h5.appendChild(input_day)
+
+            input_week = document.createElement('input')
+            input_week.type = 'week'
+            input_week.name = 'period_week_' + e
+            input_week.id = 'period_week_' + e
+            input_week.style = 'display:none'
+            input_week.value = '{{defHistInfo.period_week}}'
+        h5.appendChild(input_week)
+
+            input_month = document.createElement('input')
+            input_month.type = 'month'
+            input_month.name = 'period_month_' + e
+            input_month.id = 'period_month_' + e
+            input_month.style = 'display:none'
+            input_month.value = '{{defHistInfo.period_month}}'
+        h5.appendChild(input_month)
+
+            input_year = document.createElement('input')
+            input_year.type = 'year'
+            input_year.name = 'period_year_' + e
+            input_year.id = 'period_year_' + e
+            input_year.style = 'display:none'
+            input_year.value = '{{defHistInfo.period_year}}'
+        h5.appendChild(input_year)
+
+            input_dayfrom = document.createElement('input')
+            input_dayfrom.type = 'date'
+            input_dayfrom.name = 'period_dayfrom_' + e
+            input_dayfrom.id = 'period_dayfrom_' + e
+            input_dayfrom.style = 'display:none'
+            input_dayfrom.value = '{{defHistInfo.period_dayfrom}}'
+        h5.appendChild(input_dayfrom)
+
+            input_dayto = document.createElement('input')
+            input_dayto.type = 'date'
+            input_dayto.name = 'period_dayto_' + e
+            input_dayto.id = 'period_dayto_' + e
+            input_dayto.style = 'display:none'
+            input_dayto.value = '{{defHistInfo.period_dayto}}'
+        h5.appendChild(input_dayto)
+
+        h5.appendChild(document.createTextNode('  Property Type '));
+
+            property_type = document.createElement('select');
+            property_type.name = "property_type_" + e;
+            //property_type.id = "property_type_" + e;
+                option0 = document.createElement('option');
+                option0.text = 'Listings'
+                property_type.add(option0)
+                option1 = document.createElement('option');
+                option1.text = 'Sold'
+                property_type.add(option1)
+        h5.appendChild(property_type)
+
+        h5.appendChild(document.createTextNode('  Region '));
+
+            county_select = document.createElement('select')
+            county_select.name = 'county_selected_' + e
+            //county_select.id = 'county-select'
+            county_select.className = "county-select"
+            county_select.multiple = "multiple"
+                optgroup = document.createElement('optgroup')
+                optgroup.label = 'all'
+                    {% for c in county_list %}
+                        option = document.createElement('option')
+                        option.text = '{{c}}'
+                        option.value = '{{c}}'
+                        {% if c == "Whole Sweden" %}option.selected=true{%endif%}
+                    optgroup.appendChild(option)
+                    {% endfor %}
+            county_select.appendChild(optgroup)
+        h5.appendChild(county_select)
+
+        hlink = document.createElement('a')
+        hlink.href = 'javascript:removeHist(' + g_child + ')'
+        hlink.appendChild(document.createTextNode(' Remove    '))
+        h5.appendChild(hlink)
+
+    div.appendChild(h5);
+    container.appendChild(div);
+    g_child ++;
+    document.getElementById('g_child').value=g_child
+    mselect()
+
+}
+
+
+</script>
+
+
+<div id="full">
+    <div class="container-fluid ">
+        <form method="post" name="form_" id="histForm" value="hello"> {% csrf_token %}
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Histogram Properties</h3></div>
+                    <div class="full">
+                        <div class="text-center blue">
+                            <h5><input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
+                                Type:
+                                <select name="hist_type">
+                                    <option value="Price" {% if hist_type == "Price" %} selected {% endif%}>Price</option>
+                                    <option value="Price m2" {% if hist_type == "Price m2" %} selected {% endif%}>Price m2</option>
+                                    <option value="Area" {% if hist_type == "Area" %} selected {% endif%}>Area</option>
+                                    <option value="Rent" {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
+                                </select>
+                                # of bins <input type="text" name="num_bins" value="{{num_bins}}" size="3">
+                                Cutoffs: Lower <input type="text" name="LowerCutoff" value="{{LowerCutoff}}" size="3">%
+                                    Upper <input type="text" name="UpperCutoff" value="{{UpperCutoff}}" size="3">%
+                                Style:
+                                <select name="chart_type">
+                                    <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
+                                    <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
+                                </select>
+                                Data:
+                                <select name="data_type">
+                                    <option value="Abs" {% if data_type == "Abs" %} selected {% endif%}>Absolute</option>
+                                    <option value="Rel" {% if data_type == "Rel" %} selected {% endif%}>Relative</option>
+                                </select>
+                                <button  >Refresh</button>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
+                    <div id="listings_price_hist" style="height:600px"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Active Listings Price</h3></div>
+                    <div class="text blue" id="new_hist_list">
+                        <button name="test" type="button" onclick="newHist()">Add Histogram</button>
+                        <button name="tte" >Submit</button>
+                        <br><br>
+                        {% for hist in histInfo %}
+                            <div id = "div_hist_{{forloop.counter0}}">
+                                <f5>
+                                    <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
+                                    {{forloop.counter0}}. Dates:
+                                    <select name="period_type_{{forloop.counter0}}" id="period_type_{{forloop.counter0}}" onchange="displayPeriodForm({{forloop.counter0}})">
+                                        <option {%if hist.period_type == "Day"%} selected {%endif%}> Day </option>
+                                        <option {%if hist.period_type == "Week"%} selected {%endif%}> Week </option>
+                                        <option {%if hist.period_type == "Month"%} selected {%endif%}> Month </option>
+                                        <option {%if hist.period_type == "Year"%} selected {%endif%}> Year </option>
+                                        <option {%if hist.period_type == "Period"%} selected {%endif%}> Period </option>
+                                    </select>
+                                    <input type="date" id="period_day_{{forloop.counter0}}"      name="period_day_{{forloop.counter0}}"   {% if hist.period_type != "Day"%}  style="display:none" {%endif%} value="{{hist.period_day}}">
+                                    <input type="week" id="period_week_{{forloop.counter0}}"     name="period_week_{{forloop.counter0}}"  {% if hist.period_type != "Week"%}  style="display:none" {%endif%} value="{{hist.period_week}}">
+                                    <input type="month"id="period_month_{{forloop.counter0}}"    name="period_month_{{forloop.counter0}}" {% if hist.period_type != "Month"%} style="display:none" {%endif%} value="{{hist.period_month}}">
+                                    <input type="year" id="period_year_{{forloop.counter0}}"     name="period_year_{{forloop.counter0}}"  {% if hist.period_type != "Year"%}  style="display:none" {%endif%} value="{{hist.period_year}}">
+                                    <input type="date" id="period_dayfrom_{{forloop.counter0}}"  name="period_dayfrom_{{forloop.counter0}}"   {% if hist.period_type != "Period"%}  style="display:none" {%endif%} value="{{hist.period_dayfrom}}">
+                                    <input type="date" id="period_dayto_{{forloop.counter0}}"    name="period_dayto_{{forloop.counter0}}"   {% if hist.period_type != "Period"%}  style="display:none" {%endif%} value="{{hist.period_dayto}}">
+                                    Property Type:
+                                    <select name="property_type_{{forloop.counter0}}">
+                                        <option value="Listings" {% if hist.property_type == "Listings" %} selected {% endif%}>Listings</option>
+                                        <option value="Sold" {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
+                                    </select>
+                                    Region:
+                                    <select class="county-select" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
+                                        <optgroup label="All">
+                                            {% for c in county_list %}
+                                        <option value="{{c}}" {% if c in hist.county_selected %} selected {% endif%}>{{c}}</option>
+                                        {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                    <a href="javascript:removeHist({{forloop.counter0}})"> Remove</a>
+
+                                </f5>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

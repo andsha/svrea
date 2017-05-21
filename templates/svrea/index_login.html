@@ -2,11 +2,191 @@
 {% load humanize %}
 {% load static %}
 
-
 {% block content %}
+{% if success %}
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart', 'line']});
+        google.charts.setOnLoadCallback(active_listings_chart);
+        google.charts.setOnLoadCallback(sold_listings_chart);
+        google.charts.setOnLoadCallback(listing_price);
+        google.charts.setOnLoadCallback(listing_price_sqm);
+        google.charts.setOnLoadCallback(sold_price);
+        google.charts.setOnLoadCallback(sold_price_sqm);
+
+        function active_listings_chart() {
+        var data = google.visualization.arrayToDataTable({{ current_listings | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'none'},
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('active_listings_chart'));
+        chart.draw(data, options);
+        }
+
+        function sold_listings_chart() {
+        var data = google.visualization.arrayToDataTable({{ sold_listings | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'none'},
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('sold_listings_chart'));
+        chart.draw(data, options);
+        }
+
+        function listing_price() {
+        var data = google.visualization.arrayToDataTable({{ listing_price | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'top'},
+        series: {0: {color: 'red'},
+                 1: {color: 'green'},
+                 2: {color: 'blue'},
+                 3: {color: 'blue'},
+                 4: {color: '#3366CC'},
+                 5: {color: '#3366CC'},
+                }
+         };
+        var chart = new google.visualization.LineChart(document.getElementById('listing_price'));
+        chart.draw(data, options);
+        }
+
+        function listing_price_sqm() {
+        var data = google.visualization.arrayToDataTable({{ listing_price_sqm | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'top'},
+        series: {0: {color: 'red'},
+                 1: {color: 'green'},
+                 2: {color: 'blue'},
+                 3: {color: 'blue'},
+                 4: {color: '#3366CC'},
+                 5: {color: '#3366CC'},
+                }
+         };
+        var chart = new google.visualization.LineChart(document.getElementById('listing_price_sqm'));
+        chart.draw(data, options);
+        }
+
+        function sold_price() {
+        var data = google.visualization.arrayToDataTable({{ sold_price | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'top'},
+        series: {0: {color: 'red'},
+                 1: {color: 'green'},
+                 2: {color: 'blue'},
+                 3: {color: 'blue'},
+                 4: {color: '#3366CC'},
+                 5: {color: '#3366CC'},
+                }
+         };
+        var chart = new google.visualization.LineChart(document.getElementById('sold_price'));
+        chart.draw(data, options);
+        }
+
+        function sold_price_sqm() {
+        var data = google.visualization.arrayToDataTable({{ sold_price_sqm | safe}});
+        var options = {
+        title : '',
+        legend : {position : 'top'},
+        series: {0: {color: 'red'},
+                 1: {color: 'green'},
+                 2: {color: 'blue'},
+                 3: {color: 'blue'},
+                 4: {color: '#3366CC'},
+                 5: {color: '#3366CC'},
+                }
+         };
+        var chart = new google.visualization.LineChart(document.getElementById('sold_price_sqm'));
+        chart.draw(data, options);
+        }
+
+    </script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 
-login
+    <form method="post" > {% csrf_token %}
+        <div class="full">
+            <div class="text-center blue">
+                <h4>This is
+                    <select name="period" data-style="btn-primary">
+                        <option value="Daily" {% if period == 'Daily'%} selected {% endif%}>Daily</option>
+                        <option value="Weekly" {% if period == 'Weekly'%} selected {% endif%}>Weekly</option>
+                        <option value="Monthly" {% if period == 'Monthly'%} selected {% endif%}>Monthly</option>
+                        <option value="Yearly" {% if period == 'Yearly'%} selected {% endif%}>Yearly</option>
+                    </select>
+                    statistics for
+                    <select name="county" data-style="btn-primary">
+                        <option value="All" {% if county == 'All'%} selected {% endif%}>All</option>
+                        {% for c in county_list %}
+                        <option value="{{c}}" {% if county == c%} selected {% endif%}>{{c}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-default" onclick="this.form.submit();">Refresh</button>
+                </h4>
+            </div>
+        </div>
+    </form>
+    <div id="full">
+        <div class="container-fluid ">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Active Listings</h3></div>
+                    <div id="active_listings_chart" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Sold Properties</h3></div>
+                    <div id="sold_listings_chart" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Active Listings Price</h3></div>
+                    <div id="listing_price" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Active Listings Price / m<sup>2</sup></h3></div>
+                    <div id="listing_price_sqm" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Sold Price</h3></div>
+                    <div id="sold_price" style="height:400px"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Sold Price / m<sup>2</sup></h3></div>
+                    <div id="sold_price_sqm" style="height:400px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
+    <script src="{% static 'external/jquery/jquery.js'%}"></script>
+    <script src="{% static 'jquery-ui.js'%}"></script>
+
+    <script>
+        $( "#slider" ).slider({
+        range: true,
+        values: [ 17, 67 ]
+    });
+
+    $( "#slider2" ).slider({
+        range: true,
+        values: [ 17, 67 ]
+    });
+    </script>
+{% endif %}
 {% endblock %}
