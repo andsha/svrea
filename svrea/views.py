@@ -108,10 +108,10 @@ def index_login(request):
             from_date = to_date - datetime.timedelta(days = 180)
         elif period == 'Monthly':
             dtype =  'YYYY-MM'
-            from_date = to_date - datetime.timedelta(weeks=104)
+            from_date = to_date - datetime.timedelta(weeks=208)
         elif period == 'Weekly':
             dtype = 'YYYY-"W"IW'
-            from_date = to_date - datetime.timedelta(weeks=52)
+            from_date = to_date - datetime.timedelta(weeks=208)
         elif period == 'Yearly':
             dtype = 'YYYY'
             from_date = to_date - datetime.timedelta(weeks=520)
