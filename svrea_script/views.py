@@ -98,10 +98,24 @@ def script_info(request):
         logout(request)
         return redirect("index")
 
-    info = Info.objects.all().order_by('started')
+    if request.POST.get('deleteInfo'):
+        infoid = request.POST.get('deleteInfo').split('_')[1]
+        num = Info.objects.get(id = infoid).delete()
+
+    info = Info.objects.all().order_by('-started')
+    paginator = Paginator(info, 50, orphans=9)
+    page = request.GET.get('page')
+
+    try:
+        info = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        info = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        info = paginator.page(paginator.num_pages)
 
     context = {
-        "text" : "You can see script info",
         "info" : info
     }
     return render(request, "svrea_script/info.html", context=context)
@@ -116,7 +130,7 @@ def script_logs(request):
         return redirect("index")
 
     alllogs = Log.objects.order_by('-when')
-    paginator = Paginator(alllogs, 20, orphans=9)
+    paginator = Paginator(alllogs, 50, orphans=9)
     page = request.GET.get('page')
     try:
         logs = paginator.page(page)
@@ -142,10 +156,19 @@ def script_data(request):
         return redirect("index")
 
     #info = Rawdata.objects.annotate(sizeofdata=Len_Of_JSON_Field('rawdata')).order_by('downloaded').all()
-    info = Rawdata.objects.order_by('downloaded').defer('rawdata')
+    alldata = Rawdata.objects.order_by('downloaded').defer('rawdata')
+    paginator = Paginator(alldata, 100, orphans=9)
+    page = request.GET.get('page')
+    try:
+        alldata = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        alldata = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        alldata = paginator.page(paginator.num_pages)
 
     context = {
-        "text" : "You can see script data",
-        "info" : info
+        "alldata" : alldata
     }
     return render(request, "svrea_script/data.html", context=context)
