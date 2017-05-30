@@ -66,7 +66,7 @@ def index_login(request):
 
     try:
         county_list = [county.geographic_name for county in EtlListings.objects
-                                                            .filter(geographic_type__exact = 'country' if county == 'Whole Sweden' else 'county')
+                                                            .filter(geographic_type__exact = 'county')
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
 
