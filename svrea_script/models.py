@@ -74,6 +74,7 @@ class Address(models.Model):
     municipality        = models.CharField(max_length=50, null=True, blank=True)
     county              = models.CharField(max_length=50, null=True, blank=True)
     areaname            = models.CharField(max_length=50, null=True, blank=True)
+    country             = models.CharField(max_length=50, default='Sweden')
 
     class Meta:
         index_together = ['street', 'city', 'municipality', 'county' ]

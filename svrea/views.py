@@ -56,7 +56,7 @@ def index_nologin(request):
 def index_login(request):
 
     period = 'Daily'
-    county = 'All'
+    county = 'Whole Sweden'
 
     if request.POST:
         if request.POST.get("period"):
@@ -66,7 +66,7 @@ def index_login(request):
 
     try:
         county_list = [county.geographic_name for county in EtlListings.objects
-                                                            .filter(geographic_type__exact = 'county')
+                                                            .filter(geographic_type__exact = 'country' if county == 'Whole Sweden' else 'county')
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
 
@@ -92,9 +92,9 @@ def index_login(request):
                                                                       'sold_price_sqm_med',
                                                                       'sold_price_sqm_85',
                                                                       'sold_price_sqm_15',
-                                                                      ).filter(geographic_type__exact = 'county')
+                                                                      ).filter(geographic_type__exact = 'country' if county == 'Whole Sweden' else 'county')
 #        print ([i for i in active_list])
-        if county != 'All':
+        if county != 'Whole Sweden':
             active_list = active_list.filter(geographic_name__exact = county)
 
         #listings = []
