@@ -69,33 +69,34 @@ def index_login(request):
                                                             .filter(geographic_type__exact = 'county')
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
-
-        active_list = EtlListings.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0))\
-                                                              .values('record_date',
-                                                                      'geographic_type',
-                                                                      'geographic_name',
-                                                                      'al',
-                                                                      'st',
-                                                                      'listing_price_avg',
-                                                                      'listing_price_med',
-                                                                      'listing_price_85',
-                                                                      'listing_price_15',
-                                                                      'listing_price_sqm_avg',
-                                                                      'listing_price_sqm_med',
-                                                                      'listing_price_sqm_85',
-                                                                      'listing_price_sqm_15',
-                                                                      'sold_price_avg',
-                                                                      'sold_price_med',
-                                                                      'sold_price_85',
-                                                                      'sold_price_15',
-                                                                      'sold_price_sqm_avg',
-                                                                      'sold_price_sqm_med',
-                                                                      'sold_price_sqm_85',
-                                                                      'sold_price_sqm_15',
-                                                                      ).filter(geographic_type__exact = 'country' if county == 'Whole Sweden' else 'county')
+        print(county)
+        active_list = EtlListings.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
+            .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
+            .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
+            .values('record_date',
+                      'geographic_type',
+                      'geographic_name',
+                      'al',
+                      'st',
+                      'listing_price_avg',
+                      'listing_price_med',
+                      'listing_price_85',
+                      'listing_price_15',
+                      'listing_price_sqm_avg',
+                      'listing_price_sqm_med',
+                      'listing_price_sqm_85',
+                      'listing_price_sqm_15',
+                      'sold_price_avg',
+                      'sold_price_med',
+                      'sold_price_85',
+                      'sold_price_15',
+                      'sold_price_sqm_avg',
+                      'sold_price_sqm_med',
+                      'sold_price_sqm_85',
+                      'sold_price_sqm_15')
 #        print ([i for i in active_list])
-        if county != 'Whole Sweden':
-            active_list = active_list.filter(geographic_name__exact = county)
+#         if county == 'Whole Sweden':
+#             active_list = active_list.filter(geographic_name__exact = county)
 
         #listings = []
         #print(active_listings_period)

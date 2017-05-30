@@ -118,7 +118,7 @@
                     </select>
                     statistics for
                     <select name="county" data-style="btn-primary">
-                        <option value="All" {% if county == 'Whole Sweden'%} selected {% endif%}>Whole Sweden</option>
+                        <option value="Whole Sweden" {% if county == 'Whole Sweden'%} selected {% endif%}>Whole Sweden</option>
                         {% for c in county_list %}
                         <option value="{{c}}" {% if county == c%} selected {% endif%}>{{c}}</option>
                         {% endfor %}
