@@ -7,6 +7,7 @@ from django.contrib import messages
 from script.svrea_script import Svrea_script, area_list
 from svrea_script.models import Info, Aux, Log, Rawdata
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import connection
 from django.db.models import Func
 from django.db.models.functions import Length
 
@@ -27,11 +28,17 @@ class Len_Of_JSON_Field(Func):
 def script_run(request):
     #print(request.POST)
     # return 0
+    if request.POST.get('runsql'):
+        sqlquery = request.POST.get('sqlquery')
+        sqlres = request.POST.get('sqlres')
+    else:
+        sqlquery = 'SQL Query'
+        sqlres = 'SQL result'
+
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect("index")
-
-    if request.POST.get('stopScript'):
+    elif request.POST.get('stopScript'):
         id = request.POST.get('stopScript').split('_')[1]
         info = Info.objects.get(id = id)
         aux = None
@@ -50,8 +57,7 @@ def script_run(request):
             aux.save()
             info.status = 'stopped'
             info.save()
-
-    if request.POST.get('download'):
+    elif request.POST.get('download'):
         q = Queue(connection=conn)
         params = {'download': request.POST.get('download'),
                   'forced' : True if request.POST.get('forced') is not None else False,
@@ -60,16 +66,13 @@ def script_run(request):
                   }
         script = Svrea_script(params=params, username=request.user.username)
         res = q.enqueue(script.run, timeout=workertimeout)
-
-
-    if request.POST.get('upload'):
+    elif request.POST.get('upload'):
         q = Queue(connection=conn)
         params = {'upload' : True,
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
         res = q.enqueue(script.run, timeout=workertimeout)
-
-    if request.POST.get('analyze'):
+    elif request.POST.get('analyze'):
         q = Queue(connection=conn)
         params = {'analyze' : True,
                   'forced' : True,
@@ -78,13 +81,24 @@ def script_run(request):
         script = Svrea_script(params=params, username=request.user.username)
 
         res = q.enqueue(script.run, timeout=workertimeout)
+    elif request.POST.get('runsql'):
+        sql = request.POST.get('sqlquery')
+        #print(sql)
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(sql)
+                sqlres = [[str(s) for s in row] for row in cursor.fetchall()]
+            except Exception as e:
+                sqlres = e
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
     context = {
         "text" : '',
         "running_scripts" : running_scripts,
-        "area_list" : area_list
+        "area_list" : area_list,
+        "sqlquery" : sqlquery,
+        "sqlres" : sqlres
     }
     time.sleep(.1)
     return render(request, "svrea_script/run.html", context=context)
