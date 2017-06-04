@@ -69,7 +69,7 @@ def index_login(request):
                                                             .filter(geographic_type__exact = 'county')
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
-        print(county)
+        #print(county)
         active_list = EtlListings.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
@@ -235,14 +235,14 @@ def density_map(request):
 
 
 @login_required(redirect_field_name = "", login_url="/")
-def price_density_map(request):
+def maps_price_density(request):
     if request.POST.get('submit') == 'Log Out':
         logout(request)
 
     context = {
         "success": False
     }
-    return render(request, "svrea/index_login.html", context=context)
+    return render(request, "svrea/maps_price_density.html", context=context)
 
 
 @login_required(redirect_field_name = "", login_url="/")

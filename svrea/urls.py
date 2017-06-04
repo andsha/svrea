@@ -20,7 +20,7 @@ from .views import (
     index,
     listings_map,
     density_map,
-    price_density_map,
+    maps_price_density,
     plots_histograms
 )
 
@@ -37,8 +37,8 @@ urlpatterns = [
     url(r'^register/', uregister, name = 'register'),
     url(r'^users/', include('users.urls', namespace = 'users')),
     url(r'listings_map$', listings_map, name = 'listings_map'),
-    url('density_map$', density_map, name = 'density_map'),
-    url(r'price_density_map$', price_density_map, name = 'price_density_map'),
+    url(r'density_map$', density_map, name = 'density_map'),
+    url(r'maps_price_density$', maps_price_density, name = 'maps_price_density'),
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
     url(r'script_info$', svrea_script_info, name = 'script_info'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
