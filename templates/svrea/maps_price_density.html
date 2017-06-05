@@ -23,6 +23,9 @@
 
 {% block content %}
     <div id="map"></div>
+    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/polys/geoxml3.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/ProjectedOverlay.js"></script>
+
     <script>
 
         function initMap() {
@@ -34,17 +37,44 @@
                     scaleControl: true
             });
 
-            var layer_Skane = new google.maps.KmlLayer({
-                url: 'https://drive.google.com/open?id=0BwFGzorEH6RxYjd0VGxrU0c0Z1k',
+            var myParser = new geoXML3.parser({
+                map: map,
+                singleInfoWindow: true,
+                afterParse: useTheData
             });
+            myParser.parse('{% static "maps/Sweden/Muni_n.kml" %}');
 
-            layer_Skane.setMap(map)
         }
+
+        function useTheData(doc){
+            geoXmlDoc = doc[0];
+            //console.log('hello')
+            //console.log(geoXmlDoc.gpolygons[1]['title'])
+            for (idx = 0; idx < geoXmlDoc.gpolygons.length; idx += 1){
+                var color = '#3498DB'
+                switch(geoXmlDoc.gpolygons[idx]['title']){
+                    case 'Skane':
+                        color = '#F1948A'
+                        break;
+                    case 'Halland':
+                        color = '#C39BD3'
+                        break;
+                }
+                console.log(geoXmlDoc.gpolygons[1]['title'])
+                geoXmlDoc.gpolygons[idx].setOptions({fillColor: color, strokeColor: color, fillOpacity: 0.7});
+            }
+
+
+
+
+
+        };
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnIE9wJPz5n13I1vcB02dx9mM2tcKNJ6A&libraries=visualization&callback=initMap">
     </script>
+
 {% endblock %}
 
 
-https://drive.google.com/open?id=0BwFGzorEH6RxcmdsaVV5WnVpcUk
+
