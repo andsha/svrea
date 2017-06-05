@@ -1,5 +1,5 @@
-fread = open('./static/maps/Sweden/County.kml', 'r')
-fwrite = open('./static/maps/Sweden/County_reduced.kml', 'w+')
+fread = open('./static/maps/Sweden/Muni.kml', 'r')
+fwrite = open('./static/maps/Sweden/Muni_reduced.kml', 'w+')
 i = 0
 while True:
     l = fread.readline()
@@ -35,14 +35,17 @@ while True:
 
                 l = ''
                 if len(coords) > 50:
-                    t = 0
+                    l1_old = coords[0].split(',')[0][0:6]
+                    l2_old = coords[0].split(',')[0][0:6]
                     for c in coords:
                         #print('c=%s' %c)
-                        if t % 5 == 0:
-                            nl = '%s,%s,%s' %(c.split(',')[0][0:6], c.split(',')[1][0:6], 0)
+                        l1 = c.split(',')[0][0:5]
+                        l2 = c.split(',')[1][0:5]
+                        if l1 != l1_old and l2 != l2_old:
+                            nl = '%s,%s,%s' %(l1, l2, 0)
                             l = '%s %s' %(l, nl)
-                            t = 0
-                        t += 1
+                            l1_old = l1
+                            l2_old = l2
                 else:
                     #print('small area %s' % (i))
                     writeinf = False
