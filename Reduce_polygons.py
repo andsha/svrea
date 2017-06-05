@@ -35,6 +35,7 @@ while True:
 
                 l = ''
                 if len(coords) > 50:
+                    t = 0
                     l1_old = coords[0].split(',')[0][0:6]
                     l2_old = coords[0].split(',')[0][0:6]
                     for c in coords:
@@ -46,6 +47,10 @@ while True:
                             l = '%s %s' %(l, nl)
                             l1_old = l1
                             l2_old = l2
+                            t += 1
+                    if t < 5:
+                        #print(i)
+                        writeinf = False
                 else:
                     #print('small area %s' % (i))
                     writeinf = False
