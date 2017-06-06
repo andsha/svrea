@@ -238,6 +238,7 @@ def density_map(request):
 def maps_price_density(request):
     if request.POST.get('submit') == 'Log Out':
         logout(request)
+        return redirect('index')
 
     context = {
         "success": False
