@@ -417,7 +417,7 @@ class Svrea_script():
                 (listings, listings_created) = Listings.objects.update_or_create(
                     booliid=listing['booliId'],
                     defaults={
-                        "datepublished": listing['published'],
+                        "datepublished": listing['published'] if 'published' in listing else None,
                         "source": source,
                         "address": address,
                         "latitude": listing['location']['position']['latitude'],
