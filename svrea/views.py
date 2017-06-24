@@ -3,24 +3,31 @@ import sys
 import datetime
 import calendar
 import numpy
+from operator import itemgetter
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import models
-from django.db.models import Count, Max, F, Sum, Func, Avg
+from django.db.models import Count, Max, F, Sum, Func, Avg, Q
 from django.db.models.functions import Coalesce
 
 from svrea_script.models import Listings, Address
 from svrea_etl.models import EtlListings
 
+from static.maps.Sweden.ListOfMunis import MuniList
 
 
 class To_char(Func):
     function = 'to_char'
-    template = "%(function)s(%(expressions)s, '%(dtype)s')"
+    template = "%(function)s(%(expressions)s, %(dtype)s')"
     utput_field = models.IntegerField()
+
+class cast(Func):
+    template = "%(expressions)s::%(dtype)s"
+    if '%(dtype)s' == 'bigint':
+        output_field = models.BigIntegerField()
 
 
 def index(request):
@@ -210,40 +217,130 @@ def index_login(request):
     return render(request, "svrea/index_login.html", context=context)
 
 
-
-
 @login_required(redirect_field_name = "", login_url="/")
-def listings_map(request):
-    if request.POST.get('submit') == 'Log Out':
-        logout(request)
-
-    context = {
-        "success": False
-    }
-    return render(request, "svrea/index_login.html", context=context)
-
-
-@login_required(redirect_field_name = "", login_url="/")
-def density_map(request):
-    if request.POST.get('submit') == 'Log Out':
-        logout(request)
-
-    context = {
-        "success": False
-    }
-    return render(request, "svrea/index_login.html", context=context)
-
-
-@login_required(redirect_field_name = "", login_url="/")
-def maps_price_density(request):
+def maps(request, map_type):
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect('index')
 
+    period_type = 'Day'
+    period_day = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+    period_week = '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if
+    datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1])
+    period_month = '%s-%s' % (datetime.date.today().year
+                               ,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month)
+    period_year = '%s' % datetime.date.today().year
+    period_dayfrom = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+    period_dayto = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+
+    #print('request', request.POST)
+    if request.POST.get('period_type'):
+        #print('request', request.POST)
+        period_type = request.POST.get('period_type')
+        period_day = request.POST.get('period_day')
+        period_week = request.POST.get('period_week')
+        period_month = request.POST.get('period_month')
+        period_year = request.POST.get('period_year')
+        period_dayfrom = request.POST.get('period_dayfrom')
+        period_dayto = request.POST.get('period_dayto')
+
+    #print(period_type)
+    if period_type == 'Day':
+        datefrom = datetime.datetime.strptime(period_day, "%Y-%m-%d")
+        dateto = datefrom + datetime.timedelta(days=1)
+    elif period_type == 'Week':
+        #print(period_week)
+        datefrom = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
+        dateto = datefrom + datetime.timedelta(days=7)
+        print(datefrom, dateto)
+    elif period_type == 'Month':
+        datefrom = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
+        dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
+    elif "period_type" == 'Year':
+        datefrom = datetime.datetime.strptime("period_year" + '-01-01', "%Y-%m-%d")
+        dateto = datetime.datetime.strptime("period_year" + '-12-31',
+                                            "%Y-%m-%d") + datetime.timedelta(days=1)
+    else:  # Period
+        datefrom = "period_dayfrom"
+        dateto = datetime.datetime.strptime("period_dayto", '%Y-%m-%d') + datetime.timedelta(days=1)
+
+
+
+    field = ''
+    if map_type == 'listings':
+        field = 'active_listings'
+        text = 'active listings'
+    elif map_type == 'listing_price':
+        field = 'listing_price_med'
+        text = 'active listings median price'
+    elif map_type == 'listing_price_sqm':
+        field = 'listing_price_sqm_med'
+        text = 'active listings median price per m<sup>2<sup>'
+    elif map_type == 'sold':
+        field = 'sold_today'
+        text = 'properties sold'
+    elif map_type == 'sold_price':
+        field = 'sold_price_med'
+        text = 'sold property median price'
+    elif map_type == 'sold_price_sqm':
+        field = 'sold_price_sqm_med'
+        text = 'sold property median price per m<sup>2<sup>'
+    else:
+        return redirect('index')
+
+    ml = EtlListings.objects.filter(geographic_type__exact='municipality', record_date__range = (datefrom,dateto)).values('geographic_name')
+
+    if map_type == 'listings':
+        ml = ml.annotate(s=Avg('active_listings'))
+        text = 'active listings'
+    elif map_type == 'listing_price':
+        ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_avg')) / Sum('active_listings'))
+
+    elif map_type == 'sold':
+        ml = ml.annotate(s = Sum('sold_today'))
+    elif map_type == 'sold_price':
+        ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype = 'bigint') * F('sold_price_med')) / Sum('sold_today'), 0))
+        text = 'sold property median price'
+    ml = ml.values_list('geographic_name', 's')
+
+    # print(ml)
+    # for m in ml:
+    #     print(m)
+        #print(datefrom, dateto)
+
+    muniListings = sorted(ml, key=itemgetter(1))
+    maxMuniListings = muniListings[-2][1]
+    minMuniListings = muniListings[1][1]
+    map_colors = [
+        '#02F005', # green
+        '#97FF02', # salad
+        '#CDFF02', # yellow-green
+        '#E8FF02', #yellow
+        '#FFD102', #orange
+        '#FF8402', #dark orange
+        '#FF0000' #dark red
+    ]
+    minuListingsColors = {}
+    for m in muniListings:
+        idx = int((m[1] -  minMuniListings) / maxMuniListings * len(map_colors))
+        idx = 0 if idx < 0 else idx
+        minuListingsColors[m[0]] = {"color" : map_colors[idx] if idx < len(map_colors) else '#900000',
+                                    "text" : "%s %s" %(m[1], text)
+                                    }
+
     context = {
-        "success": False
+        "success": False,
+        "minuListingsColors" : minuListingsColors,
+        "period_type" : period_type,
+        "period_day" : period_day,
+        "period_week": period_week,
+        "period_month": period_month,
+        "period_year": period_year,
+        "period_dayfrom": period_dayfrom,
+        "period_dayto": period_dayto
     }
-    return render(request, "svrea/maps_price_density.html", context=context)
+
+    return render(request, "svrea/maps.html", context=context)
 
 
 @login_required(redirect_field_name = "", login_url="/")

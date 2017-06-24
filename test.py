@@ -1,11 +1,9 @@
-from rq import Queue
-from redis import Redis
-import redis
-
 import time
-#from script.svrea_script import testfunc
 
-from Reduce_polygons import testfunc
+import redis
+from rq import Queue
+
+from static.maps.Sweden.Reduce_polygons import testfunc
 
 #redis_conn = Redis(port=6379)
 #redis_url = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')

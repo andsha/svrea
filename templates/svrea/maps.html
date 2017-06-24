@@ -1,0 +1,171 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block head %}
+<style>
+    .full, html, body {
+        height:100%;
+        margin:0;
+    }
+    .full {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #map {
+        flex:2;
+        display: flex;
+    }
+</style>
+
+   <script>
+        function displayPeriodForm(){
+            console.log('hello')
+            document.getElementById('period_day').style.display='none';
+            document.getElementById('period_week').style.display='none';
+            document.getElementById('period_month').style.display='none';
+            document.getElementById('period_year').style.display='none';
+            document.getElementById('period_dayfrom').style.display='none';
+            document.getElementById('period_dayto').style.display='none';
+
+            switch (document.getElementById('period_type').selectedIndex){
+                case 0:
+                    document.getElementById('period_day').style.display='';
+                    break;
+                case 1:
+                    document.getElementById('period_week').style.display='';
+                    break;
+                case 2:
+                    document.getElementById('period_month').style.display='';
+                    break;
+                case 3:
+                    document.getElementById('period_year').style.display='';
+                    break;
+                case 4:
+                    document.getElementById('period_dayfrom').style.display='';
+                    document.getElementById('period_dayto').style.display='';
+                    break;
+            };
+        };
+
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="text-center blue">
+        <form name="map_period" method="POST"> {% csrf_token %}
+            <h4>
+                Map for
+                <select name="period_type" id="period_type" onchange="displayPeriodForm()">
+                    <option {%if period_type == "Day"%} selected {%endif%}> Day </option>
+                    <option {%if period_type == "Week"%} selected {%endif%}> Week </option>
+                    <option {%if period_type == "Month"%} selected {%endif%}> Month </option>
+                    <option {%if period_type == "Year"%} selected {%endif%}> Year </option>
+                    <option {%if period_type == "Period"%} selected {%endif%}> Period </option>
+                </select>
+                <input type="date" id="period_day"      name="period_day"   {% if period_type != "Day"%}  style="display:none" {%endif%} value="{{period_day}}">
+                <input type="week" id="period_week"     name="period_week"  {% if period_type != "Week"%}  style="display:none" {%endif%} value="{{period_week}}">
+                <input type="month"id="period_month"    name="period_month" {% if period_type != "Month"%} style="display:none" {%endif%} value="{{period_month}}">
+                <input type="year" id="period_year"     name="period_year"  {% if period_type != "Year"%}  style="display:none" {%endif%} value="{{period_year}}">
+                <input type="date" id="period_dayfrom"  name="period_dayfrom"   {% if period_type != "Period"%}  style="display:none" {%endif%} value="{{period_dayfrom}}">
+                <input type="date" id="period_dayto"    name="period_dayto"   {% if period_type != "Period"%}  style="display:none" {%endif%} value="{{period_dayto}}">
+                <button type="button" class="btn btn-default" onclick="this.form.submit();">Show</button>
+            </h4>
+        </form>
+    </div>
+    <div id="map"></div>
+
+
+
+    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/polys/geoxml3.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/geocodezip/geoxml3/master/ProjectedOverlay.js"></script>
+
+    <script>
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 57.585752, lng:  14.198204},
+                zoom: 5,
+                maxZoom:12,
+                minZoom: 5,
+                scaleControl: true
+            });
+
+            var myParser = new geoXML3.parser({
+                map: map,
+                singleInfoWindow: false,
+                afterParse: useTheData
+            });
+
+            myParser.parse('{% static "maps/Sweden/Muni_reduced.kml" %}');
+
+            function useTheData(doc){
+                geoXmlDoc = doc[0];
+
+                for (idx = 0; idx < geoXmlDoc.placemarks.length; idx += 1){
+                    var placemark = geoXmlDoc.placemarks[idx];
+                    var color = '#EAECEE'
+                    var text = ''
+                    switch(placemark.name){
+                        {% for muni,data in minuListingsColors.items %} 
+                        case '{{ muni }}': 
+                            color = '{{data.color}}'
+                            {% autoescape off %}
+                            text = '{{ muni }}: {{data.text}}'
+                            {% endautoescape %}
+                            break; 
+                        {% endfor %}
+                    }
+                    placemark.polygon.setOptions({fillColor: color, strokeColor: color, fillOpacity: 0.7});
+                    //console.log(text)
+                    polygonMouseover(placemark, doc, text );
+                }
+            };
+
+
+            function polygonMouseover(placemark, doc, text) {
+                //console.log(infowindow)
+                google.maps.event.addListener(placemark.polygon,'mouseover', function(evt) {
+                    //console.log(placemark.Polygon[0].outerBoundaryIs[0].coordinates.length)
+                    var lat1 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[0].lat
+                    var lng1 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[0].lng
+                    var lat2 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[placemark.Polygon[0].outerBoundaryIs[0].coordinates.length/3 | 0].lat
+                    var lng2 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[placemark.Polygon[0].outerBoundaryIs[0].coordinates.length/3 | 0].lng
+                    var lat3 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[placemark.Polygon[0].outerBoundaryIs[0].coordinates.length/3*2 | 0].lat
+                    var lng3 = placemark.Polygon[0].outerBoundaryIs[0].coordinates[placemark.Polygon[0].outerBoundaryIs[0].coordinates.length/3*2 | 0].lng
+                    var lat = (lat1 + lat2 + lat3) / 3
+                    var lng = (lng1 + lng2 + lng3) / 3
+                    var markerOptions = geoXML3.combineOptions({
+                        map:      map,
+                        position: new google.maps.LatLng(lat, lng),
+                        visible: false
+                    });
+                    var marker = new google.maps.Marker(markerOptions);
+                    placemark.marker = marker
+                    var infoWindowOptions = geoXML3.combineOptions({
+                        content: text,
+                        pixelOffset: new google.maps.Size(0, 2)
+                    });
+                    //console.log("fe", infoWindowOptions.content)
+                    placemark.polygon.infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+                    placemark.polygon.infoWindow.open(map, marker);
+
+                });
+                google.maps.event.addListener(placemark.polygon,'mouseout', function(evt) {
+                    placemark.marker.setMap(null);
+                    placemark.marker = null;
+                    placemark.polygon.infoWindow.close();
+                });
+            };
+        };
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnIE9wJPz5n13I1vcB02dx9mM2tcKNJ6A&libraries=visualization&callback=initMap">
+    </script>
+
+
+{% endblock %}
