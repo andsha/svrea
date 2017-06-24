@@ -43,12 +43,12 @@ while True:
                 l = ''
                 if len(coords) > 20:
                     t = 0
-                    l1_old = coords[0].split(',')[0][0:5]
-                    l2_old = coords[0].split(',')[0][0:5]
+                    l1_old = coords[0].split(',')[0][0:6]
+                    l2_old = coords[0].split(',')[0][0:6]
                     for c in coords:
                         #print('c=%s' %c)
-                        l1 = c.split(',')[0][0:5]
-                        l2 = c.split(',')[1][0:5]
+                        l1 = c.split(',')[0][0:6]
+                        l2 = c.split(',')[1][0:6]
                         if l1 != l1_old and l2 != l2_old:
                             nl = '%s,%s,%s' %(l1, l2, 0)
                             l = '%s %s' %(l, nl)
