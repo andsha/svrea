@@ -266,27 +266,27 @@ def maps(request, map_type):
 
 
 
-    field = ''
-    if map_type == 'listings':
-        field = 'active_listings'
-        text = 'active listings'
-    elif map_type == 'listing_price':
-        field = 'listing_price_med'
-        text = 'active listings median price'
-    elif map_type == 'listing_price_sqm':
-        field = 'listing_price_sqm_med'
-        text = 'active listings median price per m<sup>2<sup>'
-    elif map_type == 'sold':
-        field = 'sold_today'
-        text = 'properties sold'
-    elif map_type == 'sold_price':
-        field = 'sold_price_med'
-        text = 'sold property median price'
-    elif map_type == 'sold_price_sqm':
-        field = 'sold_price_sqm_med'
-        text = 'sold property median price per m<sup>2<sup>'
-    else:
-        return redirect('index')
+    # field = ''
+    # if map_type == 'listings':
+    #     field = 'active_listings'
+    #     text = 'active listings'
+    # elif map_type == 'listing_price':
+    #     field = 'listing_price_med'
+    #     text = 'active listings median price'
+    # elif map_type == 'listing_price_sqm':
+    #     field = 'listing_price_sqm_med'
+    #     text = 'active listings median price per m<sup>2<sup>'
+    # elif map_type == 'sold':
+    #     field = 'sold_today'
+    #     text = 'properties sold'
+    # elif map_type == 'sold_price':
+    #     field = 'sold_price_med'
+    #     text = 'sold property median price'
+    # elif map_type == 'sold_price_sqm':
+    #     field = 'sold_price_sqm_med'
+    #     text = 'sold property median price per m<sup>2<sup>'
+    # else:
+    #     return redirect('index')
 
     ml = EtlListings.objects.filter(geographic_type__exact='municipality', record_date__range = (datefrom,dateto)).values('geographic_name')
 
@@ -295,12 +295,13 @@ def maps(request, map_type):
         text = 'active listings'
     elif map_type == 'listing_price':
         ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_avg')) / Sum('active_listings'))
-
     elif map_type == 'sold':
         ml = ml.annotate(s = Sum('sold_today'))
     elif map_type == 'sold_price':
         ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype = 'bigint') * F('sold_price_med')) / Sum('sold_today'), 0))
         text = 'sold property median price'
+    else:
+        return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
     # print(ml)
