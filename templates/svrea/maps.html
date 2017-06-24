@@ -59,6 +59,14 @@
         <form name="map_period" method="POST"> {% csrf_token %}
             <h4>
                 Map for
+                <select name="map_type" id="map_type">
+                    <option {%if map_type == "listings"%} selected {%endif%} value="listings"> Active Listings </option>
+                    <option {%if map_type == "listing_price"%} selected {%endif%} value="listing_price"> Active Listing Prices </option>
+                    <option {%if map_type == "listing_price_sqm"%} selected {%endif%} value="listing_price_sqm"> Active Listing Prices / m<sub>2</sub> </option>
+                    <option {%if map_type == "sold"%} selected {%endif%} value="sold"> Sold Properties </option>
+                    <option {%if map_type == "sold_price"%} selected {%endif%} value="sold_price"> Sold Property Prices </option>
+                    <option {%if map_type == "sold_price_sqm"%} selected {%endif%} value="sold_price_sqm"> Sold Property Prices / m<sub>2</sub> </option>
+                </select>
                 <select name="period_type" id="period_type" onchange="displayPeriodForm()">
                     <option {%if period_type == "Day"%} selected {%endif%}> Day </option>
                     <option {%if period_type == "Week"%} selected {%endif%}> Week </option>
@@ -114,7 +122,7 @@
                         case '{{ muni }}': 
                             color = '{{data.color}}'
                             {% autoescape off %}
-                            text = '{{ muni }}: {{data.text}}'
+                            text = '{{ muni }}: {{data.text | intcomma}}'
                             {% endautoescape %}
                             break; 
                         {% endfor %}

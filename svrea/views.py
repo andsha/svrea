@@ -21,7 +21,7 @@ from static.maps.Sweden.ListOfMunis import MuniList
 
 class To_char(Func):
     function = 'to_char'
-    template = "%(function)s(%(expressions)s, %(dtype)s')"
+    template = "%(function)s(%(expressions)s, '%(dtype)s')"
     utput_field = models.IntegerField()
 
 class cast(Func):
@@ -208,8 +208,8 @@ def index_login(request):
                                ]] + [[i[0], i[15], i[16], i[17], i[18]] for i in listings],
             "county" : county
         }
-    except:
-        print('ee')
+    except Exception as e:
+        print(e)
         sys.stdout.flush()
         context = {
             "success" : False
@@ -218,7 +218,7 @@ def index_login(request):
 
 
 @login_required(redirect_field_name = "", login_url="/")
-def maps(request, map_type):
+def maps(request):
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect('index')
@@ -233,6 +233,8 @@ def maps(request, map_type):
     period_dayfrom = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
     period_dayto = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
 
+    map_type = 'listings'
+
     #print('request', request.POST)
     if request.POST.get('period_type'):
         #print('request', request.POST)
@@ -243,8 +245,9 @@ def maps(request, map_type):
         period_year = request.POST.get('period_year')
         period_dayfrom = request.POST.get('period_dayfrom')
         period_dayto = request.POST.get('period_dayto')
+        map_type = request.POST.get('map_type')
 
-    #print(period_type)
+    print(map_type)
     if period_type == 'Day':
         datefrom = datetime.datetime.strptime(period_day, "%Y-%m-%d")
         dateto = datefrom + datetime.timedelta(days=1)
@@ -292,14 +295,22 @@ def maps(request, map_type):
 
     if map_type == 'listings':
         ml = ml.annotate(s=Avg('active_listings'))
-        text = 'active listings'
+        text = 'Properties for sale'
     elif map_type == 'listing_price':
-        ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_avg')) / Sum('active_listings'))
+        ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_med')) / Sum('active_listings'))
+        text = 'SEK property median price'
+    elif map_type == 'listing_price_sqm':
+        ml = ml.annotate(s=Sum(cast('active_listings', dtype='bigint') * F('listing_price_med')) / Sum(cast('active_listings', dtype='bigint') * F('listing_area_avg')))
+        text = 'SEK, property median price per m<sup>2<sup>'
     elif map_type == 'sold':
         ml = ml.annotate(s = Sum('sold_today'))
+        text = 'sold properties'
     elif map_type == 'sold_price':
         ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype = 'bigint') * F('sold_price_med')) / Sum('sold_today'), 0))
-        text = 'sold property median price'
+        text = 'SEK, sold property median price'
+    elif map_type == 'sold_price_sqm':
+        ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_price_med')), 0) / Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_area_avg')), 1))
+        text = 'SEK, sold property median price per m<sup>2<sup>'
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
@@ -338,7 +349,8 @@ def maps(request, map_type):
         "period_month": period_month,
         "period_year": period_year,
         "period_dayfrom": period_dayfrom,
-        "period_dayto": period_dayto
+        "period_dayto": period_dayto,
+        "map_type" : map_type
     }
 
     return render(request, "svrea/maps.html", context=context)
