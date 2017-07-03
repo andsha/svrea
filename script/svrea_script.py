@@ -28,16 +28,28 @@ WARNING = 1101
 ERROR = 1102
 INFO = 1103
 
-area_list = [['64', 'Skane'],
-             ['160', 'Halland'],
-             ['23', 'Vastra Gotalands'],
-             ['2',  'Stockholm lan'],
-             ['783', 'Kronobergs lan'],
-             ['45', 'Blekinge lan'],
-             ['381', 'Kalmar'],
-             ['153', 'Jonkoping'],
-             ['253', 'Ostergotland lan'],
-             ['26', 'Sodermanlands lan'],
+area_list = [['2',  'Stockholm lan'],
+            ['26', 'Sodermanlands lan'],
+            ['253', 'Ostergotland lan'],
+            ['153', 'Jönköpings län'],
+            ['783', 'Kronobergs lan'],
+            ['381', 'Kalmar län'],
+            ['64', 'Skåne län'],
+            ['160', 'Hallands län'],
+            ['23', 'Västra Götalands län'],
+
+            ['118',  'Uppsala'],
+            ['645',  'Gotland'],
+            ['45', 'Blekinge lan'],
+            ['390', 'Värmlands län'],
+            ['318', 'Örebro län'],
+            ['315', 'Västmanlands län'],
+            ['322', 'Dalarnas län'],
+            ['581', 'Gävleborgs län'],
+            ['250', 'Västernorrlands län'],
+            ['456', 'Jämtlands län'],
+            ['588', 'Västerbottens län'],
+            ['802', 'Norrbottens län']
              ]
 area_list.sort(key = lambda x: int(x[0]) )
 
