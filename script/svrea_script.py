@@ -237,7 +237,7 @@ class Svrea_script():
                     #print('stop thread')
                     return 1
 
-                tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit)))
+                tolog(INFO, "%s out of %s" % (int(offset / limit) + 1, int(maxcount / limit)))
                 uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
                 timestamp = str(int(time.time()))
                 hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
