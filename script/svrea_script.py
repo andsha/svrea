@@ -41,7 +41,7 @@ area_list = [
 
             ['118',  'Uppsala'],
             ['645',  'Gotland'],
-            ['45', 'Blekinge lan'],
+            ['145', 'Blekinge lan'],
             ['390', 'Värmlands län'],
             ['318', 'Örebro län'],
             ['315', 'Västmanlands län'],
@@ -237,7 +237,7 @@ class Svrea_script():
                     #print('stop thread')
                     return 1
 
-                tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit) + 1))
+                tolog(INFO, "%s out of %s" % (offset / limit + 1, int(maxcount / limit)))
                 uniqueString = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(16))
                 timestamp = str(int(time.time()))
                 hashstr = sha1((gCallerId + timestamp + gUniqueKey + uniqueString).encode('utf-8')).hexdigest()
