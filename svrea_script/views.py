@@ -170,7 +170,7 @@ def script_data(request):
         return redirect("index")
 
     #info = Rawdata.objects.annotate(sizeofdata=Len_Of_JSON_Field('rawdata')).order_by('downloaded').all()
-    alldata = Rawdata.objects.order_by('downloaded').defer('rawdata')
+    alldata = Rawdata.objects.order_by('-downloaded').defer('rawdata')
     paginator = Paginator(alldata, 100, orphans=9)
     page = request.GET.get('page')
     try:

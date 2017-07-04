@@ -41,7 +41,7 @@ while True:
                 i += 1
 
                 l = ''
-                if len(coords) > 20:
+                if len(coords) > 10:
                     t = 0
                     l1_old = coords[0].split(',')[0][0:5]
                     l2_old = coords[0].split(',')[0][0:5]
