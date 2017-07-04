@@ -29,16 +29,15 @@ ERROR = 1102
 INFO = 1103
 
 area_list = [
-            # ['2',  'Stockholm lan'],
-            # ['26', 'Sodermanlands lan'],
-            # ['253', 'Ostergotland lan'],
-            # ['153', 'Jönköpings län'],
-            # ['783', 'Kronobergs lan'],
-            # ['381', 'Kalmar län'],
-            # ['64', 'Skåne län'],
-            # ['160', 'Hallands län'],
-            # ['23', 'Västra Götalands län'],
-
+            ['2',  'Stockholm lan'],
+            ['26', 'Sodermanlands lan'],
+            ['253', 'Ostergotland lan'],
+            ['153', 'Jönköpings län'],
+            ['783', 'Kronobergs lan'],
+            ['381', 'Kalmar län'],
+            ['64', 'Skåne län'],
+            ['160', 'Hallands län'],
+            ['23', 'Västra Götalands län'],
             ['118',  'Uppsala'],
             ['645',  'Gotland'],
             ['145', 'Blekinge lan'],
