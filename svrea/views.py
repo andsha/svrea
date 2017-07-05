@@ -2,7 +2,7 @@ import sys
 
 import datetime
 import calendar
-import numpy
+import numpy, math
 from operator import itemgetter
 
 from django.shortcuts import render, redirect
@@ -247,7 +247,7 @@ def maps(request):
         period_dayto = request.POST.get('period_dayto')
         map_type = request.POST.get('map_type')
 
-    print(map_type)
+    print(period_type)
     if period_type == 'Day':
         datefrom = datetime.datetime.strptime(period_day, "%Y-%m-%d")
         dateto = datefrom + datetime.timedelta(days=1)
@@ -259,9 +259,9 @@ def maps(request):
     elif period_type == 'Month':
         datefrom = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
         dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
-    elif "period_type" == 'Year':
-        datefrom = datetime.datetime.strptime("period_year" + '-01-01', "%Y-%m-%d")
-        dateto = datetime.datetime.strptime("period_year" + '-12-31',
+    elif period_type == 'Year':
+        datefrom = datetime.datetime.strptime(period_year + '-01-01', "%Y-%m-%d")
+        dateto = datetime.datetime.strptime(period_year + '-12-31',
                                             "%Y-%m-%d") + datetime.timedelta(days=1)
     else:  # Period
         datefrom = "period_dayfrom"
@@ -295,34 +295,34 @@ def maps(request):
 
     if map_type == 'listings':
         ml = ml.annotate(s=Avg('active_listings'))
-        text = 'Properties for sale'
+        text = 'Properties'
     elif map_type == 'listing_price':
         ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_med')) / Sum('active_listings'))
-        text = 'SEK property median price'
+        text = 'SEK'
     elif map_type == 'listing_price_sqm':
-        ml = ml.annotate(s=Sum(cast('active_listings', dtype='bigint') * F('listing_price_med')) / Sum(cast('active_listings', dtype='bigint') * F('listing_area_avg')))
-        text = 'SEK, property median price per m<sup>2<sup>'
+        ml = ml.annotate(s=Coalesce(Sum(cast('active_listings', dtype='bigint') * F('listing_price_med')),0) / Coalesce(Sum(cast('active_listings', dtype='bigint') * F('listing_area_avg')),1))
+        text = 'SEK/m<sup>2<sup>'
     elif map_type == 'sold':
         ml = ml.annotate(s = Sum('sold_today'))
-        text = 'sold properties'
+        text = 'Properties'
     elif map_type == 'sold_price':
         ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype = 'bigint') * F('sold_price_med')) / Sum('sold_today'), 0))
-        text = 'SEK, sold property median price'
+        text = 'SEK'
     elif map_type == 'sold_price_sqm':
         ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_price_med')), 0) / Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_area_avg')), 1))
-        text = 'SEK, sold property median price per m<sup>2<sup>'
+        text = 'SEK/m<sup>2<sup>'
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
-    # print(ml)
-    # for m in ml:
-    #     print(m)
+    #print(ml)
+    #for m in ml:
+        #print(m)
         #print(datefrom, dateto)
 
     muniListings = sorted(ml, key=itemgetter(1))
-    maxMuniListings = muniListings[-2][1]
-    minMuniListings = muniListings[1][1]
+    maxMuniListings = muniListings[-int(len(muniListings)/50)][1]
+    minMuniListings = muniListings[int(len(muniListings)/50)][1]
     map_colors = [
         '#02F005', # green
         '#97FF02', # salad
@@ -334,10 +334,15 @@ def maps(request):
     ]
     minuListingsColors = {}
     for m in muniListings:
-        idx = int((m[1] -  minMuniListings) / maxMuniListings * len(map_colors))
+        a = m[1] - minMuniListings
+        b = maxMuniListings - minMuniListings
+        idx = int( a / b * (len(map_colors) -1 ))
+        idx = 0 if idx <0 else idx
+        #print(m, minMuniListings, maxMuniListings, a, b, idx
+        #idx = int((m[1] -  minMuniListings) / maxMuniListings * len(map_colors))
         idx = 0 if idx < 0 else idx
-        minuListingsColors[m[0]] = {"color" : map_colors[idx] if idx < len(map_colors) else '#900000',
-                                    "text" : "%s %s" %(m[1], text)
+        minuListingsColors[m[0]] = {"color" : map_colors[idx] if idx < len(map_colors) else '#000000',
+                                    "text" : "%s %s" %(int(m[1]), text)
                                     }
 
     context = {

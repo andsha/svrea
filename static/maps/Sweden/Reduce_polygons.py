@@ -41,21 +41,26 @@ while True:
                 i += 1
 
                 l = ''
-                if len(coords) > 10:
+                if len(coords) > 5:
                     t = 0
                     l1_old = coords[0].split(',')[0][0:5]
+                    #l1_old += '5'
                     l2_old = coords[0].split(',')[0][0:5]
+                    #l2_old += '5'
                     for c in coords:
                         #print('c=%s' %c)
                         l1 = c.split(',')[0][0:5]
+                        #l1 += '5'
                         l2 = c.split(',')[1][0:5]
+                        #l2 += '5'
+                        #print(l1,l2)
                         if l1 != l1_old and l2 != l2_old:
                             nl = '%s,%s,%s' %(l1, l2, 0)
                             l = '%s %s' %(l, nl)
                             l1_old = l1
                             l2_old = l2
                             t += 1
-                    if t < 5:
+                    if t < 3:
                         #print(i)
                         writeinf = False
                 else:

@@ -140,6 +140,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.53,58.63,0 16.54,58.62,0 16.52,58.63,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.20,58.63,0 16.21,58.62,0 16.24,58.61,0 16.23,58.60,0 16.20,58.61,0 16.19,58.62,0 16.18,58.63,0
 						</coordinates>
 					</LinearRing>
@@ -148,7 +156,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.83,58.58,0 16.81,58.57,0 16.82,58.58,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.95,58.53,0 16.94,58.52,0 16.93,58.53,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.96,58.48,0 16.95,58.49,0 16.94,58.50,0 16.91,58.51,0 16.89,58.52,0 16.92,58.51,0 16.95,58.50,0 16.96,58.51,0 16.97,58.50,0 16.98,58.49,0 16.99,58.48,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.02,58.51,0 17.01,58.50,0 17.00,58.49,0 17.01,58.50,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.88,58.46,0 16.87,58.45,0 16.86,58.46,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.79,58.43,0 16.78,58.42,0 16.77,58.43,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -164,6 +212,14 @@
 					<LinearRing>
 <coordinates>
  16.83,58.28,0 16.82,58.29,0 16.78,58.28,0 16.79,58.29,0 16.80,58.28,0 16.83,58.27,0 16.77,58.28,0 16.76,58.27,0 16.74,58.26,0 16.73,58.25,0 16.72,58.26,0 16.70,58.27,0 16.69,58.26,0 16.67,58.27,0 16.65,58.28,0 16.64,58.29,0 16.63,58.30,0 16.62,58.31,0 16.56,58.32,0 16.55,58.33,0 16.54,58.34,0 16.53,58.33,0 16.52,58.34,0 16.51,58.35,0 16.46,58.36,0 16.43,58.35,0 16.41,58.36,0 16.38,58.37,0 16.34,58.38,0 16.32,58.37,0 16.30,58.38,0 16.26,58.37,0 16.27,58.36,0 16.28,58.35,0 16.29,58.34,0 16.28,58.33,0 16.27,58.32,0 16.26,58.31,0 16.25,58.30,0 16.19,58.31,0 16.18,58.32,0 16.15,58.33,0 16.13,58.34,0 16.11,58.35,0 16.09,58.34,0 16.08,58.35,0 16.07,58.36,0 16.06,58.37,0 16.05,58.38,0 16.04,58.37,0 16.03,58.38,0 16.02,58.40,0 16.01,58.41,0 16.03,58.40,0 16.04,58.41,0 16.03,58.42,0 16.04,58.43,0 16.05,58.45,0 16.09,58.46,0 16.08,58.47,0 16.09,58.49,0 16.11,58.50,0 16.14,58.51,0 16.27,58.50,0 16.34,58.49,0 16.32,58.48,0 16.33,58.47,0 16.39,58.46,0 16.41,58.47,0 16.46,58.46,0 16.49,58.45,0 16.52,58.44,0 16.56,58.43,0 16.59,58.44,0 16.60,58.43,0 16.61,58.44,0 16.62,58.42,0 16.63,58.41,0 16.64,58.42,0 16.65,58.41,0 16.66,58.40,0 16.70,58.39,0 16.71,58.38,0 16.72,58.37,0 16.71,58.36,0 16.70,58.35,0 16.71,58.36,0 16.72,58.35,0 16.74,58.36,0 16.75,58.37,0 16.76,58.36,0 16.77,58.37,0 16.78,58.36,0 16.79,58.35,0 16.78,58.34,0 16.79,58.33,0 16.76,58.32,0 16.75,58.33,0 16.74,58.34,0 16.72,58.33,0 16.66,58.34,0 16.64,58.35,0 16.63,58.34,0 16.65,58.33,0 16.68,58.32,0 16.71,58.31,0 16.74,58.30,0 16.75,58.31,0 16.85,58.30,0 16.88,58.29,0 16.87,58.28,0 16.88,58.27,0 16.85,58.26,0 16.84,58.27,0 16.83,58.26,0 16.82,58.27,0 16.84,58.28,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.97,58.43,0 16.98,58.44,0 16.97,58.45,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -187,7 +243,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.01,58.42,0 17.00,58.41,0 17.01,58.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.83,58.41,0 16.84,58.42,0 16.83,58.41,0 16.82,58.40,0 16.81,58.41,0 16.82,58.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.88,58.41,0 16.89,58.42,0 16.88,58.41,0 16.86,58.42,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -211,7 +283,71 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.97,58.39,0 16.96,58.38,0 16.97,58.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.88,58.39,0 16.87,58.38,0 16.86,58.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.88,58.38,0 16.87,58.37,0 16.86,58.38,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.90,58.37,0 16.89,58.36,0 16.88,58.35,0 16.89,58.34,0 16.88,58.35,0 16.87,58.34,0 16.86,58.35,0 16.88,58.36,0 16.89,58.37,0 16.88,58.36,0 16.87,58.37,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.78,58.33,0 16.79,58.32,0 16.76,58.33,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.95,58.31,0 16.94,58.30,0 16.93,58.31,0 16.94,58.33,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.96,58.31,0 16.95,58.30,0 16.94,58.31,0 16.95,58.32,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.81,58.27,0 16.80,58.26,0 16.79,58.27,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.79,58.27,0 16.80,58.26,0 16.78,58.27,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -281,7 +417,95 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.03,58.25,0 17.02,58.24,0 17.03,58.25,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.86,58.24,0 16.85,58.23,0 16.84,58.24,0 16.85,58.25,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.97,58.24,0 16.98,58.23,0 16.95,58.24,0 16.96,58.23,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.92,58.23,0 16.93,58.22,0 16.92,58.21,0 16.91,58.22,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.96,58.22,0 16.95,58.21,0 16.94,58.22,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.02,58.22,0 17.00,58.21,0 17.01,58.22,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.04,58.22,0 17.03,58.21,0 17.04,58.22,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.91,58.20,0 16.92,58.19,0 16.93,58.20,0 16.94,58.19,0 16.93,58.18,0 16.92,58.17,0 16.91,58.18,0 16.90,58.19,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.88,58.18,0 16.87,58.19,0 16.88,58.20,0 16.89,58.19,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.90,58.18,0 16.89,58.17,0 16.90,58.18,0 16.89,58.17,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.93,58.17,0 16.92,58.16,0 16.91,58.17,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.95,58.17,0 16.94,58.16,0 16.93,58.17,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -298,6 +522,22 @@
 					<LinearRing>
 <coordinates>
  16.80,58.09,0 16.78,58.10,0 16.79,58.11,0 16.81,58.12,0 16.82,58.11,0 16.81,58.10,0 16.82,58.09,0 16.83,58.10,0 16.84,58.09,0 16.83,58.08,0 16.82,58.09,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.86,58.10,0 16.85,58.09,0 16.84,58.10,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.77,58.09,0 16.79,58.08,0 16.78,58.09,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -339,6 +579,30 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.06,56.18,0 15.05,56.17,0 15.04,56.18,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 14.98,56.14,0 14.99,56.13,0 14.97,56.14,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 14.97,56.11,0 14.95,56.12,0 14.97,56.11,0 14.98,56.12,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -351,6 +615,14 @@
 					<LinearRing>
 <coordinates>
  15.63,56.18,0 15.62,56.17,0 15.60,56.16,0 15.59,56.17,0 15.60,56.16,0 15.59,56.15,0 15.58,56.14,0 15.57,56.15,0 15.56,56.16,0 15.55,56.17,0 15.56,56.16,0 15.58,56.17,0 15.57,56.18,0 15.58,56.19,0 15.60,56.18,0 15.59,56.20,0 15.58,56.21,0 15.57,56.20,0 15.56,56.19,0 15.57,56.18,0 15.55,56.19,0 15.54,56.18,0 15.53,56.17,0 15.52,56.16,0 15.51,56.17,0 15.49,56.18,0 15.48,56.19,0 15.47,56.20,0 15.48,56.21,0 15.49,56.22,0 15.48,56.23,0 15.47,56.24,0 15.48,56.25,0 15.47,56.27,0 15.46,56.26,0 15.44,56.27,0 15.39,56.28,0 15.38,56.29,0 15.37,56.30,0 15.38,56.31,0 15.37,56.33,0 15.34,56.34,0 15.32,56.35,0 15.30,56.36,0 15.31,56.37,0 15.34,56.38,0 15.33,56.39,0 15.34,56.40,0 15.39,56.39,0 15.42,56.40,0 15.43,56.41,0 15.44,56.42,0 15.45,56.44,0 15.46,56.43,0 15.50,56.44,0 15.49,56.45,0 15.47,56.46,0 15.48,56.47,0 15.50,56.48,0 15.52,56.49,0 15.58,56.48,0 15.59,56.47,0 15.60,56.46,0 15.62,56.45,0 15.65,56.44,0 15.66,56.43,0 15.67,56.42,0 15.68,56.41,0 15.72,56.40,0 15.74,56.39,0 15.75,56.38,0 15.76,56.37,0 15.77,56.36,0 15.78,56.35,0 15.79,56.34,0 15.80,56.33,0 15.81,56.32,0 15.83,56.31,0 15.88,56.30,0 15.91,56.31,0 15.95,56.30,0 15.97,56.29,0 16.01,56.30,0 16.03,56.31,0 16.04,56.30,0 16.05,56.29,0 16.04,56.28,0 16.03,56.27,0 16.04,56.26,0 16.03,56.25,0 16.04,56.24,0 16.01,56.23,0 16.00,56.22,0 15.99,56.20,0 15.98,56.19,0 15.97,56.20,0 15.96,56.19,0 15.95,56.18,0 15.94,56.17,0 15.93,56.16,0 15.92,56.15,0 15.91,56.14,0 15.90,56.13,0 15.89,56.12,0 15.88,56.11,0 15.87,56.10,0 15.86,56.09,0 15.85,56.08,0 15.84,56.07,0 15.83,56.08,0 15.82,56.09,0 15.81,56.10,0 15.79,56.09,0 15.78,56.10,0 15.79,56.12,0 15.80,56.13,0 15.81,56.14,0 15.82,56.15,0 15.81,56.16,0 15.82,56.17,0 15.81,56.16,0 15.82,56.17,0 15.81,56.16,0 15.78,56.15,0 15.80,56.14,0 15.79,56.15,0 15.78,56.14,0 15.77,56.15,0 15.78,56.14,0 15.76,56.13,0 15.77,56.12,0 15.76,56.11,0 15.75,56.10,0 15.74,56.11,0 15.73,56.10,0 15.74,56.11,0 15.73,56.12,0 15.71,56.13,0 15.72,56.14,0 15.73,56.13,0 15.74,56.14,0 15.73,56.15,0 15.76,56.16,0 15.75,56.15,0 15.72,56.16,0 15.71,56.17,0 15.70,56.16,0 15.69,56.15,0 15.68,56.16,0 15.67,56.15,0 15.66,56.16,0 15.65,56.17,0 15.66,56.18,0 15.65,56.17,0 15.64,56.18,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.05,56.27,0 16.06,56.26,0 16.04,56.27,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -410,6 +682,54 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.79,56.07,0 15.78,56.06,0 15.77,56.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.73,56.06,0 15.72,56.05,0 15.73,56.06,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.76,56.04,0 15.75,56.05,0 15.76,56.06,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.81,56.05,0 15.80,56.04,0 15.79,56.05,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.79,56.03,0 15.78,56.02,0 15.77,56.03,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.80,56.03,0 15.79,56.01,0 15.77,56.02,0 15.78,56.03,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -448,6 +768,22 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.26,56.16,0 15.27,56.15,0 15.26,56.16,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 15.43,56.13,0 15.41,56.12,0 15.40,56.13,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -460,6 +796,14 @@
 					<LinearRing>
 <coordinates>
  14.66,55.99,0 14.64,56.00,0 14.61,55.99,0 14.60,56.01,0 14.59,56.02,0 14.58,56.01,0 14.59,56.02,0 14.60,56.03,0 14.59,56.04,0 14.60,56.05,0 14.58,56.04,0 14.57,56.03,0 14.56,56.02,0 14.55,56.03,0 14.54,56.05,0 14.55,56.06,0 14.56,56.07,0 14.57,56.08,0 14.58,56.09,0 14.59,56.11,0 14.58,56.12,0 14.59,56.19,0 14.64,56.20,0 14.65,56.19,0 14.66,56.18,0 14.67,56.15,0 14.68,56.12,0 14.69,56.11,0 14.70,56.10,0 14.71,56.09,0 14.72,56.08,0 14.73,56.06,0 14.74,56.05,0 14.75,56.04,0 14.77,56.03,0 14.76,56.02,0 14.75,56.01,0 14.74,56.00,0 14.73,55.99,0 14.71,56.00,0 14.70,56.01,0 14.69,56.00,0 14.68,55.99,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 14.85,56.01,0 14.84,56.00,0 14.83,56.01,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -734,6 +1078,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.44,60.74,0 17.43,60.75,0 17.44,60.74,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -769,6 +1121,46 @@
 					<LinearRing>
 <coordinates>
  17.55,61.73,0 17.54,61.72,0 17.53,61.71,0 17.51,61.72,0 17.52,61.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.32,61.65,0 17.31,61.66,0 17.33,61.65,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.37,61.63,0 17.38,61.62,0 17.36,61.63,0 17.35,61.64,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.38,61.62,0 17.37,61.61,0 17.36,61.62,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.19,61.58,0 17.18,61.59,0 17.17,61.58,0 17.16,61.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.19,61.57,0 17.17,61.58,0 17.18,61.57,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -834,6 +1226,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.49,61.95,0 17.48,61.94,0 17.47,61.95,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -876,6 +1276,14 @@
 					<LinearRing>
 <coordinates>
  16.69,61.51,0 16.70,61.52,0 16.73,61.51,0 16.76,61.50,0 16.77,61.49,0 16.80,61.48,0 16.82,61.47,0 16.84,61.46,0 16.88,61.45,0 16.91,61.44,0 17.04,61.43,0 17.05,61.42,0 17.06,61.41,0 17.08,61.40,0 17.09,61.39,0 17.10,61.38,0 17.11,61.37,0 17.13,61.36,0 17.14,61.35,0 17.15,61.34,0 17.18,61.33,0 17.19,61.34,0 17.20,61.33,0 17.19,61.32,0 17.22,61.31,0 17.24,61.30,0 17.23,61.29,0 17.22,61.30,0 17.17,61.29,0 17.22,61.28,0 17.21,61.27,0 17.20,61.28,0 17.19,61.27,0 17.16,61.28,0 17.14,61.29,0 17.12,61.30,0 17.13,61.29,0 17.14,61.28,0 17.15,61.27,0 17.16,61.26,0 17.17,61.25,0 17.19,61.24,0 17.18,61.23,0 17.19,61.22,0 17.18,61.21,0 17.17,61.22,0 17.16,61.21,0 17.14,61.20,0 17.13,61.19,0 17.16,61.18,0 17.19,61.17,0 17.16,61.16,0 17.18,61.15,0 17.15,61.14,0 17.16,61.13,0 17.18,61.12,0 17.17,61.11,0 17.15,61.10,0 17.17,61.09,0 17.19,61.08,0 17.18,61.07,0 17.17,61.06,0 17.16,61.05,0 17.15,61.04,0 16.97,61.03,0 16.80,61.04,0 16.78,61.05,0 16.76,61.06,0 16.74,61.07,0 16.72,61.06,0 16.71,61.07,0 16.64,61.08,0 16.57,61.09,0 16.59,61.10,0 16.62,61.11,0 16.65,61.12,0 16.66,61.13,0 16.67,61.14,0 16.68,61.15,0 16.70,61.16,0 16.71,61.17,0 16.72,61.18,0 16.71,61.20,0 16.73,61.21,0 16.74,61.22,0 16.75,61.23,0 16.74,61.24,0 16.73,61.25,0 16.72,61.26,0 16.71,61.27,0 16.70,61.28,0 16.67,61.29,0 16.65,61.30,0 16.63,61.31,0 16.70,61.32,0 16.71,61.33,0 16.72,61.34,0 16.71,61.35,0 16.72,61.36,0 16.73,61.37,0 16.72,61.39,0 16.71,61.41,0 16.70,61.42,0 16.71,61.43,0 16.70,61.44,0 16.69,61.45,0 16.70,61.47,0 16.71,61.50,0 16.70,61.51,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.25,61.27,0 17.24,61.28,0 17.27,61.27,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -949,6 +1357,54 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.98,57.75,0 18.97,57.74,0 18.96,57.75,0 18.97,57.76,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.85,57.71,0 18.84,57.69,0 18.83,57.70,0 18.84,57.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.99,57.44,0 18.98,57.43,0 18.95,57.44,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.07,57.31,0 18.06,57.30,0 18.05,57.31,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.99,57.28,0 17.98,57.27,0 17.95,57.28,0 17.96,57.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.75,57.28,0 18.76,57.27,0 18.74,57.28,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -1009,6 +1465,22 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.94,57.37,0 11.93,57.36,0 11.92,57.37,0 11.93,57.38,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.96,57.34,0 11.97,57.33,0 11.95,57.34,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -1036,6 +1508,46 @@
 					<LinearRing>
 <coordinates>
  12.20,57.22,0 12.18,57.21,0 12.12,57.22,0 12.10,57.23,0 12.09,57.24,0 12.10,57.23,0 12.11,57.24,0 12.12,57.25,0 12.11,57.24,0 12.10,57.25,0 12.09,57.24,0 12.08,57.25,0 12.09,57.26,0 12.10,57.27,0 12.13,57.28,0 12.16,57.29,0 12.17,57.30,0 12.20,57.31,0 12.21,57.30,0 12.25,57.29,0 12.26,57.30,0 12.27,57.29,0 12.31,57.30,0 12.33,57.31,0 12.34,57.32,0 12.35,57.33,0 12.39,57.32,0 12.40,57.31,0 12.41,57.30,0 12.42,57.31,0 12.43,57.30,0 12.42,57.29,0 12.43,57.28,0 12.44,57.26,0 12.45,57.27,0 12.46,57.26,0 12.47,57.27,0 12.51,57.28,0 12.52,57.29,0 12.53,57.30,0 12.54,57.31,0 12.56,57.32,0 12.58,57.33,0 12.61,57.34,0 12.62,57.33,0 12.63,57.32,0 12.65,57.33,0 12.67,57.32,0 12.70,57.31,0 12.71,57.30,0 12.72,57.29,0 12.74,57.28,0 12.75,57.27,0 12.76,57.26,0 12.74,57.25,0 12.73,57.24,0 12.70,57.23,0 12.69,57.22,0 12.66,57.21,0 12.65,57.22,0 12.64,57.21,0 12.63,57.20,0 12.62,57.19,0 12.63,57.18,0 12.64,57.16,0 12.63,57.15,0 12.61,57.14,0 12.62,57.13,0 12.61,57.12,0 12.60,57.11,0 12.59,57.10,0 12.58,57.09,0 12.57,57.08,0 12.58,57.07,0 12.59,57.06,0 12.60,57.05,0 12.58,57.04,0 12.59,57.03,0 12.60,57.02,0 12.61,57.01,0 12.59,57.00,0 12.56,57.01,0 12.55,57.00,0 12.54,56.99,0 12.53,56.98,0 12.52,56.99,0 12.48,57.00,0 12.42,56.99,0 12.40,56.98,0 12.35,56.99,0 12.34,57.00,0 12.33,57.01,0 12.32,57.02,0 12.29,57.03,0 12.30,57.02,0 12.31,57.03,0 12.28,57.04,0 12.26,57.05,0 12.27,57.06,0 12.25,57.07,0 12.26,57.08,0 12.24,57.09,0 12.23,57.10,0 12.24,57.11,0 12.23,57.12,0 12.22,57.11,0 12.21,57.10,0 12.20,57.11,0 12.19,57.12,0 12.23,57.13,0 12.21,57.14,0 12.20,57.15,0 12.22,57.16,0 12.20,57.17,0 12.21,57.18,0 12.20,57.19,0 12.19,57.18,0 12.18,57.19,0 12.17,57.18,0 12.15,57.19,0 12.16,57.20,0 12.17,57.19,0 12.18,57.20,0 12.21,57.21,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.13,57.31,0 12.12,57.30,0 12.11,57.31,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.12,57.30,0 12.11,57.29,0 12.10,57.30,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.09,57.29,0 12.08,57.28,0 12.07,57.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.10,57.22,0 12.09,57.21,0 12.08,57.22,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.18,57.16,0 12.17,57.15,0 12.15,57.16,0 12.16,57.17,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1236,6 +1748,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 13.69,57.14,0 13.70,57.15,0 13.72,57.14,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -1248,6 +1768,14 @@
 					<LinearRing>
 <coordinates>
  13.90,57.43,0 13.89,57.41,0 13.88,57.40,0 13.89,57.39,0 13.91,57.38,0 13.92,57.37,0 13.93,57.36,0 13.96,57.37,0 13.97,57.36,0 13.98,57.35,0 13.99,57.34,0 14.00,57.33,0 14.01,57.32,0 14.02,57.31,0 14.01,57.30,0 14.00,57.29,0 14.05,57.28,0 14.04,57.27,0 14.00,57.26,0 13.99,57.25,0 13.98,57.24,0 13.96,57.25,0 13.92,57.26,0 13.91,57.27,0 13.87,57.26,0 13.86,57.25,0 13.84,57.24,0 13.83,57.22,0 13.82,57.23,0 13.80,57.22,0 13.75,57.23,0 13.71,57.24,0 13.70,57.28,0 13.69,57.29,0 13.68,57.30,0 13.67,57.33,0 13.65,57.34,0 13.60,57.33,0 13.58,57.34,0 13.59,57.36,0 13.60,57.37,0 13.61,57.39,0 13.62,57.40,0 13.63,57.41,0 13.64,57.42,0 13.65,57.43,0 13.66,57.44,0 13.67,57.45,0 13.66,57.46,0 13.67,57.45,0 13.69,57.44,0 13.70,57.45,0 13.72,57.46,0 13.74,57.47,0 13.76,57.46,0 13.78,57.45,0 13.80,57.46,0 13.82,57.47,0 13.84,57.46,0 13.88,57.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 14.04,57.29,0 14.03,57.30,0 14.05,57.29,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1371,6 +1899,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.80,57.25,0 16.79,57.24,0 16.78,57.25,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -1431,6 +1967,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.38,56.68,0 16.37,56.67,0 16.36,56.68,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -1459,6 +2003,14 @@
 					<LinearRing>
 <coordinates>
  16.51,57.01,0 16.52,57.00,0 16.51,56.99,0 16.50,57.00,0 16.49,57.01,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.46,56.90,0 16.47,56.89,0 16.45,56.90,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1519,6 +2071,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.62,57.56,0 16.63,57.55,0 16.60,57.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.68,57.55,0 16.67,57.54,0 16.68,57.55,0 16.69,57.54,0 16.70,57.53,0 16.68,57.54,0 16.66,57.55,0
 						</coordinates>
 					</LinearRing>
@@ -1543,7 +2103,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.57,57.35,0 16.56,57.34,0 16.57,57.35,0 16.56,57.36,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.58,57.33,0 16.57,57.32,0 16.58,57.31,0 16.57,57.30,0 16.56,57.31,0 16.55,57.32,0 16.56,57.33,0 16.55,57.32,0 16.56,57.33,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.49,57.19,0 16.48,57.18,0 16.47,57.19,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1597,6 +2173,46 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.59,57.95,0 16.58,57.94,0 16.57,57.95,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.80,57.90,0 16.81,57.89,0 16.79,57.90,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.59,57.89,0 16.60,57.88,0 16.59,57.89,0 16.58,57.90,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.79,57.89,0 16.80,57.88,0 16.78,57.89,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.62,57.89,0 16.63,57.88,0 16.61,57.89,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.64,57.88,0 16.65,57.87,0 16.66,57.86,0 16.67,57.85,0 16.68,57.84,0 16.64,57.85,0 16.65,57.86,0 16.64,57.87,0 16.63,57.88,0
 						</coordinates>
 					</LinearRing>
@@ -1621,6 +2237,30 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 16.73,57.86,0 16.74,57.85,0 16.72,57.86,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.68,57.86,0 16.69,57.85,0 16.67,57.86,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.59,57.85,0 16.58,57.84,0 16.57,57.85,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  16.73,57.81,0 16.72,57.82,0 16.73,57.83,0 16.71,57.84,0 16.70,57.83,0 16.69,57.84,0 16.71,57.85,0 16.73,57.84,0 16.74,57.83,0 16.75,57.82,0 16.76,57.83,0 16.77,57.82,0 16.76,57.81,0 16.78,57.80,0 16.76,57.81,0 16.75,57.80,0
 						</coordinates>
 					</LinearRing>
@@ -1630,6 +2270,30 @@
 					<LinearRing>
 <coordinates>
  16.67,57.79,0 16.65,57.80,0 16.66,57.81,0 16.67,57.82,0 16.66,57.83,0 16.68,57.82,0 16.69,57.81,0 16.70,57.80,0 16.69,57.81,0 16.68,57.80,0 16.71,57.81,0 16.72,57.80,0 16.71,57.79,0 16.70,57.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.71,57.82,0 16.72,57.81,0 16.70,57.82,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.69,57.78,0 16.70,57.77,0 16.67,57.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.75,57.71,0 16.74,57.70,0 16.73,57.71,0 16.74,57.72,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1662,6 +2326,14 @@
 					<LinearRing>
 <coordinates>
  16.55,57.59,0 16.54,57.58,0 16.56,57.57,0 16.55,57.58,0 16.54,57.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 16.77,57.57,0 16.76,57.56,0 16.75,57.57,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1932,6 +2604,22 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 24.11,65.79,0 24.10,65.78,0 24.11,65.80,0 24.12,65.79,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.97,65.78,0 23.95,65.79,0 23.96,65.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  23.79,65.73,0 23.78,65.72,0 23.77,65.71,0 23.76,65.70,0 23.74,65.69,0 23.73,65.70,0 23.68,65.71,0 23.67,65.72,0 23.68,65.73,0 23.67,65.74,0 23.69,65.73,0 23.71,65.74,0 23.74,65.73,0 23.76,65.74,0 23.78,65.73,0 23.79,65.74,0 23.80,65.75,0
 						</coordinates>
 					</LinearRing>
@@ -1940,7 +2628,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 24.15,65.70,0 24.13,65.71,0 24.16,65.70,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 24.11,65.70,0 24.10,65.69,0 24.09,65.70,0 24.10,65.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.97,65.69,0 24.00,65.68,0 23.96,65.69,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 24.13,65.67,0 24.12,65.66,0 24.11,65.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  23.81,65.63,0 23.77,65.64,0 23.78,65.65,0 23.79,65.64,0 23.80,65.63,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.90,65.60,0 23.91,65.61,0 23.92,65.60,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -1994,7 +2722,55 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.77,65.79,0 22.76,65.80,0 22.75,65.81,0 22.76,65.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.74,65.79,0 22.73,65.80,0 22.72,65.81,0 22.73,65.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.23,65.79,0 23.24,65.78,0 23.21,65.79,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.47,65.77,0 23.44,65.78,0 23.46,65.77,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.76,65.75,0 22.79,65.74,0 22.80,65.72,0 22.81,65.71,0 22.80,65.70,0 22.79,65.71,0 22.77,65.70,0 22.76,65.71,0 22.75,65.70,0 22.74,65.71,0 22.73,65.72,0 22.74,65.74,0 22.73,65.75,0 22.74,65.77,0 22.75,65.76,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.27,65.75,0 23.26,65.74,0 23.25,65.75,0 23.24,65.76,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.41,65.74,0 23.42,65.75,0 23.43,65.74,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2019,6 +2795,38 @@
 					<LinearRing>
 <coordinates>
  23.55,65.72,0 23.56,65.71,0 23.55,65.72,0 23.54,65.73,0 23.53,65.74,0 23.54,65.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.83,65.73,0 22.84,65.72,0 22.81,65.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.86,65.71,0 22.85,65.70,0 22.84,65.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.88,65.67,0 22.87,65.68,0 22.89,65.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 23.08,65.67,0 23.09,65.66,0 23.05,65.67,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2080,6 +2888,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.42,65.70,0 22.39,65.71,0 22.42,65.70,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  21.80,65.68,0 21.81,65.67,0 21.82,65.66,0 21.84,65.65,0 21.87,65.66,0 21.88,65.65,0 21.89,65.64,0 21.92,65.63,0 21.94,65.62,0 21.96,65.61,0 21.97,65.60,0 21.99,65.59,0 22.01,65.58,0 22.11,65.57,0 22.12,65.56,0 22.13,65.55,0 22.14,65.54,0 22.17,65.55,0 22.18,65.54,0 22.17,65.53,0 22.15,65.52,0 22.14,65.51,0 22.11,65.52,0 22.06,65.51,0 22.07,65.50,0 22.05,65.51,0 21.94,65.52,0 21.87,65.51,0 21.86,65.52,0 21.84,65.51,0 21.86,65.50,0 21.88,65.49,0 21.89,65.5,0 21.88,65.50,0 21.87,65.51,0 21.89,65.52,0 21.90,65.51,0 21.91,65.50,0 21.92,65.49,0 21.94,65.48,0 21.96,65.47,0 21.97,65.46,0 21.99,65.47,0 22.00,65.46,0 22.01,65.47,0 22.02,65.46,0 22.01,65.45,0 22.00,65.44,0 21.99,65.42,0 21.98,65.41,0 21.96,65.42,0 21.95,65.43,0 21.93,65.44,0 21.92,65.43,0 21.90,65.42,0 21.92,65.41,0 21.91,65.40,0 21.92,65.39,0 21.91,65.40,0 21.88,65.41,0 21.87,65.42,0 21.85,65.43,0 21.83,65.44,0 21.81,65.45,0 21.78,65.46,0 21.75,65.47,0 21.71,65.48,0 21.69,65.49,0 21.66,65.50,0 21.65,65.51,0 21.63,65.52,0 21.61,65.53,0 21.59,65.54,0 21.57,65.55,0 21.54,65.56,0 21.51,65.57,0 21.49,65.58,0 21.47,65.59,0 21.44,65.60,0 21.41,65.61,0 21.38,65.62,0 21.37,65.64,0 21.36,65.65,0 21.34,65.66,0 21.38,65.67,0 21.43,65.68,0 21.47,65.67,0 21.46,65.66,0 21.48,65.65,0 21.49,65.66,0 21.50,65.67,0 21.51,65.68,0 21.50,65.69,0 21.48,65.70,0 21.49,65.71,0 21.52,65.70,0 21.55,65.69,0 21.58,65.68,0 21.59,65.67,0 21.62,65.66,0 21.68,65.67,0 21.75,65.68,0
 						</coordinates>
 					</LinearRing>
@@ -2096,7 +2912,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.72,65.67,0 22.71,65.66,0 22.70,65.67,0 22.71,65.68,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.79,65.66,0 22.80,65.65,0 22.76,65.66,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.40,65.65,0 22.39,65.66,0 22.41,65.65,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.65,65.64,0 22.66,65.63,0 22.61,65.64,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.49,65.63,0 22.50,65.62,0 22.49,65.63,0 22.50,65.62,0 22.47,65.63,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.42,65.61,0 22.41,65.62,0 22.43,65.61,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2112,7 +2968,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.36,65.60,0 22.37,65.61,0 22.38,65.60,0 22.37,65.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.22,65.56,0 22.24,65.55,0 22.22,65.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.80,65.56,0 22.79,65.55,0 22.76,65.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.68,65.56,0 22.69,65.55,0 22.68,65.54,0 22.65,65.53,0 22.63,65.54,0 22.64,65.55,0 22.66,65.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.24,65.55,0 22.25,65.54,0 22.23,65.55,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2129,6 +3017,14 @@
 					<LinearRing>
 <coordinates>
  22.23,65.54,0 22.24,65.53,0 22.27,65.52,0 22.32,65.51,0 22.33,65.50,0 22.36,65.5,0 22.37,65.49,0 22.36,65.48,0 22.33,65.49,0 22.32,65.50,0 22.30,65.51,0 22.26,65.50,0 22.25,65.5,0 22.24,65.49,0 22.22,65.5,0 22.21,65.50,0 22.20,65.51,0 22.19,65.52,0 22.18,65.53,0 22.19,65.54,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.34,65.53,0 22.35,65.52,0 22.34,65.53,0 22.33,65.54,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2192,6 +3088,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.01,65.49,0 22.00,65.5,0 21.98,65.50,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.26,65.49,0 22.27,65.48,0 22.28,65.47,0 22.29,65.48,0 22.28,65.47,0 22.26,65.48,0 22.25,65.49,0
 						</coordinates>
 					</LinearRing>
@@ -2224,7 +3128,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.60,65.45,0 22.61,65.46,0 22.62,65.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.12,65.43,0 22.13,65.42,0 22.10,65.43,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.12,65.42,0 22.11,65.41,0 22.10,65.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.06,65.41,0 22.07,65.40,0 22.05,65.39,0 22.04,65.40,0 22.03,65.41,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.52,65.40,0 22.51,65.39,0 22.50,65.40,0 22.49,65.41,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2240,7 +3176,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 22.27,65.39,0 22.28,65.40,0 22.29,65.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  22.40,65.37,0 22.43,65.36,0 22.48,65.35,0 22.45,65.34,0 22.43,65.35,0 22.42,65.36,0 22.40,65.37,0 22.38,65.38,0 22.37,65.39,0 22.38,65.38,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.47,65.38,0 22.48,65.37,0 22.45,65.38,0 22.46,65.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 22.37,65.31,0 22.35,65.32,0 22.36,65.31,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2294,7 +3254,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 21.54,65.35,0 21.53,65.36,0 21.54,65.37,0 21.56,65.36,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  21.78,65.33,0 21.79,65.32,0 21.81,65.31,0 21.76,65.32,0 21.75,65.33,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 21.83,65.29,0 21.80,65.30,0 21.82,65.29,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2613,7 +3589,71 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.43,58.74,0 17.44,58.73,0 17.43,58.74,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.41,58.74,0 17.40,58.73,0 17.39,58.74,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.42,58.73,0 17.41,58.72,0 17.40,58.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.52,58.73,0 17.53,58.72,0 17.52,58.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.20,58.72,0 17.21,58.71,0 17.19,58.72,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  17.27,58.71,0 17.28,58.70,0 17.27,58.71,0 17.26,58.70,0 17.25,58.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.17,58.71,0 17.18,58.70,0 17.17,58.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.30,58.71,0 17.31,58.70,0 17.29,58.71,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.47,58.69,0 17.48,58.67,0 17.47,58.68,0 17.46,58.69,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2637,6 +3677,22 @@
 					<LinearRing>
 <coordinates>
  17.16,58.67,0 17.17,58.66,0 17.18,58.67,0 17.17,58.66,0 17.15,58.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.21,58.67,0 17.22,58.66,0 17.21,58.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.16,58.65,0 17.15,58.64,0 17.16,58.65,0 17.17,58.66,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2682,7 +3738,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.61,58.85,0 17.62,58.84,0 17.60,58.85,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  17.63,58.81,0 17.62,58.82,0 17.60,58.83,0 17.61,58.82,0 17.60,58.83,0 17.59,58.84,0 17.60,58.83,0 17.62,58.82,0 17.65,58.81,0 17.68,58.80,0 17.70,58.79,0 17.68,58.80,0 17.67,58.79,0 17.66,58.80,0 17.64,58.81,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.51,58.81,0 17.52,58.80,0 17.51,58.79,0 17.50,58.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.53,58.80,0 17.52,58.79,0 17.51,58.80,0 17.52,58.81,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.56,58.75,0 17.57,58.74,0 17.56,58.75,0 17.55,58.74,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -2987,6 +4075,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 12.82,55.86,0 12.81,55.84,0 12.82,55.85,0 12.81,55.86,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -3239,6 +4335,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.55,59.51,0 18.53,59.50,0 18.54,59.51,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.85,59.50,0 18.83,59.49,0 18.82,59.50,0 18.84,59.51,0 18.85,59.50,0 18.86,59.51,0
 						</coordinates>
 					</LinearRing>
@@ -3247,7 +4351,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.51,59.50,0 18.50,59.49,0 18.49,59.50,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.85,59.49,0 18.84,59.48,0 18.83,59.47,0 18.82,59.48,0 18.84,59.49,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.76,59.49,0 18.75,59.48,0 18.73,59.49,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3272,6 +4392,22 @@
 					<LinearRing>
 <coordinates>
  18.71,59.46,0 18.73,59.45,0 18.74,59.46,0 18.75,59.45,0 18.72,59.44,0 18.71,59.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.75,59.45,0 18.74,59.44,0 18.73,59.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.56,59.41,0 18.57,59.40,0 18.54,59.41,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3339,7 +4475,63 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.46,59.15,0 18.45,59.14,0 18.46,59.15,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.44,59.13,0 18.43,59.12,0 18.42,59.13,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.41,59.12,0 18.40,59.11,0 18.41,59.12,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.55,59.11,0 18.54,59.10,0 18.55,59.11,0 18.56,59.12,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.37,59.07,0 18.38,59.08,0 18.40,59.09,0 18.41,59.08,0 18.42,59.09,0 18.43,59.10,0 18.44,59.11,0 18.47,59.12,0 18.48,59.11,0 18.47,59.09,0 18.49,59.08,0 18.47,59.07,0 18.46,59.06,0 18.45,59.05,0 18.44,59.04,0 18.42,59.03,0 18.41,59.02,0 18.42,59.01,0 18.41,59.00,0 18.39,59.01,0 18.38,59.00,0 18.37,59.01,0 18.36,59.00,0 18.35,59.01,0 18.34,59.02,0 18.33,59.03,0 18.37,59.04,0 18.34,59.05,0 18.35,59.06,0 18.34,59.05,0 18.37,59.06,0 18.38,59.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.52,59.11,0 18.50,59.10,0 18.48,59.11,0 18.50,59.12,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.32,59.07,0 18.31,59.06,0 18.32,59.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.49,59.06,0 18.48,59.05,0 18.47,59.04,0 18.48,59.06,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3363,7 +4555,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.33,59.04,0 18.32,59.03,0 18.31,59.04,0 18.32,59.05,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.18,59.03,0 18.19,59.02,0 18.18,59.03,0 18.17,59.02,0 18.16,59.03,0 18.17,59.04,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.07,59.02,0 18.06,59.01,0 18.05,59.02,0 18.07,59.03,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3379,7 +4587,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.53,59.02,0 18.52,59.01,0 18.53,59.02,0 18.54,59.03,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.14,58.97,0 18.13,58.96,0 18.10,58.97,0 18.08,58.96,0 18.05,58.95,0 18.04,58.96,0 18.03,58.95,0 18.04,58.96,0 18.05,58.98,0 18.04,58.97,0 18.05,58.96,0 18.06,58.97,0 18.05,58.98,0 18.06,58.99,0 18.08,59.00,0 18.09,59.01,0 18.10,59.02,0 18.11,59.01,0 18.12,59.02,0 18.13,59.01,0 18.14,59.02,0 18.15,59.03,0 18.16,59.02,0 18.22,59.01,0 18.21,59.02,0 18.20,59.01,0 18.16,59.00,0 18.17,59.01,0 18.18,59.00,0 18.19,59.01,0 18.18,58.99,0 18.17,59.00,0 18.16,58.99,0 18.15,59.00,0 18.14,59.01,0 18.15,59.00,0 18.14,58.99,0 18.13,58.98,0 18.14,58.97,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.47,59.01,0 18.46,59.00,0 18.45,59.01,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.06,59.01,0 18.05,59.00,0 18.04,58.99,0 18.05,59.00,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.18,58.99,0 18.17,58.98,0 18.16,58.97,0 18.17,58.99,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.18,58.98,0 18.17,58.97,0 18.18,58.98,0 18.19,58.99,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3412,6 +4660,22 @@
 					<LinearRing>
 <coordinates>
  18.09,58.85,0 18.08,58.86,0 18.09,58.87,0 18.10,58.88,0 18.12,58.89,0 18.14,58.90,0 18.16,58.89,0 18.13,58.88,0 18.14,58.89,0 18.13,58.88,0 18.12,58.86,0 18.11,58.85,0 18.10,58.86,0 18.11,58.85,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.18,58.90,0 18.17,58.89,0 18.16,58.90,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.10,58.89,0 18.09,58.88,0 18.10,58.89,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3479,6 +4743,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.36,59.25,0 18.37,59.24,0 18.36,59.25,0 18.35,59.26,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.40,59.24,0 18.41,59.23,0 18.40,59.22,0 18.39,59.23,0 18.38,59.24,0 18.39,59.25,0
 						</coordinates>
 					</LinearRing>
@@ -3494,6 +4766,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.81,60.25,0 18.80,60.24,0 18.79,60.25,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.74,60.21,0 18.75,60.20,0 18.76,60.19,0 18.77,60.18,0 18.78,60.19,0 18.79,60.17,0 18.80,60.16,0 18.79,60.15,0 18.72,60.16,0 18.71,60.17,0 18.72,60.18,0 18.73,60.20,0 18.70,60.21,0 18.72,60.22,0 18.73,60.21,0
 						</coordinates>
 					</LinearRing>
@@ -3503,6 +4783,30 @@
 					<LinearRing>
 <coordinates>
  18.14,59.81,0 18.17,59.82,0 18.25,59.83,0 18.26,59.84,0 18.31,59.85,0 18.36,59.86,0 18.37,59.87,0 18.38,59.88,0 18.40,59.89,0 18.39,59.90,0 18.38,59.91,0 18.37,59.92,0 18.38,59.93,0 18.39,59.94,0 18.41,59.95,0 18.42,59.96,0 18.43,59.97,0 18.44,59.98,0 18.47,59.99,0 18.48,60.00,0 18.46,60.01,0 18.43,60.02,0 18.40,60.03,0 18.41,60.04,0 18.44,60.05,0 18.45,60.06,0 18.46,60.07,0 18.47,60.08,0 18.48,60.09,0 18.49,60.10,0 18.50,60.13,0 18.51,60.14,0 18.50,60.15,0 18.53,60.14,0 18.54,60.13,0 18.56,60.12,0 18.57,60.11,0 18.58,60.09,0 18.59,60.07,0 18.58,60.08,0 18.57,60.13,0 18.56,60.14,0 18.57,60.15,0 18.58,60.14,0 18.61,60.13,0 18.62,60.14,0 18.63,60.13,0 18.68,60.12,0 18.69,60.11,0 18.68,60.12,0 18.73,60.11,0 18.75,60.10,0 18.76,60.09,0 18.75,60.08,0 18.76,60.07,0 18.77,60.10,0 18.79,60.11,0 18.78,60.12,0 18.81,60.11,0 18.83,60.10,0 18.82,60.09,0 18.83,60.08,0 18.82,60.07,0 18.83,60.06,0 18.84,60.04,0 18.85,60.02,0 18.86,60.01,0 18.87,60.00,0 18.88,59.99,0 18.89,59.98,0 18.91,59.97,0 18.90,59.96,0 18.91,59.95,0 18.92,59.94,0 18.91,59.93,0 18.92,59.92,0 18.93,59.93,0 18.92,59.92,0 18.93,59.93,0 18.94,59.92,0 18.95,59.91,0 18.98,59.90,0 19.03,59.89,0 19.01,59.88,0 19.03,59.87,0 19.04,59.88,0 19.03,59.89,0 19.02,59.88,0 19.03,59.89,0 19.06,59.88,0 19.05,59.87,0 19.06,59.88,0 19.07,59.87,0 19.08,59.86,0 19.07,59.87,0 19.08,59.86,0 19.07,59.85,0 19.08,59.84,0 19.07,59.83,0 19.06,59.81,0 19.05,59.80,0 19.06,59.81,0 19.04,59.82,0 19.03,59.81,0 19.02,59.83,0 19.03,59.82,0 19.02,59.81,0 19.01,59.82,0 19.02,59.83,0 19.00,59.84,0 18.99,59.83,0 19.00,59.84,0 18.99,59.85,0 18.98,59.86,0 18.97,59.87,0 18.96,59.88,0 18.95,59.87,0 18.94,59.88,0 18.93,59.89,0 18.94,59.90,0 18.92,59.91,0 18.91,59.90,0 18.90,59.92,0 18.87,59.93,0 18.88,59.92,0 18.89,59.90,0 18.90,59.91,0 18.91,59.90,0 18.90,59.89,0 18.89,59.88,0 18.90,59.89,0 18.92,59.88,0 18.94,59.87,0 18.93,59.86,0 18.94,59.85,0 18.93,59.84,0 18.92,59.83,0 18.91,59.82,0 18.90,59.81,0 18.89,59.80,0 18.88,59.79,0 18.87,59.78,0 18.86,59.77,0 18.85,59.78,0 18.84,59.77,0 18.83,59.78,0 18.82,59.77,0 18.79,59.76,0 18.78,59.77,0 18.77,59.76,0 18.72,59.75,0 18.71,59.74,0 18.73,59.75,0 18.77,59.76,0 18.81,59.77,0 18.83,59.76,0 18.84,59.77,0 18.87,59.76,0 18.88,59.77,0 18.99,59.76,0 19.00,59.77,0 19.01,59.76,0 19.08,59.75,0 19.07,59.74,0 19.08,59.73,0 19.07,59.72,0 19.06,59.71,0 19.04,59.70,0 18.96,59.71,0 18.95,59.70,0 18.94,59.71,0 18.90,59.70,0 18.85,59.69,0 18.81,59.68,0 18.76,59.67,0 18.78,59.68,0 18.80,59.67,0 18.79,59.68,0 18.80,59.67,0 18.75,59.66,0 18.74,59.65,0 18.73,59.66,0 18.72,59.65,0 18.71,59.66,0 18.72,59.65,0 18.70,59.64,0 18.68,59.63,0 18.72,59.64,0 18.73,59.63,0 18.74,59.64,0 18.73,59.63,0 18.74,59.62,0 18.75,59.61,0 18.73,59.62,0 18.71,59.63,0 18.70,59.62,0 18.71,59.61,0 18.70,59.60,0 18.68,59.59,0 18.67,59.58,0 18.66,59.57,0 18.65,59.58,0 18.64,59.57,0 18.59,59.58,0 18.58,59.59,0 18.57,59.58,0 18.56,59.57,0 18.55,59.58,0 18.50,59.59,0 18.49,59.58,0 18.48,59.57,0 18.47,59.56,0 18.46,59.55,0 18.43,59.56,0 18.42,59.57,0 18.41,59.59,0 18.39,59.60,0 18.38,59.61,0 18.37,59.62,0 18.38,59.63,0 18.39,59.64,0 18.36,59.65,0 18.34,59.66,0 18.33,59.67,0 18.26,59.66,0 18.21,59.65,0 18.15,59.66,0 18.14,59.67,0 18.13,59.68,0 18.12,59.69,0 18.13,59.70,0 18.12,59.71,0 18.10,59.72,0 18.09,59.73,0 18.10,59.74,0 18.11,59.77,0 18.12,59.78,0 18.13,59.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.65,60.15,0 18.64,60.14,0 18.63,60.15,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.79,60.13,0 18.78,60.12,0 18.76,60.13,0 18.77,60.14,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.81,60.13,0 18.80,60.12,0 18.79,60.13,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3534,7 +4838,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 19.12,59.81,0 19.11,59.80,0 19.10,59.81,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.12,59.79,0 19.11,59.80,0 19.10,59.79,0 19.11,59.80,0 19.12,59.81,0 19.13,59.80,0 19.14,59.81,0 19.13,59.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.25,59.80,0 19.24,59.79,0 19.25,59.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.08,59.79,0 19.07,59.78,0 19.06,59.79,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3550,7 +4878,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 19.22,59.78,0 19.21,59.77,0 19.22,59.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.19,59.78,0 19.20,59.77,0 19.19,59.76,0 19.16,59.77,0 19.15,59.76,0 19.14,59.77,0 19.16,59.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.14,59.77,0 19.13,59.76,0 19.12,59.77,0 19.13,59.78,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.04,59.77,0 19.05,59.76,0 19.04,59.77,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.19,59.76,0 19.20,59.75,0 19.18,59.76,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.15,59.76,0 19.14,59.75,0 19.15,59.76,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3566,7 +4934,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 19.17,59.74,0 19.16,59.73,0 19.15,59.74,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.13,59.73,0 19.12,59.72,0 19.11,59.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.32,59.73,0 19.31,59.72,0 19.30,59.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.40,59.73,0 19.39,59.72,0 19.38,59.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.14,59.69,0 19.15,59.68,0 19.14,59.69,0 19.12,59.70,0 19.13,59.69,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.15,59.67,0 19.14,59.68,0 19.15,59.69,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3583,6 +4991,30 @@
 					<LinearRing>
 <coordinates>
  18.81,59.67,0 18.82,59.68,0 18.85,59.67,0 18.84,59.66,0 18.85,59.67,0 18.89,59.66,0 18.88,59.65,0 18.87,59.66,0 18.81,59.67,0 18.83,59.68,0 18.81,59.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.18,59.65,0 19.17,59.66,0 19.18,59.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.93,59.66,0 18.91,59.65,0 18.90,59.66,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.77,59.66,0 18.76,59.65,0 18.75,59.66,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3614,6 +5046,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.79,59.64,0 18.78,59.63,0 18.76,59.64,0 18.77,59.65,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.89,59.62,0 18.90,59.63,0 18.92,59.64,0 18.93,59.65,0 18.95,59.64,0 18.96,59.63,0 18.98,59.62,0 18.96,59.61,0 18.95,59.62,0 18.93,59.61,0 18.92,59.62,0 18.93,59.63,0 18.92,59.62,0 18.91,59.61,0 18.90,59.60,0 18.91,59.59,0 18.90,59.58,0 18.89,59.59,0 18.90,59.58,0 18.89,59.57,0 18.88,59.58,0 18.87,59.57,0 18.86,59.58,0 18.85,59.59,0 18.86,59.60,0 18.87,59.61,0 18.88,59.60,0 18.89,59.61,0
 						</coordinates>
 					</LinearRing>
@@ -3630,7 +5070,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.87,59.63,0 18.88,59.64,0 18.87,59.63,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.28,59.62,0 19.25,59.61,0 19.24,59.62,0 19.26,59.63,0 19.27,59.62,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.77,59.62,0 18.76,59.61,0 18.75,59.62,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3646,6 +5102,22 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 19.17,59.59,0 19.16,59.58,0 19.14,59.59,0 19.17,59.60,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.24,59.59,0 19.23,59.58,0 19.24,59.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.05,59.58,0 19.06,59.57,0 19.07,59.58,0 19.06,59.57,0 19.05,59.56,0 19.02,59.57,0 19.03,59.56,0 19.02,59.57,0 19.03,59.58,0
 						</coordinates>
 					</LinearRing>
@@ -3654,7 +5126,71 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.73,59.57,0 18.72,59.56,0 18.71,59.57,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.71,59.57,0 18.70,59.56,0 18.69,59.57,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.27,59.53,0 19.26,59.52,0 19.27,59.53,0 19.28,59.54,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.37,59.51,0 19.36,59.50,0 19.35,59.51,0 19.36,59.52,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  19.20,59.44,0 19.21,59.43,0 19.20,59.42,0 19.18,59.43,0 19.19,59.44,0 19.20,59.43,0 19.21,59.44,0 19.20,59.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.51,59.44,0 19.50,59.43,0 19.49,59.44,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.35,59.42,0 19.34,59.41,0 19.33,59.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.22,59.42,0 19.21,59.41,0 19.20,59.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.13,59.36,0 19.12,59.35,0 19.11,59.36,0 19.12,59.37,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3708,7 +5244,23 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.04,58.86,0 18.03,58.85,0 18.02,58.84,0 18.03,58.85,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  17.87,58.75,0 17.86,58.74,0 17.87,58.73,0 17.86,58.74,0 17.85,58.75,0 17.86,58.77,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.04,58.77,0 18.05,58.76,0 18.04,58.77,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3739,7 +5291,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.72,58.97,0 17.71,58.96,0 17.70,58.97,0 17.71,58.98,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.64,58.94,0 17.63,58.95,0 17.64,58.94,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.73,58.90,0 17.74,58.89,0 17.72,58.90,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  17.70,58.86,0 17.71,58.85,0 17.72,58.84,0 17.71,58.83,0 17.70,58.84,0 17.69,58.85,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.76,58.82,0 17.77,58.81,0 17.75,58.82,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3863,6 +5447,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.41,59.22,0 18.42,59.21,0 18.41,59.20,0 18.40,59.21,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -3912,6 +5504,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.92,59.45,0 18.90,59.44,0 18.89,59.45,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.80,59.45,0 18.79,59.44,0 18.78,59.43,0 18.76,59.44,0 18.78,59.45,0
 						</coordinates>
 					</LinearRing>
@@ -3928,7 +5528,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.94,59.44,0 18.93,59.43,0 18.92,59.44,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.43,59.43,0 18.42,59.42,0 18.41,59.43,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.71,59.42,0 18.69,59.43,0 18.68,59.42,0 18.67,59.43,0 18.72,59.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.47,59.43,0 18.48,59.42,0 18.46,59.43,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.75,59.42,0 18.74,59.41,0 18.73,59.42,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3944,7 +5576,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.72,59.42,0 18.71,59.41,0 18.70,59.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.62,59.34,0 18.63,59.33,0 18.62,59.34,0 18.64,59.33,0 18.65,59.32,0 18.64,59.31,0 18.65,59.30,0 18.66,59.31,0 18.65,59.30,0 18.64,59.29,0 18.61,59.28,0 18.64,59.29,0 18.70,59.28,0 18.69,59.27,0 18.70,59.28,0 18.71,59.27,0 18.69,59.26,0 18.67,59.27,0 18.66,59.26,0 18.63,59.25,0 18.64,59.26,0 18.65,59.25,0 18.64,59.24,0 18.62,59.25,0 18.57,59.26,0 18.58,59.27,0 18.57,59.26,0 18.55,59.27,0 18.54,59.26,0 18.53,59.27,0 18.54,59.28,0 18.49,59.29,0 18.45,59.30,0 18.46,59.31,0 18.45,59.30,0 18.44,59.31,0 18.43,59.30,0 18.41,59.29,0 18.46,59.28,0 18.47,59.29,0 18.48,59.28,0 18.50,59.27,0 18.51,59.28,0 18.53,59.27,0 18.54,59.26,0 18.55,59.25,0 18.56,59.26,0 18.57,59.25,0 18.59,59.24,0 18.60,59.25,0 18.61,59.24,0 18.57,59.23,0 18.55,59.24,0 18.54,59.23,0 18.57,59.22,0 18.56,59.21,0 18.55,59.22,0 18.56,59.21,0 18.55,59.22,0 18.53,59.21,0 18.48,59.22,0 18.47,59.23,0 18.45,59.24,0 18.44,59.23,0 18.43,59.24,0 18.41,59.25,0 18.40,59.26,0 18.39,59.27,0 18.33,59.28,0 18.34,59.29,0 18.36,59.28,0 18.38,59.29,0 18.34,59.30,0 18.35,59.31,0 18.34,59.32,0 18.35,59.31,0 18.34,59.32,0 18.33,59.31,0 18.32,59.32,0 18.31,59.33,0 18.33,59.32,0 18.37,59.33,0 18.35,59.34,0 18.34,59.35,0 18.35,59.36,0 18.36,59.35,0 18.38,59.36,0 18.39,59.35,0 18.42,59.34,0 18.43,59.33,0 18.44,59.32,0 18.45,59.31,0 18.46,59.32,0 18.47,59.33,0 18.46,59.34,0 18.45,59.35,0 18.46,59.37,0 18.45,59.38,0 18.44,59.39,0 18.43,59.40,0 18.42,59.41,0 18.41,59.42,0 18.44,59.41,0 18.46,59.42,0 18.48,59.41,0 18.50,59.40,0 18.52,59.39,0 18.51,59.38,0 18.52,59.39,0 18.53,59.38,0 18.54,59.37,0 18.58,59.36,0 18.61,59.37,0 18.62,59.36,0 18.63,59.35,0 18.64,59.34,0 18.63,59.35,0 18.52,59.36,0 18.53,59.35,0 18.56,59.34,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.02,59.42,0 19.01,59.41,0 19.00,59.42,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.70,59.42,0 18.69,59.41,0 18.68,59.42,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -3976,6 +5632,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.74,59.40,0 18.73,59.39,0 18.74,59.40,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.82,59.40,0 18.83,59.39,0 18.82,59.38,0 18.81,59.39,0 18.82,59.38,0 18.80,59.39,0 18.79,59.38,0 18.78,59.39,0 18.81,59.40,0
 						</coordinates>
 					</LinearRing>
@@ -3984,7 +5648,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.61,59.39,0 18.60,59.38,0 18.59,59.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.78,59.38,0 18.79,59.37,0 18.78,59.38,0 18.76,59.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.70,59.37,0 18.71,59.38,0 18.72,59.37,0 18.69,59.38,0 18.68,59.37,0 18.67,59.38,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.77,59.38,0 18.78,59.37,0 18.76,59.38,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.89,59.38,0 18.88,59.37,0 18.87,59.38,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4008,7 +5704,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.91,59.36,0 18.90,59.35,0 18.89,59.36,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.91,59.35,0 18.92,59.34,0 18.93,59.35,0 18.92,59.34,0 18.88,59.33,0 18.89,59.34,0 18.90,59.33,0 18.89,59.32,0 18.87,59.31,0 18.83,59.32,0 18.85,59.31,0 18.86,59.32,0 18.87,59.33,0 18.88,59.34,0 18.87,59.35,0 18.88,59.34,0 18.89,59.35,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.91,59.34,0 18.92,59.33,0 18.90,59.34,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.66,59.33,0 18.67,59.32,0 18.65,59.33,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.90,59.31,0 18.89,59.30,0 18.86,59.31,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.14,59.30,0 19.16,59.29,0 19.14,59.30,0 19.13,59.29,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4032,7 +5768,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.86,59.29,0 18.85,59.28,0 18.86,59.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.46,59.29,0 18.48,59.28,0 18.47,59.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.94,59.29,0 18.93,59.28,0 18.92,59.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.92,59.28,0 18.93,59.27,0 18.90,59.28,0 18.89,59.29,0 18.90,59.28,0 18.91,59.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.79,59.24,0 18.78,59.23,0 18.77,59.24,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.81,59.24,0 18.82,59.23,0 18.81,59.24,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4064,6 +5840,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.84,59.20,0 18.85,59.19,0 18.84,59.20,0 18.85,59.21,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.64,59.18,0 18.65,59.17,0 18.63,59.16,0 18.62,59.17,0 18.63,59.18,0
 						</coordinates>
 					</LinearRing>
@@ -4088,6 +5872,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.64,59.16,0 18.63,59.15,0 18.62,59.16,0 18.64,59.17,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.71,59.15,0 18.70,59.14,0 18.69,59.13,0 18.67,59.14,0 18.68,59.13,0 18.69,59.14,0 18.70,59.15,0 18.72,59.16,0
 						</coordinates>
 					</LinearRing>
@@ -4096,7 +5888,39 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.84,59.13,0 18.83,59.12,0 18.84,59.13,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.68,59.12,0 18.66,59.11,0 18.65,59.10,0 18.64,59.11,0 18.65,59.12,0 18.67,59.13,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.74,59.10,0 18.73,59.09,0 18.74,59.10,0 18.75,59.11,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.73,59.10,0 18.72,59.09,0 18.71,59.10,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.63,59.09,0 18.62,59.08,0 18.61,59.09,0 18.64,59.10,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4154,6 +5978,30 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.40,59.37,0 18.39,59.38,0 18.41,59.37,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.43,59.37,0 18.44,59.36,0 18.42,59.37,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.33,59.36,0 18.32,59.35,0 18.31,59.36,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -4189,7 +6037,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.61,60.31,0 18.60,60.30,0 18.59,60.31,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.62,60.29,0 18.60,60.30,0 18.61,60.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.63,60.29,0 18.64,60.28,0 18.62,60.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.57,60.28,0 18.56,60.29,0 18.58,60.28,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.61,60.28,0 18.62,60.27,0 18.64,60.26,0 18.63,60.27,0 18.64,60.28,0 18.65,60.27,0 18.67,60.26,0 18.66,60.25,0 18.65,60.26,0 18.63,60.27,0 18.62,60.26,0 18.60,60.27,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.70,60.26,0 18.69,60.24,0 18.68,60.25,0 18.69,60.26,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4206,6 +6094,30 @@
 					<LinearRing>
 <coordinates>
  18.52,60.19,0 18.53,60.18,0 18.52,60.17,0 18.49,60.18,0 18.48,60.19,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.66,60.18,0 18.64,60.17,0 18.63,60.18,0 18.64,60.19,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.62,60.17,0 18.63,60.16,0 18.62,60.17,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.51,60.16,0 18.50,60.17,0 18.52,60.16,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4763,6 +6675,22 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 20.99,63.80,0 21,63.81,0 21.01,63.80,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 20.87,63.67,0 20.86,63.66,0 20.85,63.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  20.84,63.65,0 20.83,63.64,0 20.81,63.65,0 20.83,63.66,0 20.85,63.65,0
 						</coordinates>
 					</LinearRing>
@@ -4771,7 +6699,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 20.27,63.65,0 20.25,63.66,0 20.26,63.65,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  20.76,63.59,0 20.74,63.60,0 20.77,63.61,0 20.78,63.62,0 20.77,63.60,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.87,63.54,0 19.88,63.55,0 19.87,63.54,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.88,63.47,0 19.87,63.48,0 19.88,63.49,0 19.89,63.48,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4820,6 +6772,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 19.57,64.01,0 19.58,64.00,0 19.56,64.01,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -4839,7 +6799,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 18.86,63.17,0 18.87,63.18,0 18.88,63.17,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  18.67,63.14,0 18.68,63.13,0 18.67,63.12,0 18.66,63.13,0 18.65,63.14,0 18.66,63.15,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.62,63.11,0 18.63,63.12,0 18.62,63.13,0 18.63,63.12,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.60,63.05,0 18.61,63.07,0 18.62,63.06,0 18.61,63.05,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -4944,6 +6928,22 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.89,62.90,0 17.88,62.89,0 17.86,62.88,0 17.87,62.90,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 18.21,62.77,0 18.22,62.78,0 18.23,62.77,0 18.22,62.76,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -4986,6 +6986,14 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 17.53,62.39,0 17.54,62.40,0 17.55,62.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  17.58,62.40,0 17.59,62.38,0 17.58,62.37,0 17.57,62.38,0 17.54,62.39,0 17.56,62.40,0
 						</coordinates>
 					</LinearRing>
@@ -5010,6 +7018,14 @@
 					<LinearRing>
 <coordinates>
  17.71,62.39,0 17.70,62.40,0 17.68,62.41,0 17.64,62.42,0 17.63,62.43,0 17.61,62.44,0 17.60,62.43,0 17.58,62.44,0 17.53,62.45,0 17.52,62.46,0 17.51,62.47,0 17.50,62.49,0 17.49,62.50,0 17.48,62.51,0 17.47,62.50,0 17.44,62.51,0 17.43,62.50,0 17.40,62.49,0 17.35,62.48,0 17.33,62.47,0 17.34,62.46,0 17.28,62.45,0 17.29,62.44,0 17.26,62.43,0 17.21,62.44,0 17.20,62.46,0 17.21,62.47,0 17.20,62.48,0 17.21,62.49,0 17.22,62.50,0 17.23,62.51,0 17.25,62.52,0 17.26,62.53,0 17.27,62.55,0 17.26,62.57,0 17.27,62.58,0 17.24,62.59,0 17.21,62.60,0 17.17,62.61,0 17.14,62.62,0 17.13,62.63,0 17.11,62.64,0 17.09,62.65,0 17.08,62.66,0 17.05,62.67,0 17.03,62.68,0 17.01,62.69,0 16.99,62.70,0 16.97,62.71,0 16.96,62.72,0 16.95,62.73,0 16.96,62.74,0 16.97,62.75,0 16.99,62.76,0 17.01,62.77,0 17.02,62.78,0 17.04,62.79,0 17.07,62.80,0 17.09,62.81,0 17.10,62.82,0 17.12,62.83,0 17.14,62.84,0 17.16,62.85,0 17.18,62.84,0 17.20,62.83,0 17.23,62.82,0 17.24,62.81,0 17.26,62.80,0 17.28,62.79,0 17.26,62.78,0 17.29,62.77,0 17.30,62.76,0 17.31,62.75,0 17.34,62.74,0 17.35,62.73,0 17.36,62.72,0 17.39,62.71,0 17.40,62.70,0 17.42,62.69,0 17.44,62.68,0 17.45,62.67,0 17.47,62.66,0 17.49,62.65,0 17.52,62.64,0 17.53,62.63,0 17.52,62.62,0 17.55,62.61,0 17.56,62.60,0 17.57,62.59,0 17.59,62.58,0 17.64,62.57,0 17.67,62.56,0 17.68,62.55,0 17.69,62.53,0 17.70,62.52,0 17.72,62.51,0 17.73,62.50,0 17.71,62.49,0 17.67,62.48,0 17.66,62.47,0 17.65,62.46,0 17.66,62.45,0 17.67,62.44,0 17.70,62.43,0 17.68,62.42,0 17.72,62.41,0 17.73,62.40,0 17.72,62.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 17.55,62.43,0 17.54,62.42,0 17.53,62.43,0 17.52,62.44,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5205,7 +7221,55 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.62,57.74,0 11.65,57.73,0 11.66,57.72,0 11.64,57.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.66,57.71,0 11.65,57.70,0 11.63,57.71,0 11.62,57.72,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.63,57.70,0 11.64,57.69,0 11.65,57.70,0 11.66,57.69,0 11.67,57.68,0 11.66,57.67,0 11.65,57.68,0 11.64,57.67,0 11.63,57.68,0 11.62,57.69,0 11.61,57.68,0 11.60,57.69,0 11.61,57.70,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.69,57.69,0 11.68,57.68,0 11.67,57.69,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.67,57.67,0 11.66,57.66,0 11.64,57.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.63,57.66,0 11.62,57.65,0 11.61,57.66,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.61,57.63,0 11.60,57.62,0 11.59,57.63,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5386,7 +7450,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.76,57.75,0 11.75,57.74,0 11.74,57.75,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.79,57.65,0 11.80,57.64,0 11.79,57.63,0 11.78,57.64,0 11.79,57.65,0 11.78,57.64,0 11.77,57.63,0 11.76,57.64,0 11.75,57.63,0 11.74,57.64,0 11.75,57.65,0 11.76,57.64,0 11.77,57.65,0 11.78,57.66,0 11.79,57.65,0 11.80,57.66,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.73,57.64,0 11.74,57.63,0 11.73,57.64,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.81,57.63,0 11.80,57.62,0 11.79,57.63,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.87,57.62,0 11.85,57.63,0 11.86,57.62,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.75,57.63,0 11.76,57.62,0 11.74,57.63,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5402,7 +7506,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.75,57.62,0 11.74,57.61,0 11.73,57.62,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.77,57.59,0 11.76,57.58,0 11.77,57.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.79,57.58,0 11.78,57.56,0 11.77,57.57,0 11.76,57.58,0 11.77,57.57,0 11.78,57.58,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.78,57.56,0 11.77,57.55,0 11.76,57.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.79,57.55,0 11.80,57.54,0 11.79,57.55,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.74,57.51,0 11.73,57.50,0 11.72,57.51,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5545,7 +7689,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.73,57.94,0 11.74,57.93,0 11.71,57.94,0 11.72,57.95,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.71,57.92,0 11.70,57.91,0 11.69,57.92,0 11.68,57.91,0 11.67,57.92,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.74,57.92,0 11.73,57.91,0 11.72,57.92,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.60,57.91,0 11.59,57.90,0 11.58,57.91,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5562,6 +7730,62 @@
 					<LinearRing>
 <coordinates>
  11.61,57.86,0 11.60,57.85,0 11.58,57.86,0 11.57,57.85,0 11.56,57.86,0 11.55,57.85,0 11.54,57.86,0 11.56,57.87,0 11.58,57.88,0 11.59,57.87,0 11.60,57.88,0 11.55,57.89,0 11.56,57.88,0 11.57,57.89,0 11.58,57.88,0 11.57,57.89,0 11.58,57.90,0 11.59,57.89,0 11.60,57.90,0 11.61,57.89,0 11.62,57.90,0 11.63,57.89,0 11.64,57.88,0 11.63,57.87,0 11.62,57.86,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.70,57.88,0 11.67,57.89,0 11.66,57.88,0 11.67,57.89,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.70,57.88,0 11.69,57.87,0 11.70,57.88,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.57,57.87,0 11.55,57.86,0 11.56,57.87,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.69,57.82,0 11.68,57.81,0 11.67,57.82,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.68,57.81,0 11.67,57.80,0 11.68,57.81,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.71,57.80,0 11.68,57.81,0 11.69,57.80,0 11.70,57.81,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.71,57.80,0 11.70,57.79,0 11.69,57.80,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5630,6 +7854,22 @@
 					<LinearRing>
 <coordinates>
  11.58,58.37,0 11.59,58.36,0 11.57,58.37,0 11.58,58.38,0 11.59,58.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.61,58.38,0 11.60,58.37,0 11.59,58.38,0 11.60,58.39,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.37,58.30,0 11.38,58.29,0 11.36,58.30,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5782,6 +8022,54 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.61,58.11,0 11.62,58.10,0 11.60,58.11,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.37,58.11,0 11.36,58.10,0 11.35,58.11,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.43,58.11,0 11.42,58.10,0 11.41,58.11,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.57,58.08,0 11.56,58.09,0 11.57,58.10,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.43,58.09,0 11.44,58.10,0 11.46,58.09,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.62,58.09,0 11.61,58.08,0 11.60,58.09,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.51,58.09,0 11.52,58.08,0 11.54,58.07,0 11.52,58.06,0 11.53,58.07,0 11.52,58.06,0 11.51,58.05,0 11.50,58.06,0 11.49,58.07,0 11.50,58.09,0
 						</coordinates>
 					</LinearRing>
@@ -5790,7 +8078,31 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.59,58.09,0 11.58,58.08,0 11.59,58.09,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.56,58.07,0 11.55,58.06,0 11.56,58.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.46,58.07,0 11.47,58.06,0 11.48,58.05,0 11.47,58.06,0 11.46,58.05,0 11.44,58.06,0 11.45,58.07,0 11.44,58.06,0 11.45,58.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.55,58.07,0 11.54,58.06,0 11.55,58.07,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -5870,6 +8182,22 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.27,58.34,0 11.25,58.33,0 11.26,58.34,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.21,58.33,0 11.20,58.34,0 11.21,58.33,0 11.22,58.34,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -5901,6 +8229,14 @@
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.78,57.98,0 11.77,57.97,0 11.76,57.98,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
 </Polygon>		</MultiGeometry>
 	</Placemark>
 	<Placemark>
@@ -5929,6 +8265,14 @@
 					<LinearRing>
 <coordinates>
  11.00,58.91,0 11.01,58.90,0 11.02,58.89,0 11.04,58.88,0 11.05,58.87,0 11.06,58.86,0 11.03,58.87,0 11.00,58.88,0 10.98,58.89,0 10.99,58.90,0 10.98,58.91,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.08,58.83,0 11.07,58.82,0 11.06,58.83,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -6013,6 +8357,30 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.14,58.73,0 11.13,58.72,0 11.12,58.73,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.15,58.72,0 11.14,58.71,0 11.13,58.72,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.21,58.67,0 11.22,58.66,0 11.20,58.67,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.25,58.66,0 11.24,58.65,0 11.23,58.64,0 11.21,58.65,0 11.22,58.66,0 11.23,58.67,0
 						</coordinates>
 					</LinearRing>
@@ -6021,7 +8389,87 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.25,58.64,0 11.24,58.62,0 11.23,58.63,0 11.24,58.64,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.23,58.62,0 11.22,58.61,0 11.21,58.62,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.26,58.61,0 11.27,58.60,0 11.26,58.61,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.26,58.60,0 11.25,58.59,0 11.23,58.60,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.24,58.59,0 11.23,58.58,0 11.22,58.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.21,58.58,0 11.22,58.57,0 11.20,58.58,0 11.21,58.57,0 11.22,58.58,0 11.21,58.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.25,58.59,0 11.26,58.58,0 11.24,58.59,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.26,58.58,0 11.27,58.57,0 11.25,58.58,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.19,58.56,0 11.18,58.55,0 11.17,58.56,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.24,58.53,0 11.23,58.52,0 11.22,58.53,0 11.23,58.54,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.26,58.51,0 11.27,58.50,0 11.25,58.51,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -6066,7 +8514,47 @@
 				<outerBoundaryIs>
 					<LinearRing>
 <coordinates>
+ 11.75,58.10,0 11.74,58.08,0 11.73,58.09,0 11.74,58.10,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
  11.73,58.07,0 11.74,58.06,0 11.75,58.07,0 11.76,58.06,0 11.77,58.05,0 11.75,58.04,0 11.76,58.03,0 11.75,58.04,0 11.76,58.03,0 11.75,58.01,0 11.74,58.00,0 11.73,57.99,0 11.70,58.00,0 11.72,58.01,0 11.71,58.02,0 11.70,58.01,0 11.69,58.00,0 11.68,57.98,0 11.67,57.97,0 11.68,57.96,0 11.64,57.95,0 11.63,57.96,0 11.62,57.95,0 11.63,57.94,0 11.61,57.93,0 11.57,57.92,0 11.56,57.93,0 11.57,57.94,0 11.54,57.95,0 11.55,57.94,0 11.56,57.95,0 11.57,57.96,0 11.56,57.95,0 11.52,57.96,0 11.53,57.97,0 11.54,57.98,0 11.53,57.99,0 11.54,58.00,0 11.57,57.99,0 11.58,58.00,0 11.57,58.01,0 11.58,58.02,0 11.57,58.01,0 11.54,58.00,0 11.53,58.01,0 11.52,58.00,0 11.51,58.01,0 11.50,58.00,0 11.49,58.01,0 11.48,58.00,0 11.47,57.99,0 11.48,58.01,0 11.49,58.02,0 11.51,58.01,0 11.52,58.02,0 11.51,58.03,0 11.50,58.04,0 11.51,58.05,0 11.54,58.06,0 11.56,58.05,0 11.62,58.06,0 11.64,58.05,0 11.66,58.06,0 11.64,58.07,0 11.65,58.08,0 11.66,58.09,0 11.70,58.08,0 11.69,58.07,0 11.70,58.06,0 11.72,58.07,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.77,58.05,0 11.76,58.04,0 11.75,58.05,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.52,57.99,0 11.51,57.98,0 11.52,57.99,0 11.51,57.98,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.66,57.94,0 11.65,57.93,0 11.63,57.94,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.62,57.93,0 11.61,57.92,0 11.60,57.93,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>
@@ -6120,6 +8608,38 @@
 					<LinearRing>
 <coordinates>
  11.84,58.25,0 11.83,58.26,0 11.84,58.27,0 11.83,58.28,0 11.81,58.29,0 11.82,58.30,0 11.81,58.31,0 11.84,58.32,0 11.88,58.33,0 11.89,58.32,0 11.90,58.33,0 11.91,58.34,0 11.90,58.35,0 11.89,58.34,0 11.87,58.33,0 11.85,58.32,0 11.78,58.33,0 11.74,58.34,0 11.73,58.33,0 11.70,58.34,0 11.69,58.33,0 11.71,58.32,0 11.72,58.33,0 11.73,58.31,0 11.72,58.30,0 11.71,58.31,0 11.70,58.30,0 11.69,58.31,0 11.67,58.30,0 11.66,58.29,0 11.67,58.28,0 11.65,58.27,0 11.66,58.26,0 11.65,58.27,0 11.64,58.26,0 11.63,58.25,0 11.62,58.26,0 11.60,58.25,0 11.59,58.26,0 11.58,58.25,0 11.57,58.26,0 11.56,58.25,0 11.55,58.26,0 11.54,58.27,0 11.55,58.26,0 11.56,58.25,0 11.57,58.24,0 11.56,58.23,0 11.54,58.24,0 11.50,58.25,0 11.51,58.26,0 11.50,58.27,0 11.51,58.28,0 11.52,58.29,0 11.53,58.30,0 11.54,58.31,0 11.55,58.32,0 11.57,58.33,0 11.58,58.34,0 11.59,58.35,0 11.60,58.36,0 11.61,58.37,0 11.62,58.38,0 11.65,58.39,0 11.64,58.38,0 11.63,58.39,0 11.62,58.40,0 11.64,58.41,0 11.66,58.42,0 11.70,58.41,0 11.74,58.42,0 11.77,58.43,0 11.82,58.42,0 11.91,58.43,0 11.96,58.44,0 12.02,58.43,0 12.07,58.42,0 12.09,58.41,0 12.11,58.40,0 12.12,58.39,0 12.14,58.40,0 12.15,58.39,0 12.14,58.37,0 12.13,58.36,0 12.12,58.35,0 12.11,58.34,0 12.10,58.33,0 12.11,58.32,0 12.12,58.31,0 12.11,58.30,0 12.10,58.28,0 12.09,58.27,0 12.08,58.26,0 12.09,58.25,0 12.08,58.24,0 12.07,58.23,0 12.06,58.22,0 12.04,58.21,0 12.03,58.20,0 12.02,58.19,0 12.03,58.18,0 12.01,58.17,0 12.00,58.16,0 11.99,58.15,0 11.98,58.14,0 11.92,58.15,0 11.90,58.14,0 11.89,58.15,0 11.86,58.16,0 11.85,58.17,0 11.86,58.18,0 11.85,58.19,0 11.86,58.20,0 11.87,58.19,0 11.88,58.20,0 11.89,58.21,0 11.90,58.22,0 11.88,58.21,0 11.87,58.22,0 11.86,58.23,0 11.85,58.24,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.79,58.29,0 11.78,58.28,0 11.77,58.29,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.79,58.28,0 11.80,58.27,0 11.78,58.28,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.62,58.26,0 11.61,58.25,0 11.60,58.24,0 11.61,58.26,0
+						</coordinates>
+					</LinearRing>
+				</outerBoundaryIs>
+</Polygon><Polygon>
+				<outerBoundaryIs>
+					<LinearRing>
+<coordinates>
+ 11.60,58.25,0 11.59,58.24,0 11.58,58.25,0
 						</coordinates>
 					</LinearRing>
 				</outerBoundaryIs>

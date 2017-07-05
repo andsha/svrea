@@ -44,3 +44,10 @@ listing = Listings.objects.annotate(whatever='address__county' if gtype == 'coun
 listing = Listings.objects.values('address__county' if 'county' == 'county' else 'address__municipality') \
     .filter(isactive__exact=True) \
     .annotate(listing_counts=Count('booliid'))
+
+
+
+select record_date, geographic_name, active_listings, listing_price_med, active_listings, listing_area_avg from svrea_etl_etllistings where record_date = '2017-02-04'  and (active_listings is NULL or listing_price_med is NULL or active_listings is NULL or listing_area_avg is NULL);
+select count(*) from svrea_script_listings l join svrea_script_address a on l.address_id=a.addressid where a.municipality='Habo' and l.datepublished<='2017-02-04' and (l.dateinactive >'2017-02-04' or l.dateinactive is NULL);
+
+select livingarea from svrea_script_listings l join svrea_script_address a on l.address_id=a.addressid where a.municipality='Habo' and l.datepublished<='2017-02-04' and (l.dateinactive >'2017-02-04' or l.dateinactive is NULL);
