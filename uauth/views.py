@@ -2,13 +2,27 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 
 def uregister(request):
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
     if request.user.is_authenticated:
         return redirect("users:details", name=request.user.username)
     else:
         if request.POST:
+            return render(request, "registration/register.html")
             # if request.POST.get('submit') == 'Log In':
             #     return views.index_login(request)
             if request.POST.get('submit') == 'Register':

@@ -4,19 +4,21 @@ import datetime
 import calendar
 import numpy, math
 from operator import itemgetter
+from ratelimit.decorators import ratelimit
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db import models
+from django.db import models, connection
 from django.db.models import Count, Max, F, Sum, Func, Avg, Q
 from django.db.models.functions import Coalesce
+
 
 from svrea_script.models import Listings, Address
 from svrea_etl.models import EtlListings
 
-from static.maps.Sweden.ListOfMunis import MuniList
+
 
 
 class To_char(Func):
@@ -29,38 +31,21 @@ class cast(Func):
     if '%(dtype)s' == 'bigint':
         output_field = models.BigIntegerField()
 
-
+@ratelimit(key='ip', rate='1/s')
 def index(request):
 
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect('index')
-
-    if request.POST.get('submit') == 'Log In':
+    elif request.POST.get('submit') == 'Log In':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
 
         if user is not None:
             login(request, user)
-            return redirect('index')
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
-            return redirect('index')
-
-    if request.user.is_authenticated:
-        return index_login(request)
-    else:
-        return index_nologin(request)
-
-
-def index_nologin(request):
-    context = {}
-    return render(request, "svrea/index_nologin.html", context=context)
-
-
-@login_required(redirect_field_name = "", login_url="/")
-def index_login(request):
 
     period = 'Daily'
     county = 'Whole Sweden'
@@ -217,11 +202,22 @@ def index_login(request):
     return render(request, "svrea/index_login.html", context=context)
 
 
-@login_required(redirect_field_name = "", login_url="/")
+#@login_required(redirect_field_name = "", login_url="/")
+@ratelimit(key='ip', rate='1/s')
 def maps(request):
+
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
 
     period_type = 'Day'
     period_day = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
@@ -361,11 +357,21 @@ def maps(request):
     return render(request, "svrea/maps.html", context=context)
 
 
-@login_required(redirect_field_name = "", login_url="/")
+#@login_required(redirect_field_name = "", login_url="/")
+@ratelimit(key='ip', rate='1/s')
 def plots_histograms(request):
+
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
 
     skip = False
     # numHist = 0
@@ -475,13 +481,14 @@ def plots_histograms(request):
             .order_by('county')]:
         county_list.append(i)
 
+    #print(connection.queries)
     # __________________________ Templates for histograms ____________________
     listings_hist = [['Price']]
     # listings_list_all_hist = []
     listings_list_all = []
     county_chart_all_hist = []
     county_chart_all = []
-
+    print("there",connection.queries)
     for idx, hist in enumerate(histInfo):
         county_chart = []
         listings_list = []
@@ -495,7 +502,7 @@ def plots_histograms(request):
                 field)
         elif hist["property_type"] == 'Listings':
             listings_qs = Listings.objects.filter(**filter_isnull_f).order_by(field)
-
+            #listings_qs = Listings.objects#.filter(latestprice__isnull = False)  # .order_by(field)
         if hist_type == 'Price m2':
             listings_qs = listings_qs.exclude(latestprice=0).exclude(livingarea=0)
 
@@ -526,12 +533,14 @@ def plots_histograms(request):
             listings_qs = listings_qs.annotate(di=Coalesce('dateinactive', datetime.date.today())) \
                 .filter(datepublished__lt=dateto, di__gte=datefrom)
 
-        if (len(listings_qs)) == 0:
+        if (listings_qs.count()) == 0:
             messages.error(request, "No data for selected settings")
             break
 
         # _____________________ Generate ordered list of all results _______________
         # print(hist["county_selected"])
+        print("here", connection.queries)
+
         for idy, county in enumerate(hist["county_selected"]):
             # print(idy, county)
             if county == 'Whole Sweden':
@@ -559,6 +568,7 @@ def plots_histograms(request):
                 county_chart_all.append(
                     "%s. %s(%s)" % (idx, hist["county_selected"][idy], len(listings_list_all[-1])))
 
+    #print(connection.queries)
     # ______________________ Define highest and lowest cutoffs ____________________
 
     percentH_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], UpperCutoff)
@@ -594,6 +604,7 @@ def plots_histograms(request):
 
     # print(county_selected)
     # print(listings_hist)
+    #print(connection.queries)
     context = {"histInfo": histInfo,
                "defHistInfo": defHistInfo,
                "county_list": county_list,

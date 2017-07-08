@@ -52,48 +52,49 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    {%if request.user.is_authenticated%}
-                        <ul class="nav navbar-nav">
-                            <p class="navbar-text">Welcome, {{ request.user.username }}!</p>
-                            <li><a href='{% url "users:details" name=user %}'>Home</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Maps <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href='{% url "maps" %}'>Density Map</a></li>
+                    <ul class="nav navbar-nav">
+                        {% if request.user.is_authenticated %}
+                        <p class="navbar-text">Welcome, {{ request.user.username }}!</p>
+                        <li><a href='{% url "users:details" name=user %}'>Home</a></li>
+                        {% endif %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Maps <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='{% url "maps" %}'>Density Map</a></li>
 
-                                </ul>
-                            </li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plots <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href='{% url "plots_histograms"  %}'>Histograms</a></li>
-                                </ul>
-                            </li>
-                            {% if perms.svrea_script.can_see_history or perms.svrea_script.can_run_script %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Script <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    {% if perms.svrea_script.can_see_info %}
-                                        <li><a href='{% url "script_info"  %}'>Info</a></li>
-                                    {% endif %}
-                                    {% if perms.svrea_script.can_run_script %}
-                                        <li><a href='{% url "script_run"  %}'>Run</a></li>
-                                    {% endif %}
-                                    {% if perms.svrea_script.can_see_script_logs %}
-                                        <li><a href='{% url "script_logs"  %}'>Logs</a></li>
-                                    {% endif %}
-                                    {% if perms.svrea_script.can_see_data %}
-                                        <li><a href='{% url "script_data"  %}'>Data</a></li>
-                                    {% endif %}
-                                </ul>
-                            </li>
-                            {% endif %}
-                        </ul>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Plots <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='{% url "plots_histograms"  %}'>Histograms</a></li>
+                            </ul>
+                        </li>
+                        {% if perms.svrea_script.can_see_history or perms.svrea_script.can_run_script %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Script <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                {% if perms.svrea_script.can_see_info %}
+                                    <li><a href='{% url "script_info"  %}'>Info</a></li>
+                                {% endif %}
+                                {% if perms.svrea_script.can_run_script %}
+                                    <li><a href='{% url "script_run"  %}'>Run</a></li>
+                                {% endif %}
+                                {% if perms.svrea_script.can_see_script_logs %}
+                                    <li><a href='{% url "script_logs"  %}'>Logs</a></li>
+                                {% endif %}
+                                {% if perms.svrea_script.can_see_data %}
+                                    <li><a href='{% url "script_data"  %}'>Data</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    {% if request.user.is_authenticated %}
                         <form class="navbar-form navbar-right" method="post">
                             {% csrf_token %}
                             <button type="submit" value="Log Out" name="submit" class="btn btn-default">Log Out</button>
                         </form>
-                        <p class="navbar-text navbar-right"> / Home {% if path %} / {{path | safe}} {% endif %}</p>
                     {% else %}
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'register' %}">Register</a></li>
@@ -104,11 +105,12 @@
                             <input type="password" class="form-control" placeholder="Password" name="password">
                             <button type="submit" value="Log In" name="submit" class="btn btn-default">Log In</button>
                         </form>
-                    {%endif%}
-                </div><!-- /.navbar-collapse -->
-            </div><!-- /.container-fluid -->
+                    {% endif %}
+                </div>
+            </div>
         </nav>
     {% block content %}
     {% endblock %}
     </div>
+</body>
 </html>

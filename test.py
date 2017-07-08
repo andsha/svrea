@@ -51,3 +51,45 @@ select record_date, geographic_name, active_listings, listing_price_med, active_
 select count(*) from svrea_script_listings l join svrea_script_address a on l.address_id=a.addressid where a.municipality='Habo' and l.datepublished<='2017-02-04' and (l.dateinactive >'2017-02-04' or l.dateinactive is NULL);
 
 select livingarea from svrea_script_listings l join svrea_script_address a on l.address_id=a.addressid where a.municipality='Habo' and l.datepublished<='2017-02-04' and (l.dateinactive >'2017-02-04' or l.dateinactive is NULL);
+
+
+
+
+SELECT DISTINCT ON ("svrea_script_address"."county") "svrea_script_address"."addressid", "svrea_script_address"."house", "svrea_script_address"."street", "svrea_script_address"."city", "svrea_script_address"."municipality", "svrea_script_address"."county", "svrea_script_address"."areaname", "svrea_script_address"."country" FROM "svrea_script_address" INNER JOIN "svrea_script_listings" ON ("svrea_script_address"."addressid" = "svrea_script_listings"."address_id") WHERE "svrea_script_listings"."isactive" = true ORDER BY "svrea_script_address"."county" ASC', 'time': '0.336'
+
+SELECT "svrea_script_listings"."booliid",
+        "svrea_script_listings"."datepublished",
+        "svrea_script_listings"."source_id",
+        "svrea_script_listings"."address_id",
+        "svrea_script_listings"."latitude",
+        "svrea_script_listings"."longitude",
+        "svrea_script_listings"."constructionyear",
+        "svrea_script_listings"."rent",
+        "svrea_script_listings"."url",
+        "svrea_script_listings"."rooms",
+        "svrea_script_listings"."propertytype",
+        "svrea_script_listings"."plotarea",
+        "svrea_script_listings"."additionalarea",
+        "svrea_script_listings"."livingarea",
+        "svrea_script_listings"."floor",
+        "svrea_script_listings"."isnewconstruction",
+        "svrea_script_listings"."datesold",
+        "svrea_script_listings"."isactive",
+        "svrea_script_listings"."dateinactive",
+        "svrea_script_listings"."latestprice",
+        COALESCE("svrea_script_listings"."dateinactive", '2017-07-08'::date) AS "di"
+FROM "svrea_script_listings"
+WHERE ("svrea_script_listings"."latestprice" IS NOT NULL AND
+        "svrea_script_listings"."datepublished" < '2017-07-08T00:00:00'::timestamp AND
+        COALESCE("svrea_script_listings"."dateinactive", '2017-07-08'::date) >= '2017-07-07T00:00:00'::timestamp)
+ORDER BY "svrea_script_listings"."latestprice" ASC
+
+SELECT "svrea_script_listings"."latestprice"
+FROM "svrea_script_listings"
+WHERE ("svrea_script_listings"."latestprice" IS NOT NULL AND
+        "svrea_script_listings"."datepublished" < '2017-07-08T00:00:00'::timestamp AND
+        COALESCE("svrea_script_listings"."dateinactive", '2017-07-08'::date) >= '2017-07-07T00:00:00'::timestamp)
+ORDER BY "svrea_script_listings"."latestprice" ASC
+
+SELECT "svrea_script_listings"."booliid", "svrea_script_listings"."datepublished", "svrea_script_listings"."source_id", "svrea_script_listings"."address_id", "svrea_script_listings"."latitude", "svrea_script_listings"."longitude", "svrea_script_listings"."constructionyear", "svrea_script_listings"."rent", "svrea_script_listings"."url", "svrea_script_listings"."rooms", "svrea_script_listings"."propertytype", "svrea_script_listings"."plotarea", "svrea_script_listings"."additionalarea", "svrea_script_listings"."livingarea", "svrea_script_listings"."floor", "svrea_script_listings"."isnewconstruction", "svrea_script_listings"."datesold", "svrea_script_listings"."isactive", "svrea_script_listings"."dateinactive", "svrea_script_listings"."latestprice", COALESCE("svrea_script_listings"."dateinactive", \'2017-07-08\'::date) AS "di" FROM "svrea_script_listings" WHERE ("svrea_script_listings"."latestprice" IS NOT NULL AND "svrea_script_listings"."datepublished" < \'2017-07-08T00:00:00\'::timestamp AND COALESCE("svrea_script_listings"."dateinactive", \'2017-07-08\'::date) >= \'2017-07-07T00:00:00\'::timestamp) ORDER BY "svrea_script_listings"."latestprice" ASC
+
