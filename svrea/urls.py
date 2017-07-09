@@ -19,6 +19,7 @@ from django.contrib import admin
 from .views import (
     index,
     gindex,
+    legal,
     maps,
     plots_histograms,
     plots_general
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index, name = 'index'),
     url(r'googleb070a3405a28a8d0.html', gindex, name = 'gindex'),
+    url(r'^legal/', legal, name = 'legal'),
     url(r'^register/', uregister, name = 'register'),
     url(r'^users/', include('users.urls', namespace = 'users')),
     #url(r'maps/(?P<map_type>\w+)$', maps, name = 'maps'),
