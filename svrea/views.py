@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import models, connection
-from django.db.models import Count, Max, F, Sum, Func, Avg, Q
+from django.db.models import Count, Max, F, Sum, Func, Avg, Q, When, Case, Value, DateTimeField
 from django.db.models.functions import Coalesce
 
 
@@ -71,6 +71,7 @@ def legal(request):
 
     context = {}
     return render(request, "svrea/legal.html", context=context)
+
 
 @ratelimit(key='ip', rate='1/s')
 def plots_general(request):
@@ -571,8 +572,13 @@ def plots_histograms(request):
             listings_qs = listings_qs.filter(datesold__range=(datefrom, dateto))
 
         if hist["property_type"] == 'Listings':
-            listings_qs = listings_qs.annotate(di=Coalesce('dateinactive', datetime.date.today())) \
-                .filter(datepublished__lt=dateto, di__gte=datefrom)
+            # listings_qs = listings_qs.annotate(di=Coalesce('dateinactive', datetime.date.today())) \
+            #     .filter(datepublished__lt=dateto, di__gte=datefrom)
+            listings_qs = listings_qs.annotate(di=Case(
+                When(Q(dateinactive__isnull=False), then='dateinactive'),
+                default=Value(datetime.date.today()),
+                output_field=DateTimeField()
+            )).filter(datepublished__lt=dateto, di__gte=datefrom)
 
         if (listings_qs.count()) == 0:
             messages.error(request, "No data for selected settings")
