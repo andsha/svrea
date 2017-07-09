@@ -19,7 +19,8 @@ from django.contrib import admin
 from .views import (
     index,
     maps,
-    plots_histograms
+    plots_histograms,
+    plots_general
 )
 
 from svrea_script.views import script_info as svrea_script_info
@@ -36,6 +37,7 @@ urlpatterns = [
     url(r'^users/', include('users.urls', namespace = 'users')),
     #url(r'maps/(?P<map_type>\w+)$', maps, name = 'maps'),
     url(r'maps/density_maps$', maps, name = 'maps'),
+    url(r'plots_general$', plots_general, name = 'plots_general'),
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
     url(r'script_info$', svrea_script_info, name = 'script_info'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
