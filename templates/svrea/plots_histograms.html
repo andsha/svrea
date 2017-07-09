@@ -255,10 +255,11 @@ function newHist() {
             </div>
             <div class="col-md-12">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Active Listings Price</h3></div>
+                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
+                    <!--<div class="panel-heading"><h3 class="panel-title text-center"></h3></div>-->
                     <div class="text blue" id="new_hist_list">
                         <button name="test" type="button" onclick="newHist()">Add Histogram</button>
-                        <button name="tte" >Submit</button>
+                        <!--<button name="tte" style="float: centre;"><h3>Refresh Histogram</h3></button>-->
                         <br><br>
                         {% for hist in histInfo %}
                             <div id = "div_hist_{{forloop.counter0}}">
