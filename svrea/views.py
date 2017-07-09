@@ -32,6 +32,9 @@ class cast(Func):
         output_field = models.BigIntegerField()
 
 
+def gindex(request):
+    return render(request, 'googleb070a3405a28a8d0.html')
+
 @ratelimit(key='ip', rate='1/s')
 def index(request):
     if request.POST.get('submit') == 'Log Out':
