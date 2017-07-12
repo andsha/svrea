@@ -353,14 +353,14 @@ def maps(request):
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
-    #print(ml)
+    print(ml)
     #for m in ml:
         #print(m)
         #print(datefrom, dateto)
 
     muniListings = sorted(ml, key=itemgetter(1))
-    maxMuniListings = muniListings[-int(len(muniListings)/50)][1]
-    minMuniListings = muniListings[int(len(muniListings)/50)][1]
+    maxMuniListings = muniListings[-int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
+    minMuniListings = muniListings[int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
     map_colors = [
         '#02F005', # green
         '#97FF02', # salad
