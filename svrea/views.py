@@ -16,7 +16,7 @@ from django.db.models.functions import Coalesce
 
 
 from svrea_script.models import Listings, Address
-from svrea_etl.models import EtlListings
+from svrea_etl.models import EtlListingsDaily
 
 
 
@@ -99,12 +99,12 @@ def plots_general(request):
             county = request.POST.get('county')
 
     try:
-        county_list = [county.geographic_name for county in EtlListings.objects
+        county_list = [county.geographic_name for county in EtlListingsDaily.objects
                                                             .filter(geographic_type__exact = 'county')
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
         #print(county)
-        active_list = EtlListings.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
+        active_list = EtlListingsDaily.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
             .values('record_date',
@@ -114,20 +114,13 @@ def plots_general(request):
                       'st',
                       'listing_price_avg',
                       'listing_price_med',
-                      'listing_price_85',
-                      'listing_price_15',
                       'listing_price_sqm_avg',
                       'listing_price_sqm_med',
-                      'listing_price_sqm_85',
-                      'listing_price_sqm_15',
                       'sold_price_avg',
                       'sold_price_med',
-                      'sold_price_85',
-                      'sold_price_15',
                       'sold_price_sqm_avg',
                       'sold_price_sqm_med',
-                      'sold_price_sqm_85',
-                      'sold_price_sqm_15')
+                      )
 #        print ([i for i in active_list])
 #         if county == 'Whole Sweden':
 #             active_list = active_list.filter(geographic_name__exact = county)
@@ -154,25 +147,17 @@ def plots_general(request):
             dtype = 'YYYY'
             from_date = to_date - datetime.timedelta(weeks=520)
         #print(from_date, to_date)
-        listings = [[i['date'],
-                     i['active_listings'],
-                     i['sold_today'],
-                     i['listing_price_avg'],
-                     i['listing_price_med'],
-                     i['listing_price_85'],
-                     i['listing_price_15'],
-                     i['listing_price_sqm_avg'],
-                     i['listing_price_sqm_med'],
-                     i['listing_price_sqm_85'],
-                     i['listing_price_sqm_15'],
-                     i['sold_price_avg'],
-                     i['sold_price_med'],
-                     i['sold_price_85'],
-                     i['sold_price_15'],
-                     i['sold_price_sqm_avg'],
-                     i['sold_price_sqm_med'],
-                     i['sold_price_sqm_85'],
-                     i['sold_price_sqm_15'],
+        listings = [[i['date'],                     #0
+                     i['active_listings'],          #1
+                     i['sold_today'],               #2
+                     i['listing_price_avg'],        #3
+                     i['listing_price_med'],        #4
+                     i['listing_price_sqm_avg'],    #5
+                     i['listing_price_sqm_med'],    #6
+                     i['sold_price_avg'],           #7
+                     i['sold_price_med'],           #8
+                     i['sold_price_sqm_avg'],       #9
+                     i['sold_price_sqm_med'],       #10
                      ] for i in (active_list.filter(record_date__range = (from_date, to_date))
                                                             .annotate(date = To_char('record_date', dtype = dtype))
                                                             .values('date')
@@ -180,20 +165,12 @@ def plots_general(request):
                                                                       sold_today = Sum(Coalesce('sold_today', 0)),
                                                                       listing_price_avg = Avg('listing_price_avg'),
                                                                       listing_price_med = Avg('listing_price_med'),
-                                                                      listing_price_85 = Avg('listing_price_85'),
-                                                                      listing_price_15 = Avg('listing_price_15'),
                                                                       listing_price_sqm_avg = Avg('listing_price_sqm_avg'),
                                                                       listing_price_sqm_med = Avg('listing_price_sqm_med'),
-                                                                      listing_price_sqm_85 = Avg('listing_price_sqm_85'),
-                                                                      listing_price_sqm_15 = Avg('listing_price_sqm_15'),
                                                                       sold_price_avg=Avg(Coalesce('sold_price_avg', 0)),
                                                                       sold_price_med=Avg(Coalesce('sold_price_med', 0)),
-                                                                      sold_price_85=Avg(Coalesce('sold_price_85', 0)),
-                                                                      sold_price_15=Avg(Coalesce('sold_price_15', 0)),
                                                                       sold_price_sqm_avg = Avg(Coalesce('sold_price_sqm_avg', 0)),
                                                                       sold_price_sqm_med = Avg(Coalesce('sold_price_sqm_med', 0)),
-                                                                      sold_price_sqm_85 = Avg(Coalesce('sold_price_sqm_85', 0)),
-                                                                      sold_price_sqm_15 = Avg(Coalesce('sold_price_sqm_15', 0)),
                                                                       )
                                                             .order_by('date'))]
 
@@ -208,31 +185,23 @@ def plots_general(request):
 
             "listing_price": [['Date',
                                'Average',
-                               'Median',
-                               '70%',
-                               '70%'
-                               ]] + [[i[0], i[3], i[4], i[5], i[6]] for i in listings],
+                               'Median'
+                               ]] + [[i[0], i[3], i[4]] for i in listings],
 
             "listing_price_sqm": [['Date',
                                'Average',
-                               'Median',
-                               '70%',
-                               '70%'
-                               ]] + [[i[0], i[7], i[8], i[9], i[10]] for i in listings],
+                               'Median'
+                               ]] + [[i[0], i[5], i[6]] for i in listings],
 
             "sold_price": [['Date',
                                'Average',
-                               'Median',
-                               '70%',
-                               '70%'
-                               ]] + [[i[0], i[11], i[12], i[13], i[14]] for i in listings],
+                               'Median'
+                               ]] + [[i[0], i[7], i[8]] for i in listings],
 
             "sold_price_sqm": [['Date',
                                    'Average',
-                                   'Median',
-                                   '70%',
-                                   '70%'
-                               ]] + [[i[0], i[15], i[16], i[17], i[18]] for i in listings],
+                                   'Median'
+                               ]] + [[i[0], i[9], i[10]] for i in listings],
             "county" : county
         }
     except Exception as e:
