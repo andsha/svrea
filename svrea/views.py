@@ -298,7 +298,7 @@ def maps(request):
     # else:
     #     return redirect('index')
 
-    ml = EtlListings.objects.filter(geographic_type__exact='municipality', record_date__range = (datefrom,dateto)).values('geographic_name')
+    ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_date__range = (datefrom,dateto)).values('geographic_name')
 
     if map_type == 'listings':
         ml = ml.annotate(s=Avg('active_listings'))
