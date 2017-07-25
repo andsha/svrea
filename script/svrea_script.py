@@ -7,6 +7,7 @@ from hashlib import sha1
 import string
 import json
 import datetime
+from dateutil.relativedelta import relativedelta
 import random
 import time
 import re
@@ -14,7 +15,7 @@ import re
 from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
-from svrea_etl.models import EtlHistory, EtlListingsDaily
+from svrea_etl.models import EtlHistory, EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuaterly, EtlListingsYearly
 import logging
 
 gCallerId = 'scr06as'
@@ -516,9 +517,50 @@ class Svrea_script():
         ]
         datefrom = datetime.datetime.strptime(self.options['etlRange'].split(':')[0], "%Y-%m-%d")
         dateto = datetime.datetime.strptime(self.options['etlRange'].split(':')[1], "%Y-%m-%d")
+
+        if self.options['etlPeriodType'] == 'Weekly':
+            # find monday of this week
+            while datefrom.weekday() != 0:
+                datefrom -= datetime.timedelta(days=1)
+        elif self.options['etlPeriodType'] == 'Monthly':
+            datefrom = datefrom.replace(day = 1)
+        elif self.options['etlPeriodType'] == 'Quaterly':
+            if datefrom.month < 4:
+                datefrom = datefrom.replace(day = 1, month = 1)
+            elif datefrom.month < 7:
+                datefrom = datefrom.replace(day = 1, month = 3)
+            elif datefrom.month < 10:
+                datefrom = datefrom.replace(day = 1, month = 6)
+            elif datefrom.month < 13:
+                datefrom = datefrom.replace(day = 1, month = 9)
+        elif self.options['etlPeriodType'] == 'Yearly':
+            datefrom = datefrom.replace(day = 1, month = 1)
+
         today = datefrom
 
+        # loop through dates using etlPeriodType
         while today <= dateto:
+
+            if Aux.objects.get(key='AnalyzeAuxKey').value != 'run':
+                info.status = 'stopped'
+                info.save()
+                tolog(ERROR, 'script %s %s was stopped by %s' % (info.id, info.config, self.username))
+                return 1
+
+            dayFrom = today
+            dayTo = dayFrom
+
+            if self.options['etlPeriodType'] == 'Daily':
+                dayTo = today + datetime.timedelta(days=1)
+            elif self.options['etlPeriodType'] == 'Weekly':
+                dayTo = today + datetime.timedelta(days=7)
+            elif self.options['etlPeriodType'] == 'Monthly':
+                dayTo = today + relativedelta(months=1)
+            elif self.options['etlPeriodType'] == 'Quaterly':
+                dayTo = today + relativedelta(months=3)
+            elif self.options['etlPeriodType'] == 'Yearly':
+                dayTo = today + relativedelta(years=1)
+
             for idx, stage in enumerate(stages):
                 (hist, created) = EtlHistory.objects.get_or_create(
                     historydate__date = self.today,
@@ -540,14 +582,16 @@ class Svrea_script():
                         hist.status = 'started'
                         hist.save()
 
-                if getattr(self, stage)(today) == 0:
+                if getattr(self, stage)(dayFrom, dayTo) == 0:  #use dayFrom and DayTo
                     hist.status = 'done'
                     hist.save()
                 else:
                     hist.status = 'error'
                     hist.save()
 
-            today += datetime.timedelta(days=1)
+            today = dayTo
+
+            #today += datetime.timedelta(days=1) # use etlPeriodType as delta
 
         info.status = 'done'
         info.save()
@@ -564,14 +608,13 @@ class Svrea_script():
         return 0
 
 
-    def fill_listings_daily_stats(self, today):
+    def fill_listings_daily_stats(self, dayFrom, dayTo):
         geographic_types = ['county', 'municipality', 'country']
         #logging.info('bebebe')
 
         for gtype in geographic_types:
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country')\
-                .filter(Q(datepublished__date__lte = today) &
-                        (Q(dateinactive__isnull=True) | Q(dateinactive__gt=today)))\
+                .filter(Q(datepublished__date__lte=dayTo) & (Q(dateinactive__isnull=True) | Q(dateinactive__gt=dayFrom))) \
                 .annotate(listing_counts=Count('booliid'),
                           listing_price_avg = Avg('latestprice'),
                           listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
@@ -586,13 +629,13 @@ class Svrea_script():
                           #listing_area_15=Percentile(expression='livingarea', percentiles=.15),
                           #listing_area_85=Percentile(expression='livingarea', percentiles=.85),
                           listing_rent_avg=Avg('rent'),
-                          listing_rent_med=Percentile(expression='rent', percentiles=.5),
+                          listing_rent_med=Percentile(expression='rent', percentiles=.5)
                           #listing_rent_15=Percentile(expression='rent', percentiles=.15),
                           #listing_rent_85=Percentile(expression='rent', percentiles=.85),
                           )
 
             sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country') \
-                .filter(Q(datesold__date=today)) \
+                .filter(Q(datesold__date_lte = dayTo) & Q(datesold__date_gt = dayFrom)) \
                 .annotate(sold_counts=Count('booliid'),
                           sold_price_avg=Avg('latestprice'),
                           sold_price_med=Percentile(expression='latestprice', percentiles=0.5),
@@ -613,8 +656,17 @@ class Svrea_script():
                           )
 
             for l in listing:
-                (etllisting, created) = EtlListingsDaily.objects.update_or_create(
-                    record_date             = today,
+                etllistings = EtlListingsDaily.objects
+                if self.options['etlPeriodType'] == 'Weekly':
+                    etllistings = EtlListingsWeekly.objects
+                elif self.options['etlPeriodType'] == 'Monthly':
+                    etllistings = EtlListingsMonthly.objects
+                elif self.options['etlPeriodType'] == 'Quaterly':
+                    etllistings = EtlListingsQuaterly.objects
+                elif self.options['etlPeriodType'] == 'Yearly':
+                    etllistings = EtlListingsYearly.objects
+                (etllisting, created) = etllistings.update_or_create(
+                    record_firstdate        = dayFrom,
                     geographic_type         = gtype,
                     geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
                     defaults                = {
@@ -637,9 +689,16 @@ class Svrea_script():
                         #'listing_rent_85'       : l['listing_rent_85'],
                     })
 
+                if self.options['etlPeriodType'] == 'Weekly':
+                    etllisting.weekofyear = dayFrom.isocalendar()[1]
+                elif self.options['etlPeriodType'] == 'Monthly':
+                    etllisting.monthofyear = dayFrom.month
+                elif self.options['etlPeriodType'] == 'Quaterly':
+                    etllisting.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+
             for s in sold:
                 (etlsold, created) = EtlListingsDaily.objects.update_or_create(
-                    record_date=today,
+                    record_date=dayFrom,
                     geographic_type=gtype,
                     geographic_name=s['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
                     defaults={
@@ -660,10 +719,17 @@ class Svrea_script():
                         'sold_rent_med'         : s['sold_rent_med'],
                         #'sold_rent_15'          : s['sold_rent_15'],
                         #'sold_rent_85'          : s['sold_rent_85'],
-                    }
-                )
-        EtlListingsDaily.objects.filter(record_date__date = today, active_listings__isnull = True).update(active_listings=0)
-        EtlListingsDaily.objects.filter(record_date__date=today, sold_today__isnull=True).update(sold_today=0)
+                    })
+
+                if self.options['etlPeriodType'] == 'Weekly':
+                    etlsold.weekofyear = dayFrom.isocalendar()[1]
+                elif self.options['etlPeriodType'] == 'Monthly':
+                    etlsold.monthofyear = dayFrom.month
+                elif self.options['etlPeriodType'] == 'Quaterly':
+                    etlsold.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+
+        EtlListingsDaily.objects.filter(record_date__date = dayFrom, active_listings__isnull = True).update(active_listings=0)
+        EtlListingsDaily.objects.filter(record_date__date=dayFrom, sold_today__isnull=True).update(sold_today=0)
         return 0
 
 

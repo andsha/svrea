@@ -35,6 +35,8 @@ def script_run(request):
         sqlquery = 'SQL Query'
         sqlres = 'SQL result'
 
+    etlperiodtype = 'Daily'
+
     if request.POST.get('submit') == 'Log Out':
         logout(request)
         return redirect("index")
@@ -74,9 +76,11 @@ def script_run(request):
         res = q.enqueue(script.run, timeout=workertimeout)
     elif request.POST.get('analyze'):
         q = Queue(connection=conn)
+        etlperiodtype = request.POST.get('etlperiodtype')
         params = {'analyze' : True,
                   'forced' : True,
-                  'etlRange' : "%s:%s" %(request.POST.get('etlFromDate'), request.POST.get('etlToDate'))
+                  'etlRange' : "%s:%s" %(request.POST.get('etlFromDate'), request.POST.get('etlToDate')),
+                  'etlPeriodType' : etlperiodtype
                   }
         script = Svrea_script(params=params, username=request.user.username)
 
@@ -97,6 +101,7 @@ def script_run(request):
         "text" : '',
         "running_scripts" : running_scripts,
         "area_list" : area_list,
+        "etlperiodtype" : etlperiodtype,
         "sqlquery" : sqlquery,
         "sqlres" : sqlres
     }

@@ -111,8 +111,16 @@
                 <div class="col-sm-4 text-center">
                     <div class="panel panel-primary">
                         <div class="panel-heading text-center">ETL</div>
-                        From<input type="text" id="etlFromDate" name="etlFromDate"><br/>
-                        To<input type="text" id="etlToDate" name="etlToDate">
+                        From<input type="text" id="etlFromDate" name="etlFromDate"><br>
+                        To<input type="text" id="etlToDate" name="etlToDate"><br>
+                        ETL range type
+                        <select name="etlperiodtype" data-style="btn-primary">
+                            <option value="Daily" {% if etlperiodtype == 'Daily'%} selected {% endif%}>Daily</option>
+                            <option value="Weekly" {% if etlperiodtype == 'Weekly'%} selected {% endif%}>Weekly</option>
+                            <option value="Monthly" {% if etlperiodtype == 'Monthly'%} selected {% endif%}>Monthly</option>
+                            <option value="Quaterly" {% if etlperiodtype == 'Quaterly'%} selected {% endif%}>Quaterly</option>
+                            <option value="Yearly" {% if etlperiodtype == 'Yearly'%} selected {% endif%}>Yearly</option>
+                        </select>
                         <div class="btns"><button type="submit" name="analyze" value="analyze">Do ETL</button></div>
                     </div>
                 </div>

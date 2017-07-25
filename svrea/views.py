@@ -107,7 +107,7 @@ def plots_general(request):
         active_list = EtlListingsDaily.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
-            .values('record_date',
+            .values('record_firstdate',
                       'geographic_type',
                       'geographic_name',
                       'al',
@@ -158,10 +158,10 @@ def plots_general(request):
                      i['sold_price_med'],           #8
                      i['sold_price_sqm_avg'],       #9
                      i['sold_price_sqm_med'],       #10
-                     ] for i in (active_list.filter(record_date__range = (from_date, to_date))
-                                                            .annotate(date = To_char('record_date', dtype = dtype))
+                     ] for i in (active_list.filter(record_firstdate__range = (from_date, to_date))
+                                                            .annotate(date = To_char('record_firstdate', dtype = dtype))
                                                             .values('date')
-                                                            .annotate(active_listings = Sum(Coalesce('active_listings', 0)) / Count(To_char('record_date', dtype = 'YYYY-MM-DD'), distinct=True),
+                                                            .annotate(active_listings = Sum(Coalesce('active_listings', 0)) / Count(To_char('record_firstdate', dtype = 'YYYY-MM-DD'), distinct=True),
                                                                       sold_today = Sum(Coalesce('sold_today', 0)),
                                                                       listing_price_avg = Avg('listing_price_avg'),
                                                                       listing_price_med = Avg('listing_price_med'),
@@ -298,7 +298,7 @@ def maps(request):
     # else:
     #     return redirect('index')
 
-    ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_date__range = (datefrom,dateto)).values('geographic_name')
+    ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
 
     if map_type == 'listings':
         ml = ml.annotate(s=Avg('active_listings'))
