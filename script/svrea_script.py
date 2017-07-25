@@ -695,6 +695,7 @@ class Svrea_script():
                     etllisting.monthofyear = dayFrom.month
                 elif self.options['etlPeriodType'] == 'Quaterly':
                     etllisting.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+                etllisting.save()
 
             for s in sold:
                 etlsolds = EtlListingsDaily.objects
@@ -736,6 +737,7 @@ class Svrea_script():
                     etlsold.monthofyear = dayFrom.month
                 elif self.options['etlPeriodType'] == 'Quaterly':
                     etlsold.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+                etlsold.save()
 
         etls = EtlListingsDaily.objects
         if self.options['etlPeriodType'] == 'Weekly':
@@ -746,6 +748,7 @@ class Svrea_script():
             etls = EtlListingsQuaterly.objects
         elif self.options['etlPeriodType'] == 'Yearly':
             etls = EtlListingsYearly.objects
+
         etls.filter(record_firstdate__date = dayFrom, active_listings__isnull = True).update(active_listings=0)
         etls.filter(record_firstdate__date=dayFrom, sold_today__isnull=True).update(sold_today=0)
         return 0
