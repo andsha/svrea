@@ -45,7 +45,8 @@ def job():
     #********************************************************************
     params = {'analyze': True,
               'etlRange': '%s:%s' %(weekago.strftime('%Y-%m-%d'),
-                                    yesterday.strftime('%Y-%m-%d'))
+                                    yesterday.strftime('%Y-%m-%d')),
+              'etlPeriodType': 'Daily'
               }
     script = Svrea_script(params=params, username=uname)
     try:
@@ -53,5 +54,15 @@ def job():
     except Exception as e:
         tolog(INFO, e)
 
+    params = {'analyze': True,
+              'etlRange': '%s:%s' % (yesterday.strftime('%Y-%m-%d'),
+                                     yesterday.strftime('%Y-%m-%d')),
+              'etlPeriodType': 'Weekly'
+              }
+    script = Svrea_script(params=params, username=uname)
+    try:
+        script.run()
+    except Exception as e:
+        tolog(INFO, e)
 
     tolog(INFO, 'finish daily job')

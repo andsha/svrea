@@ -254,7 +254,7 @@ def maps(request):
         period_dayto = request.POST.get('period_dayto')
         map_type = request.POST.get('map_type')
 
-    print(period_type)
+    #print(period_type)
     if period_type == 'Day':
         datefrom = datetime.datetime.strptime(period_day, "%Y-%m-%d")
         dateto = datefrom + datetime.timedelta(days=1)
@@ -262,7 +262,7 @@ def maps(request):
         #print(period_week)
         datefrom = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
         dateto = datefrom + datetime.timedelta(days=7)
-        print(datefrom, dateto)
+        #print(datefrom, dateto)
     elif period_type == 'Month':
         datefrom = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
         dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
@@ -322,7 +322,7 @@ def maps(request):
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
-    print(ml)
+    #print(ml)
     #for m in ml:
         #print(m)
         #print(datefrom, dateto)
@@ -499,7 +499,7 @@ def plots_histograms(request):
     listings_list_all = []
     county_chart_all_hist = []
     county_chart_all = []
-    print("there",connection.queries)
+    #print("there",connection.queries)
     for idx, hist in enumerate(histInfo):
         county_chart = []
         listings_list = []
@@ -555,7 +555,7 @@ def plots_histograms(request):
 
         # _____________________ Generate ordered list of all results _______________
         # print(hist["county_selected"])
-        print("here", connection.queries)
+        #print("here", connection.queries)
 
         for idy, county in enumerate(hist["county_selected"]):
             # print(idy, county)
