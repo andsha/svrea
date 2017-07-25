@@ -697,8 +697,17 @@ class Svrea_script():
                     etllisting.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
 
             for s in sold:
-                (etlsold, created) = EtlListingsDaily.objects.update_or_create(
-                    record_date=dayFrom,
+                etlsolds = EtlListingsDaily.objects
+                if self.options['etlPeriodType'] == 'Weekly':
+                    etlsolds = EtlListingsWeekly.objects
+                elif self.options['etlPeriodType'] == 'Monthly':
+                    etlsolds = EtlListingsMonthly.objects
+                elif self.options['etlPeriodType'] == 'Quaterly':
+                    etlsolds = EtlListingsQuaterly.objects
+                elif self.options['etlPeriodType'] == 'Yearly':
+                    etlsolds = EtlListingsYearly.objects
+                (etlsold, created) = etlsolds.update_or_create(
+                    record_firstdate=dayFrom,
                     geographic_type=gtype,
                     geographic_name=s['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
                     defaults={
@@ -728,8 +737,17 @@ class Svrea_script():
                 elif self.options['etlPeriodType'] == 'Quaterly':
                     etlsold.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
 
-        EtlListingsDaily.objects.filter(record_date__date = dayFrom, active_listings__isnull = True).update(active_listings=0)
-        EtlListingsDaily.objects.filter(record_date__date=dayFrom, sold_today__isnull=True).update(sold_today=0)
+        etls = EtlListingsDaily.objects
+        if self.options['etlPeriodType'] == 'Weekly':
+            etls = EtlListingsWeekly.objects
+        elif self.options['etlPeriodType'] == 'Monthly':
+            etls = EtlListingsMonthly.objects
+        elif self.options['etlPeriodType'] == 'Quaterly':
+            etls = EtlListingsQuaterly.objects
+        elif self.options['etlPeriodType'] == 'Yearly':
+            etls = EtlListingsYearly.objects
+        etls.filter(record_firstdate__date = dayFrom, active_listings__isnull = True).update(active_listings=0)
+        etls.filter(record_firstdate__date=dayFrom, sold_today__isnull=True).update(sold_today=0)
         return 0
 
 
