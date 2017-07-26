@@ -16,7 +16,7 @@ from django.db.models.functions import Coalesce
 
 
 from svrea_script.models import Listings, Address
-from svrea_etl.models import EtlListingsDaily
+from svrea_etl.models import EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuaterly, EtlListingsYearly
 
 
 
@@ -104,10 +104,32 @@ def plots_general(request):
                                                             .distinct('geographic_name')
                                                             .order_by('geographic_name')]
         #print(county)
-        active_list = EtlListingsDaily.objects.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
+        al = EtlListingsDaily.objects
+        todate = datetime.date.today()
+        fromdate = todate - datetime.timedelta(days=180)
+        dtype = 'YYYY-MM-DD'
+        if period == 'Weekly':
+            al = EtlListingsWeekly.objects
+            fromdate = todate - datetime.timedelta(days = 365*4+1)
+            dtype = 'YYYY-"W"IW'
+        elif period == 'Monthly':
+            al = EtlListingsMonthly.objects
+            fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
+            dtype = 'YYYY-MM'
+        elif period == 'Quaterly':
+            al = EtlListingsMonthly.objects
+            fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
+            dtype = 'YYYY-"Q"Q'
+        elif period == 'Yearly':
+            al = EtlListingsYearly.objects
+            fromdate = todate - datetime.timedelta(days=365 * 8 + 2)
+            dtype = 'YYYY'
+        #print(period)
+        active_list = al.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
+            .annotate(date=To_char('record_firstdate', dtype=dtype))\
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
-            .values('record_firstdate',
+            .values('date',
                       'geographic_type',
                       'geographic_name',
                       'al',
@@ -120,7 +142,10 @@ def plots_general(request):
                       'sold_price_med',
                       'sold_price_sqm_avg',
                       'sold_price_sqm_med',
-                      )
+                      )\
+            .filter(record_firstdate__range = (fromdate, todate)) \
+            .order_by('record_firstdate')
+
 #        print ([i for i in active_list])
 #         if county == 'Whole Sweden':
 #             active_list = active_list.filter(geographic_name__exact = county)
@@ -130,26 +155,26 @@ def plots_general(request):
         #for idx in range(0,2):
         # idx = 0: current_listings
         # idx = 1: sold_today
-        to_date = datetime.date.today()
-        if period == 'Daily':
-            dtype = 'YYYY-MM-DD'
-            from_date = to_date - datetime.timedelta(days = 180)
-        elif period == 'Monthly':
-            dtype =  'YYYY-MM'
-            from_date = to_date - datetime.timedelta(weeks=208)
-        elif period == 'Weekly':
-            dtype = 'YYYY-"W"IW'
-            from_date = to_date - datetime.timedelta(weeks=208)
-        elif period == 'Yearly':
-            dtype = 'YYYY'
-            from_date = to_date - datetime.timedelta(weeks=520)
-        else:
-            dtype = 'YYYY'
-            from_date = to_date - datetime.timedelta(weeks=520)
+        # to_date = datetime.date.today()
+        # if period == 'Daily':
+        #     dtype = 'YYYY-MM-DD'
+        #     from_date = to_date - datetime.timedelta(days = 180)
+        # elif period == 'Monthly':
+        #     dtype =  'YYYY-MM'
+        #     from_date = to_date - datetime.timedelta(weeks=208)
+        # elif period == 'Weekly':
+        #     dtype = 'YYYY-"W"IW'
+        #     from_date = to_date - datetime.timedelta(weeks=208)
+        # elif period == 'Yearly':
+        #     dtype = 'YYYY'
+        #     from_date = to_date - datetime.timedelta(weeks=520)
+        # else:
+        #     dtype = 'YYYY'
+        #     from_date = to_date - datetime.timedelta(weeks=520)
         #print(from_date, to_date)
         listings = [[i['date'],                     #0
-                     i['active_listings'],          #1
-                     i['sold_today'],               #2
+                     i['al'],          #1
+                     i['st'],               #2
                      i['listing_price_avg'],        #3
                      i['listing_price_med'],        #4
                      i['listing_price_sqm_avg'],    #5
@@ -158,29 +183,30 @@ def plots_general(request):
                      i['sold_price_med'],           #8
                      i['sold_price_sqm_avg'],       #9
                      i['sold_price_sqm_med'],       #10
-                     ] for i in (active_list.filter(record_firstdate__range = (from_date, to_date))
-                                                            .annotate(date = To_char('record_firstdate', dtype = dtype))
-                                                            .values('date')
-                                                            .annotate(active_listings = Sum(Coalesce('active_listings', 0)) / Count(To_char('record_firstdate', dtype = 'YYYY-MM-DD'), distinct=True),
-                                                                      sold_today = Sum(Coalesce('sold_today', 0)),
-                                                                      listing_price_avg = Avg('listing_price_avg'),
-                                                                      listing_price_med = Avg('listing_price_med'),
-                                                                      listing_price_sqm_avg = Avg('listing_price_sqm_avg'),
-                                                                      listing_price_sqm_med = Avg('listing_price_sqm_med'),
-                                                                      sold_price_avg=Avg(Coalesce('sold_price_avg', 0)),
-                                                                      sold_price_med=Avg(Coalesce('sold_price_med', 0)),
-                                                                      sold_price_sqm_avg = Avg(Coalesce('sold_price_sqm_avg', 0)),
-                                                                      sold_price_sqm_med = Avg(Coalesce('sold_price_sqm_med', 0)),
-                                                                      )
-                                                            .order_by('date'))]
+                     ] for i in active_list]
+            #.filter(record_firstdate__range = (from_date, to_date))
+        #                                                     .annotate(date = To_char('record_firstdate', dtype = dtype))
+        #                                                     .values('date')
+        #                                                     .annotate(active_listings = Sum(Coalesce('active_listings', 0)) / Count(To_char('record_firstdate', dtype = 'YYYY-MM-DD'), distinct=True),
+        #                                                               sold_today = Sum(Coalesce('sold_today', 0)),
+        #                                                               listing_price_avg = Avg('listing_price_avg'),
+        #                                                               listing_price_med = Avg('listing_price_med'),
+        #                                                               listing_price_sqm_avg = Avg('listing_price_sqm_avg'),
+        #                                                               listing_price_sqm_med = Avg('listing_price_sqm_med'),
+        #                                                               sold_price_avg=Avg(Coalesce('sold_price_avg', 0)),
+        #                                                               sold_price_med=Avg(Coalesce('sold_price_med', 0)),
+        #                                                               sold_price_sqm_avg = Avg(Coalesce('sold_price_sqm_avg', 0)),
+        #                                                               sold_price_sqm_med = Avg(Coalesce('sold_price_sqm_med', 0)),
+        #                                                               )
+        #                                                     .order_by('date'))]
 
 
         context = {
             "success" : True,
             "county_list" : county_list,
             "period" : period,
-            "current_listings" : [['Date', 'Active Listings']] + [[i[0], i[1]] for i in listings],
-            "sold_listings": [['Date', 'Sold Today']] + [[i[0], i[2]] for i in listings],
+            "active" : [['Date', 'Active Listings']] + [[i[0], i[1]] for i in listings],
+            "sold": [['Date', 'Sold Today']] + [[i[0], i[2]] for i in listings],
             #"listing_price" : [[i[0], i[5], i[5], i[6], i[6]] for i in listings],
 
             "listing_price": [['Date',

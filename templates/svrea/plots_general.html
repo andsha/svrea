@@ -16,7 +16,7 @@
         google.charts.setOnLoadCallback(sold_price_sqm);
 
         function active_listings_chart() {
-        var data = google.visualization.arrayToDataTable({{ current_listings | safe}});
+        var data = google.visualization.arrayToDataTable({{ active | safe}});
         var options = {
         title : '',
         legend : {position : 'none'},
@@ -26,7 +26,7 @@
         }
 
         function sold_listings_chart() {
-        var data = google.visualization.arrayToDataTable({{ sold_listings | safe}});
+        var data = google.visualization.arrayToDataTable({{ sold | safe}});
         var options = {
         title : '',
         legend : {position : 'none'},
@@ -114,6 +114,7 @@
                         <option value="Daily" {% if period == 'Daily'%} selected {% endif%}>Daily</option>
                         <option value="Weekly" {% if period == 'Weekly'%} selected {% endif%}>Weekly</option>
                         <option value="Monthly" {% if period == 'Monthly'%} selected {% endif%}>Monthly</option>
+                        <option value="Quaterly" {% if period == 'Quaterly'%} selected {% endif%}>Quaterly</option>
                         <option value="Yearly" {% if period == 'Yearly'%} selected {% endif%}>Yearly</option>
                     </select>
                     statistics for
