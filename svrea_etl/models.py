@@ -4,6 +4,7 @@ from django.db import models
 class EtlHistory(models.Model):
     historydate = models.DateTimeField(null=True, blank=True)
     etldate = models.DateTimeField(null=True, blank=True)
+    etlperiod = models.CharField(max_length=10, null = True, blank=True)
     stage   = models.CharField(max_length = 50, null=True, blank=True)
     status  = models.CharField(max_length = 50, null=True, blank=True)
     details = models.CharField(max_length = 500, null=True, blank=True)

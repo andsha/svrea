@@ -133,7 +133,7 @@ class Svrea_script():
         for s in today_scripts:
             if s.config == self.options:
                 runtoday = True
-                if s.status == 'done' and not self.forced: # if succesfully run before by any user
+                if s.status == 'done' and not self.forced: # if successfully run before by any user
                     st = 'already run for %s by %s' %(self.options, self.username)
                     tolog(INFO, st)
                     return 1
@@ -515,31 +515,31 @@ class Svrea_script():
             'fill_listings_daily_stats',
             'finish'
         ]
-        datefrom = datetime.datetime.strptime(self.options['etlRange'].split(':')[0], "%Y-%m-%d")
-        dateto = datetime.datetime.strptime(self.options['etlRange'].split(':')[1], "%Y-%m-%d")
+        startofperiod = datetime.datetime.strptime(self.options['etlRange'].split(':')[0], "%Y-%m-%d")
+        endofperiod = datetime.datetime.strptime(self.options['etlRange'].split(':')[1], "%Y-%m-%d")
 
         if self.options['etlPeriodType'] == 'Weekly':
             # find monday of this week
-            while datefrom.weekday() != 0:
-                datefrom -= datetime.timedelta(days=1)
+            while startofperiod.weekday() != 0:
+                startofperiod -= datetime.timedelta(days=1)
         elif self.options['etlPeriodType'] == 'Monthly':
-            datefrom = datefrom.replace(day = 1)
+            startofperiod = startofperiod.replace(day = 1)
         elif self.options['etlPeriodType'] == 'Quaterly':
-            if datefrom.month < 4:
-                datefrom = datefrom.replace(day = 1, month = 1)
-            elif datefrom.month < 7:
-                datefrom = datefrom.replace(day = 1, month = 3)
-            elif datefrom.month < 10:
-                datefrom = datefrom.replace(day = 1, month = 6)
-            elif datefrom.month < 13:
-                datefrom = datefrom.replace(day = 1, month = 9)
+            if startofperiod.month < 4:
+                startofperiod = startofperiod.replace(day = 1, month = 1)
+            elif startofperiod.month < 7:
+                startofperiod = startofperiod.replace(day = 1, month = 3)
+            elif startofperiod.month < 10:
+                startofperiod = startofperiod.replace(day = 1, month = 6)
+            elif startofperiod.month < 13:
+                startofperiod = startofperiod.replace(day = 1, month = 9)
         elif self.options['etlPeriodType'] == 'Yearly':
-            datefrom = datefrom.replace(day = 1, month = 1)
+            startofperiod = startofperiod.replace(day = 1, month = 1)
 
-        today = datefrom
+        dayFrom = startofperiod
 
         # loop through dates using etlPeriodType
-        while today <= dateto:
+        while dayFrom <= endofperiod:
 
             if Aux.objects.get(key='AnalyzeAuxKey').value != 'run':
                 info.status = 'stopped'
@@ -547,24 +547,25 @@ class Svrea_script():
                 tolog(ERROR, 'script %s %s was stopped by %s' % (info.id, info.config, self.username))
                 return 1
 
-            dayFrom = today
+            #dayFrom = today
             dayTo = dayFrom
 
             if self.options['etlPeriodType'] == 'Daily':
-                dayTo = today + datetime.timedelta(days=1)
+                dayTo = dayFrom + datetime.timedelta(days=1)
             elif self.options['etlPeriodType'] == 'Weekly':
-                dayTo = today + datetime.timedelta(days=7)
+                dayTo = dayFrom + datetime.timedelta(days=7)
             elif self.options['etlPeriodType'] == 'Monthly':
-                dayTo = today + relativedelta(months=1)
+                dayTo = dayFrom + relativedelta(months=1)
             elif self.options['etlPeriodType'] == 'Quaterly':
-                dayTo = today + relativedelta(months=3)
+                dayTo = dayFrom + relativedelta(months=3)
             elif self.options['etlPeriodType'] == 'Yearly':
-                dayTo = today + relativedelta(years=1)
+                dayTo = dayFrom + relativedelta(years=1)
 
             for idx, stage in enumerate(stages):
                 (hist, created) = EtlHistory.objects.get_or_create(
                     historydate__date = self.today,
-                    etldate = today,
+                    etldate = dayFrom,
+                    etlperiod = self.options['etlPeriodType'],
                     stage = stage,
                     defaults = {
                         'historydate'   : self.today,
@@ -589,7 +590,7 @@ class Svrea_script():
                     hist.status = 'error'
                     hist.save()
 
-            today = dayTo
+            dayFrom = dayTo
 
             #today += datetime.timedelta(days=1) # use etlPeriodType as delta
 
