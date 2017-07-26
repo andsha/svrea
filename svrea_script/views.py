@@ -78,7 +78,7 @@ def script_run(request):
         q = Queue(connection=conn)
         etlperiodtype = request.POST.get('etlperiodtype')
         params = {'analyze' : True,
-                  'forced' : True,
+                  #'forced' : True,
                   'etlRange' : "%s:%s" %(request.POST.get('etlFromDate'), request.POST.get('etlToDate')),
                   'etlPeriodType' : etlperiodtype
                   }
