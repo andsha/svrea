@@ -93,3 +93,27 @@ ORDER BY "svrea_script_listings"."latestprice" ASC
 
 SELECT "svrea_script_listings"."booliid", "svrea_script_listings"."datepublished", "svrea_script_listings"."source_id", "svrea_script_listings"."address_id", "svrea_script_listings"."latitude", "svrea_script_listings"."longitude", "svrea_script_listings"."constructionyear", "svrea_script_listings"."rent", "svrea_script_listings"."url", "svrea_script_listings"."rooms", "svrea_script_listings"."propertytype", "svrea_script_listings"."plotarea", "svrea_script_listings"."additionalarea", "svrea_script_listings"."livingarea", "svrea_script_listings"."floor", "svrea_script_listings"."isnewconstruction", "svrea_script_listings"."datesold", "svrea_script_listings"."isactive", "svrea_script_listings"."dateinactive", "svrea_script_listings"."latestprice", COALESCE("svrea_script_listings"."dateinactive", \'2017-07-08\'::date) AS "di" FROM "svrea_script_listings" WHERE ("svrea_script_listings"."latestprice" IS NOT NULL AND "svrea_script_listings"."datepublished" < \'2017-07-08T00:00:00\'::timestamp AND COALESCE("svrea_script_listings"."dateinactive", \'2017-07-08\'::date) >= \'2017-07-07T00:00:00\'::timestamp) ORDER BY "svrea_script_listings"."latestprice" ASC
 
+
+
+select
+c.type,
+case when c.type='monucipality' then municipality
+        when c.type='city' then ciy
+        default county
+end as geogpr_name,
+count(*)
+FROM
+etl_listings
+join
+(
+SELECT
+        'municipality' as type
+UNION
+SELECT
+        'city' as type
+UNION
+SELECT
+        'county' as type
+) c on 1=1
+
+

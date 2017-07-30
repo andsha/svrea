@@ -241,13 +241,16 @@ function newHist() {
                                     <option value="Abs" {% if data_type == "Abs" %} selected {% endif%}>Absolute</option>
                                     <option value="Rel" {% if data_type == "Rel" %} selected {% endif%}>Relative</option>
                                 </select>
-                                <button  >Refresh</button>
+                                <!--<button  >Refresh</button>-->
                             </h5>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
+                <div class="panel panel-primary" style="border:0;">
+                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
+                </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
                     <div id="listings_price_hist" style="height:600px"></div>
@@ -281,7 +284,7 @@ function newHist() {
                                     <input type="date" id="period_dayto_{{forloop.counter0}}"    name="period_dayto_{{forloop.counter0}}"   {% if hist.period_type != "Period"%}  style="display:none" {%endif%} value="{{hist.period_dayto}}">
                                     Property Type:
                                     <select name="property_type_{{forloop.counter0}}">
-                                        <option value="Listings" {% if hist.property_type == "Listings" %} selected {% endif%}>Listings</option>
+                                        <option value="Listings" {% if hist.property_type == "Listings" %} selected {% endif%}>Active</option>
                                         <option value="Sold" {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
                                     </select>
                                     Region:

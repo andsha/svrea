@@ -1,0 +1,196 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block content %}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="{% static "js/js.cookie.js" %}"></script>
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart', 'line']});
+google.charts.setOnLoadCallback(display_ts);
+
+function display_ts() {
+var data = google.visualization.arrayToDataTable({{ ts_data | safe}});
+var options = {
+    title : '',
+    legend : {position : 'right'},
+    bar : {groupWidth: '100%'},
+    hAxis:{
+        title : '{{x_axis_title}}'
+    },
+    vAxis:{
+        title : '{{y_axis_title}}'
+    }
+    }
+
+
+var chart = new google.visualization.{{chart_type | safe}}Chart(document.getElementById('ts_chart'));
+chart.draw(data, options);
+}
+
+//$(document).ready(mselect());
+window.onload = mselect
+
+function mselect(){
+        $('.county-select').multiselect({
+        enableClickableOptGroups: true,
+        buttonClass: 'btn btn-primary',
+        nonSelectedText: 'Choose County',
+        numberDisplayed: 1}
+        );
+}
+
+function removeTS(num){
+    elem = document.getElementById('div_ts_' + num)
+    elem.parentNode.removeChild(elem)
+}
+
+var g_child = {{time_series|length}}
+
+function newTS() {
+    var e = g_child
+    container = document.getElementById('ts_list');
+    div = document.createElement('div');
+    div.id = 'div_ts_' + g_child
+        h5 = document.createElement('H5');
+
+        index = document.createElement('input')
+        index.type = 'hidden'
+        index.name = 'index_' + e
+        index.value = e
+        h5.appendChild(index)
+
+        h5.appendChild(document.createTextNode(g_child + '. Type '));
+
+            ts_type = document.createElement('select');
+            ts_type.name = "ts_type_" + e;
+                option0 = document.createElement('option');
+                option0.text = 'Active'
+                ts_type.add(option0)
+                option1 = document.createElement('option');
+                option1.text = 'Sold'
+                ts_type.add(option1)
+        h5.appendChild(ts_type)
+
+        h5.appendChild(document.createTextNode('  Region '));
+
+            county_select = document.createElement('select')
+            county_select.name = 'county_selected_' + e
+            county_select.className = "county-select"
+            county_select.multiple = "multiple"
+                optgroup = document.createElement('optgroup')
+                optgroup.label = 'all'
+                    {% for c in county_list %}
+                        option = document.createElement('option')
+                        option.text = '{{c}}'
+                        option.value = '{{c}}'
+                        {% if c == "Whole Sweden" %}option.selected=true{%endif%}
+                    optgroup.appendChild(option)
+                    {% endfor %}
+            county_select.appendChild(optgroup)
+        h5.appendChild(county_select)
+
+        hlink = document.createElement('a')
+        hlink.href = 'javascript:removeTS(' + g_child + ')'
+        hlink.appendChild(document.createTextNode(' Remove    '))
+        h5.appendChild(hlink)
+
+    div.appendChild(h5);
+    container.appendChild(div);
+    g_child ++;
+    document.getElementById('g_child').value=g_child
+    mselect()
+
+}
+
+
+</script>
+
+
+<div id="full">
+    <div class="container-fluid ">
+        <form method="post" name="form_" id="histForm" value="hello"> {% csrf_token %}
+            <div class="col-md-12">
+                <div class="panel panel-primary text-center blue">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series Properties</h3></div>
+                    <div style="padding:10px">
+                        <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
+                        From:<input type="date" id="period_from"  name="period_from" value="{{period_from}}">
+                        To:<input type="date" id="period_to"    name="period_to"   value="{{period_to}}">
+                        Step:<select name="period_step" id="period_step">
+                                <option {%if period_step == "Day"%} selected {%endif%}> Day </option>
+                                <option {%if period_step == "Week"%} selected {%endif%}> Week </option>
+                                <option {%if period_step == "Month"%} selected {%endif%}> Month </option>
+                                <option {%if period_step == "Quater"%} selected {%endif%}> Quater </option>
+                                <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
+                        </select>
+                        Data type:<select name="data_type" id="data_type">
+                                <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
+                                <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
+                                <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel panel-primary text-center blue">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
+                    <div style="padding:10px">
+                        Style:
+                        <select name="chart_type">
+                            <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
+                            <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
+                        </select>
+                        Data:
+                        <select name="data_rep">
+                            <option value="Abs" {% if data_rep == "Abs" %} selected {% endif%}>Absolute</option>
+                            <option value="Rel" {% if data_rep == "Rel" %} selected {% endif%}>Relative</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-primary" style="border:0;">
+                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series Plot</h3></div>
+                    <div id="ts_chart" style="height:600px"></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-primary" style="border:0;">
+                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Plot</h5></button></div>
+                    <!--<div class="panel-heading"><h3 class="panel-title text-center"></h3></div>-->
+                    <div class="text blue" id="ts_list">
+                        <button name="test" type="button" onclick="newTS()">Add Series</button>
+                        {% for series in time_series %}
+                            <div id = "div_ts_{{forloop.counter0}}">
+                                <f5>
+                                    <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
+                                    {{forloop.counter0}}. Type
+                                    <select name="ts_type_{{forloop.counter0}}" id="ts_type_{{forloop_counter0}}">
+                                        <option {% if series.ts_type == "Active" %} selected {% endif%}>Active</option>
+                                        <option {% if series.ts_type == "Sold" %} selected {% endif%}>Sold</option>
+                                    </select>
+                                    Region:
+                                    <select class="county-select" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
+                                        <optgroup label="All">
+                                            {% for c in county_list %}
+                                        <option value="{{c}}" {% if c in series.county_selected %} selected {% endif%}>{{c}}</option>
+                                        {% endfor %}
+                                        </optgroup>
+                                    </select>
+                                    <a href="javascript:removeTS({{forloop.counter0}})"> Remove</a>
+
+                                </f5>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+

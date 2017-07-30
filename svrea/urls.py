@@ -22,6 +22,7 @@ from .views import (
     legal,
     maps,
     plots_histograms,
+    plots_timeseries,
     plots_general
 )
 
@@ -43,6 +44,7 @@ urlpatterns = [
     url(r'maps/density_maps$', maps, name = 'maps'),
     url(r'plots_general$', plots_general, name = 'plots_general'),
     url(r'plots_histograms$', plots_histograms, name = 'plots_histograms'),
+    url(r'plots_timeseries$', plots_timeseries, name = 'plots_timeseries'),
     url(r'script_info$', svrea_script_info, name = 'script_info'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
     url(r'script_logs$', svrea_script_logs, name = 'script_logs'),

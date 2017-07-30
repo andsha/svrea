@@ -561,6 +561,7 @@ class Svrea_script():
             elif self.options['etlPeriodType'] == 'Yearly':
                 dayTo = dayFrom + relativedelta(years=1)
 
+            tolog(INFO, '%s analysis for %s' %(self.options['etlPeriodType'], dayFrom))
             for idx, stage in enumerate(stages):
                 (hist, created) = EtlHistory.objects.get_or_create(
                     historydate__date = self.today,
@@ -576,7 +577,7 @@ class Svrea_script():
 
                 if not created:
                     if hist.status == 'done' and not self.forced:
-                        tolog(INFO, '%s Already run for %s' %(stage, self.today))
+                        tolog(INFO, '%s Already run for %s' %(stage, dayFrom))
                         return 1
                     else:
                         hist.historydate = self.today

@@ -1,6 +1,7 @@
 import sys
 
 import datetime
+from dateutil.relativedelta import relativedelta
 import calendar
 import numpy, math
 from operator import itemgetter
@@ -117,7 +118,7 @@ def plots_general(request):
             fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
             dtype = 'YYYY-MM'
         elif period == 'Quaterly':
-            al = EtlListingsMonthly.objects
+            al = EtlListingsQuaterly.objects
             fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
             dtype = 'YYYY-"Q"Q'
         elif period == 'Yearly':
@@ -146,32 +147,6 @@ def plots_general(request):
             .filter(record_firstdate__range = (fromdate, todate)) \
             .order_by('record_firstdate')
 
-#        print ([i for i in active_list])
-#         if county == 'Whole Sweden':
-#             active_list = active_list.filter(geographic_name__exact = county)
-
-        #listings = []
-        #print(active_listings_period)
-        #for idx in range(0,2):
-        # idx = 0: current_listings
-        # idx = 1: sold_today
-        # to_date = datetime.date.today()
-        # if period == 'Daily':
-        #     dtype = 'YYYY-MM-DD'
-        #     from_date = to_date - datetime.timedelta(days = 180)
-        # elif period == 'Monthly':
-        #     dtype =  'YYYY-MM'
-        #     from_date = to_date - datetime.timedelta(weeks=208)
-        # elif period == 'Weekly':
-        #     dtype = 'YYYY-"W"IW'
-        #     from_date = to_date - datetime.timedelta(weeks=208)
-        # elif period == 'Yearly':
-        #     dtype = 'YYYY'
-        #     from_date = to_date - datetime.timedelta(weeks=520)
-        # else:
-        #     dtype = 'YYYY'
-        #     from_date = to_date - datetime.timedelta(weeks=520)
-        #print(from_date, to_date)
         listings = [[i['date'],                     #0
                      i['al'],          #1
                      i['st'],               #2
@@ -184,22 +159,6 @@ def plots_general(request):
                      i['sold_price_sqm_avg'],       #9
                      i['sold_price_sqm_med'],       #10
                      ] for i in active_list]
-            #.filter(record_firstdate__range = (from_date, to_date))
-        #                                                     .annotate(date = To_char('record_firstdate', dtype = dtype))
-        #                                                     .values('date')
-        #                                                     .annotate(active_listings = Sum(Coalesce('active_listings', 0)) / Count(To_char('record_firstdate', dtype = 'YYYY-MM-DD'), distinct=True),
-        #                                                               sold_today = Sum(Coalesce('sold_today', 0)),
-        #                                                               listing_price_avg = Avg('listing_price_avg'),
-        #                                                               listing_price_med = Avg('listing_price_med'),
-        #                                                               listing_price_sqm_avg = Avg('listing_price_sqm_avg'),
-        #                                                               listing_price_sqm_med = Avg('listing_price_sqm_med'),
-        #                                                               sold_price_avg=Avg(Coalesce('sold_price_avg', 0)),
-        #                                                               sold_price_med=Avg(Coalesce('sold_price_med', 0)),
-        #                                                               sold_price_sqm_avg = Avg(Coalesce('sold_price_sqm_avg', 0)),
-        #                                                               sold_price_sqm_med = Avg(Coalesce('sold_price_sqm_med', 0)),
-        #                                                               )
-        #                                                     .order_by('date'))]
-
 
         context = {
             "success" : True,
@@ -207,7 +166,6 @@ def plots_general(request):
             "period" : period,
             "active" : [['Date', 'Active Listings']] + [[i[0], i[1]] for i in listings],
             "sold": [['Date', 'Sold Today']] + [[i[0], i[2]] for i in listings],
-            #"listing_price" : [[i[0], i[5], i[5], i[6], i[6]] for i in listings],
 
             "listing_price": [['Date',
                                'Average',
@@ -300,30 +258,6 @@ def maps(request):
         datefrom = "period_dayfrom"
         dateto = datetime.datetime.strptime("period_dayto", '%Y-%m-%d') + datetime.timedelta(days=1)
 
-
-
-    # field = ''
-    # if map_type == 'listings':
-    #     field = 'active_listings'
-    #     text = 'active listings'
-    # elif map_type == 'listing_price':
-    #     field = 'listing_price_med'
-    #     text = 'active listings median price'
-    # elif map_type == 'listing_price_sqm':
-    #     field = 'listing_price_sqm_med'
-    #     text = 'active listings median price per m<sup>2<sup>'
-    # elif map_type == 'sold':
-    #     field = 'sold_today'
-    #     text = 'properties sold'
-    # elif map_type == 'sold_price':
-    #     field = 'sold_price_med'
-    #     text = 'sold property median price'
-    # elif map_type == 'sold_price_sqm':
-    #     field = 'sold_price_sqm_med'
-    #     text = 'sold property median price per m<sup>2<sup>'
-    # else:
-    #     return redirect('index')
-
     ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
 
     if map_type == 'listings':
@@ -347,11 +281,6 @@ def maps(request):
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
-
-    #print(ml)
-    #for m in ml:
-        #print(m)
-        #print(datefrom, dateto)
 
     muniListings = sorted(ml, key=itemgetter(1))
     maxMuniListings = muniListings[-int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
@@ -437,16 +366,6 @@ def plots_histograms(request):
     LowerCutoff = 2.5
     UpperCutoff = 100 - LowerCutoff
     g_child = 1
-    # period_type = 'Day'
-    # period_day =
-    # period_week = '%s-W%s' %(datetime.date.today().year, '0%s' %datetime.date.today().isocalendar()[1] if datetime.date.today().isocalendar()[1] <10 else datetime.date.today().isocalendar()[1])
-    # period_month = '%s-%s' %(datetime.date.today().year, '0%s' %datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month)
-    # period_year = '%s' %datetime.date.today().year
-    # period_dayfrom = period_day
-    # period_dayto = period_day
-
-    # print(datetime.date.today().year, datetime.date.today().isocalendar()[1])
-    # print(request.POST)
 
     if request.POST.get('g_child'):
         histInfo = []
@@ -500,10 +419,6 @@ def plots_histograms(request):
         field = 'latestprice'
         filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
 
-    # print(histInfo)
-
-
-
     if data_type[0] == 'Rel':
         rel = True
     else:
@@ -521,30 +436,19 @@ def plots_histograms(request):
     #print(connection.queries)
     # __________________________ Templates for histograms ____________________
     listings_hist = [['Price']]
-    # listings_list_all_hist = []
     listings_list_all = []
-    county_chart_all_hist = []
     county_chart_all = []
     #print("there",connection.queries)
     for idx, hist in enumerate(histInfo):
-        county_chart = []
-        listings_list = []
-        # listings_list_all_hist.append([])
-
         # ____________________ make initial QS ________________________
-
-        # print(hist["property_type"])
         if hist["property_type"] == 'Sold':
             listings_qs = Listings.objects.filter(isactive__exact=False).filter(**filter_isnull_f).order_by(
                 field)
         elif hist["property_type"] == 'Listings':
             listings_qs = Listings.objects.filter(**filter_isnull_f).order_by(field)
-            #listings_qs = Listings.objects#.filter(latestprice__isnull = False)  # .order_by(field)
         if hist_type == 'Price m2':
             listings_qs = listings_qs.exclude(latestprice=0).exclude(livingarea=0)
-
         # ______________________ Deal with time ranges _______________________
-
         if hist["period_type"] == 'Day':
             datefrom = datetime.datetime.strptime(hist["period_day"], "%Y-%m-%d")
             dateto = datefrom + datetime.timedelta(days=1)
@@ -557,41 +461,25 @@ def plots_histograms(request):
             dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
         elif hist["period_type"] == 'Year':
             datefrom = datetime.datetime.strptime(hist["period_year"] + '-01-01', "%Y-%m-%d")
-            dateto = datetime.datetime.strptime(hist["period_year"] + '-12-31',
-                                                "%Y-%m-%d") + datetime.timedelta(days=1)
+            dateto = datetime.datetime.strptime(hist["period_year"] + '-12-31',                                                "%Y-%m-%d") + datetime.timedelta(days=1)
         else:  # Period
             datefrom = hist["period_dayfrom"]
             dateto = datetime.datetime.strptime(hist["period_dayto"], '%Y-%m-%d') + datetime.timedelta(days=1)
-
         if hist["property_type"] == 'Sold':
             listings_qs = listings_qs.filter(datesold__range=(datefrom, dateto))
-
         if hist["property_type"] == 'Listings':
-            # listings_qs = listings_qs.annotate(di=Coalesce('dateinactive', datetime.date.today())) \
-            #     .filter(datepublished__lt=dateto, di__gte=datefrom)
             listings_qs = listings_qs.annotate(di=Case(
                 When(Q(dateinactive__isnull=False), then='dateinactive'),
                 default=Value(datetime.date.today()),
                 output_field=DateTimeField()
             )).filter(datepublished__lt=dateto, di__gte=datefrom)
-
         if (listings_qs.count()) == 0:
             messages.error(request, "No data for selected settings")
             break
-
         # _____________________ Generate ordered list of all results _______________
-        # print(hist["county_selected"])
-        #print("here", connection.queries)
-
         for idy, county in enumerate(hist["county_selected"]):
-            # print(idy, county)
             if county == 'Whole Sweden':
-                # print(listings_qs.values(field))
                 if hist_type == 'Price m2':
-                    # for v in listings_qs.values('latestprice', 'livingarea'):
-                    # print(v['latestprice'], v['livingarea'])
-                    # print(v['latestprice'] / v['livingarea'])
-
                     listings_list_all.append([int(r['latestprice'] / r['livingarea']) for r in
                                               listings_qs.values('latestprice', 'livingarea')])
                 else:
@@ -609,8 +497,6 @@ def plots_histograms(request):
                         [int(r[field]) for r in listings_qs.filter(address__county=county).values(field)])
                 county_chart_all.append(
                     "%s. %s(%s)" % (idx, hist["county_selected"][idy], len(listings_list_all[-1])))
-
-    #print(connection.queries)
     # ______________________ Define highest and lowest cutoffs ____________________
 
     percentH_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], UpperCutoff)
@@ -631,21 +517,15 @@ def plots_histograms(request):
     # _______________________ fill Y axis with histograms ________________________
 
     for idx, (listings_list, county) in enumerate(zip(listings_list_all, county_chart_all)):
-        # print(listings_list)
         hist = numpy.histogram(listings_list, bins=bins)
         listings_hist[0].append('%s' % county)
         tot = len(listings_list)
-
         listings_hist[1].append(len([n for n in listings_list if n < percentL_price]) / (tot if rel else 1))
-        # print(hist)
 
         for i, h in enumerate(hist[0]):
             listings_hist[i + 2].append(h / (tot if rel else 1))
 
         listings_hist[-1].append(len([n for n in listings_list if n > percentH_price]) / (tot if rel else 1))
-
-    # print(county_selected)
-    # print(listings_hist)
     #print(connection.queries)
     context = {"histInfo": histInfo,
                "defHistInfo": defHistInfo,
@@ -655,22 +535,187 @@ def plots_histograms(request):
                "data_type": data_type[0],
                "listings_hist": listings_hist,
                "x_axis_title": x_axis_title,
-               # "county_selected": county_selected,
                "num_bins": num_bins,
                "LowerCutoff": LowerCutoff,
                "UpperCutoff": UpperCutoff,
                "g_child": g_child,
-               # "period_type" : period_type,
-               # "period_day" : period_day,
-               # "period_week" : period_week,
-               # "period_month" : period_month,
-               # "period_year" : period_year,
-               # "period_dayfrom" : period_dayfrom,
-               # "period_dayto" : period_dayto,
-
                }
 
     return render(request, "svrea/plots_histograms.html", context=context)
 
+
+@ratelimit(key='ip', rate='1/s')
+def plots_timeseries(request):
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
+    # ************************  defaults  *********************
+    time_series = [{ # this is a list containing info about all time series
+        "ts_type": "Active",
+        "county_selected": ["Whole Sweden"],
+    }]
+
+    period_to = datetime.date.today()
+    period_from = period_to - datetime.timedelta(days = 180)
+    period_step = 'Day'
+    data_type = 'Number'
+    qs = EtlListingsDaily.objects
+    dtype = 'YYYY-MM-DD'
+    chart_type = 'Line'
+    data_rep = 'Abs'
+    y_axis_title = 'Number of properties'
+    g_child = 1
+
+
+    # **********************************************************
+    #print(request.POST)
+    if request.POST.get('g_child'):  # if post, then ignore defaults
+        #print(request.POST)
+        time_series = []
+        totnum = int(request.POST.get('g_child'))
+        idx = 0
+
+        while idx < totnum:
+            if not request.POST.get('index_%s' % idx):
+                idx += 1
+                continue
+            time_series.append({})
+            time_series[-1]['ts_type'] = request.POST.get('ts_type_%s' % idx)
+            time_series[-1]['county_selected'] = request.POST.getlist('county_selected_%s' % idx)
+            idx += 1
+
+        period_to = datetime.datetime.strptime(request.POST.get('period_to'),'%Y-%m-%d')
+        period_from = datetime.datetime.strptime(request.POST.get('period_from'),'%Y-%m-%d')
+        period_step = request.POST.get('period_step')
+
+        if period_step == 'Week':
+            qs = EtlListingsWeekly.objects
+            dtype = 'YYYY-"W"IW'
+            # find monday of this week
+            while period_from.weekday() != 0:
+                period_from -= datetime.timedelta(days=1)
+        elif period_step == 'Month':
+            qs = EtlListingsMonthly.objects
+            dtype = 'YYYY-MM'
+            period_from = period_from.replace(day = 1)
+        elif period_step == 'Quater':
+            qs = EtlListingsQuaterly.objects
+            dtype = 'YYYY-"Q"Q'
+            if period_from.month < 4:
+                period_from = period_from.replace(day = 1, month = 1)
+            elif period_from.month < 7:
+                period_from = period_from.replace(day = 1, month = 3)
+            elif period_from.month < 10:
+                period_from = period_from.replace(day = 1, month = 6)
+            elif period_from.month < 13:
+                period_from = period_from.replace(day = 1, month = 9)
+        elif period_step == 'Year':
+            qs = EtlListingsYearly.objects
+            dtype = 'YYYY'
+            period_from = period_from.replace(day = 1, month = 1)
+
+        data_type = request.POST.get('data_type')
+
+        chart_type = request.POST.get('chart_type')
+        data_rep = request.POST.getlist('data_rep')
+        g_child = request.POST.get('g_child')
+
+    if data_type == 'Number':
+        y_axis_title = 'Number of properties'
+    elif data_type == 'Price':
+        y_axis_title = 'Price, SEK'
+    if data_type == 'Price m2':
+        y_axis_title = 'Price / <sup>m2</sup>, SEK'
+
+    if data_rep == 'Rel':
+        rel = True
+    else:
+        rel = False
+
+    # __________________________ Generate County List _______________________
+
+    county_list = ['Whole Sweden']
+
+    for i in [address.county for address in Address.objects.distinct('county').order_by('county')]:
+        county_list.append(i)
+
+    # ______________________________________________
+
+    ts_data = [['haxis']]
+
+    qs = qs.filter(record_firstdate__gte = period_from,
+                    record_firstdate__lte = period_to)
+    qts = qs.annotate(date=To_char('record_firstdate', dtype=dtype))\
+        .values('date').distinct().order_by('record_firstdate')
+
+    for t in qts:
+        ts_data.append([t['date']])
+#        xaxis.append(t['record_firstdate'])
+
+    for ts in time_series:
+        for county in ts['county_selected']:
+            if county == 'Whole Sweden':
+                county = 'Sweden'
+            qqs = qs
+            qqs = qqs.filter(geographic_name = county)
+
+            if ts['ts_type'] == 'Active':
+                if data_type == 'Number':
+                    qqs = qqs.annotate(p=Coalesce('active_listings', 0)) \
+                        .values('record_firstdate', 'p')
+                elif data_type == 'Price':
+                    qqs = qqs.annotate(p=Coalesce('listing_price_med', 0))\
+                        .values('record_firstdate','p')
+                elif data_type == 'Price m2':
+                    qqs = qqs.annotate(p=Coalesce('listing_price_sqm_med', 0)) \
+                        .values('record_firstdate','p')
+            elif ts['ts_type'] == 'Sold':
+                if data_type == 'Number':
+                    qqs = qqs.annotate(p=Coalesce('sold_today', 0)) \
+                        .values('record_firstdate', 'p')
+                elif data_type == 'Price':
+                    qqs = qqs.annotate(p=Coalesce('sold_price_med', 0)) \
+                        .values('record_firstdate','p')
+                elif data_type == 'Price m2':
+                    qqs = qqs.annotate(p=Coalesce('sold_price_sqm_med', 0)) \
+                        .values('record_firstdate','p')
+
+            qqs = qqs.order_by('record_firstdate')
+            ts_data[0].append('%s, %s, %s' % (county, ts['ts_type'], data_type))
+            #print(ts_data)
+
+            #print(qqs)
+            for idx in range (0,len(qqs)):
+                #print(idx, qqs[idx])
+                ts_data[idx+1].append(qqs[idx]['p'])
+
+    #print(period_to)
+
+    context = {"ts_data":ts_data,
+                "period_to" : period_to.strftime('%Y-%m-%d'),
+                "period_from" : period_from.strftime('%Y-%m-%d'),
+                "period_step" : period_step,
+                "data_type" : data_type,
+               "chart_type": chart_type,
+               "data_rep": data_rep,
+               "time_series": time_series,
+               "county_list": county_list,
+               "x_axis_title": period_step,
+               "y_axis_title": y_axis_title,
+               "g_child": g_child,
+               }
+    #print(context)
+
+
+    return render(request, "svrea/plots_timeseries.html", context=context)
 
 
