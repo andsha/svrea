@@ -133,7 +133,7 @@ class EtlListingsYearly(models.Model):
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
 
-class EtlTimeSeriesFavouriteTimeSeries(models.Model):
+class EtlTimeSeriesFavourite(models.Model):
     creationdate = models.DateTimeField(null=True, blank=True)
     favouritename = models.CharField(max_length=256, null=True, blank=True)
     comment = models.CharField(max_length=2000, null=True, blank=True)

@@ -17,9 +17,12 @@ from django.db.models.functions import Coalesce
 
 
 from svrea_script.models import Listings, Address
-from svrea_etl.models import EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuaterly, EtlListingsYearly
-
-
+from svrea_etl.models import EtlListingsDaily, \
+    EtlListingsWeekly, \
+    EtlListingsMonthly, \
+    EtlListingsQuaterly, \
+    EtlListingsYearly,\
+    EtlTimeSeriesFavourite
 
 
 class To_char(Func):
@@ -73,6 +76,26 @@ def legal(request):
     context = {}
     return render(request, "svrea/legal.html", context=context)
 
+
+@login_required(redirect_field_name = "", login_url="/")
+def fav_timeseries(request):
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
+
+
+
+    return render(request, 'svrea/fav_timeseries.html')
 
 @ratelimit(key='ip', rate='1/s')
 def plots_general(request):
@@ -557,6 +580,19 @@ def plots_timeseries(request):
             login(request, user)
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
+
+    # save time series in favourites
+    if request.POST.get('save_series') and request.user.is_autenticated():
+        ts = EtlTimeSeriesFavourite(
+            creationdate = datetime.date.today(),
+            favouritename = request.POST.get('name_of_series'),
+            username = request.user.get_username(),
+            timeseriesdict = dict(request.POST.iterlists())
+        )
+        ts.save()
+        print(ts)
+
+
 
     # ************************  defaults  *********************
     time_series = [{ # this is a list containing info about all time series
