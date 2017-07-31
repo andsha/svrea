@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import JSONField
 
 
 class EtlHistory(models.Model):
@@ -131,3 +132,10 @@ class EtlListingsYearly(models.Model):
     sold_area_med           = models.IntegerField(null=True, blank=True)
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
+
+class EtlTimeSeriesFavouriteTimeSeries(models.Model):
+    creationdate = models.DateTimeField(null=True, blank=True)
+    favouritename = models.CharField(max_length=256, null=True, blank=True)
+    username = models.CharField(max_length=256, null=True, blank=True)
+    usergroup = models.CharField(max_length=256, null=True, blank=True)
+    timeseriesdict = JSONField()

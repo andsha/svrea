@@ -104,6 +104,10 @@ function newTS() {
 
 }
 
+function clearSeriesText(){
+    document.getElementById('save_name').value = '';
+}
+
 
 </script>
 
@@ -113,26 +117,6 @@ function newTS() {
         <form method="post" name="form_" id="histForm" value="hello"> {% csrf_token %}
             <div class="col-md-12">
                 <div class="panel panel-primary text-center blue">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series Properties</h3></div>
-                    <div style="padding:10px">
-                        <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
-                        From:<input type="date" id="period_from"  name="period_from" value="{{period_from}}">
-                        To:<input type="date" id="period_to"    name="period_to"   value="{{period_to}}">
-                        Step:<select name="period_step" id="period_step">
-                                <option {%if period_step == "Day"%} selected {%endif%}> Day </option>
-                                <option {%if period_step == "Week"%} selected {%endif%}> Week </option>
-                                <option {%if period_step == "Month"%} selected {%endif%}> Month </option>
-                                <option {%if period_step == "Quater"%} selected {%endif%}> Quater </option>
-                                <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
-                        </select>
-                        Data type:<select name="data_type" id="data_type">
-                                <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
-                                <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
-                                <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="panel panel-primary text-center blue">
                     <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
                     <div style="padding:10px">
                         Style:
@@ -140,32 +124,55 @@ function newTS() {
                             <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
                             <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
                         </select>
-                        Data:
-                        <select name="data_rep">
-                            <option value="Abs" {% if data_rep == "Abs" %} selected {% endif%}>Absolute</option>
-                            <option value="Rel" {% if data_rep == "Rel" %} selected {% endif%}>Relative</option>
-                        </select>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
-                <div class="panel panel-primary" style="border:0;">
-                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
-                </div>
                 <div class="panel panel-primary">
                     <div class="panel-heading"><h3 class="panel-title text-center">Time Series Plot</h3></div>
                     <div id="ts_chart" style="height:600px"></div>
                 </div>
             </div>
             <div class="col-md-12">
+                <div class="panel panel-primary text-center blue">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series</h3></div>
+                    <div style="padding:10px">
+                        <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
+                        From:<input type="date" id="period_from"  name="period_from" value="{{period_from}}">
+                        To:<input type="date" id="period_to"    name="period_to"   value="{{period_to}}">
+                        Period:<select name="period_step" id="period_step">
+                                <option {%if period_step == "Day"%} selected {%endif%}> Day </option>
+                                <option {%if period_step == "Week"%} selected {%endif%}> Week </option>
+                                <option {%if period_step == "Month"%} selected {%endif%}> Month </option>
+                                <option {%if period_step == "Quater"%} selected {%endif%}> Quater </option>
+                                <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
+                        </select>
+                        Display:<select name="data_type" id="data_type">
+                                <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
+                                <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
+                                <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
                 <div class="panel panel-primary" style="border:0;">
-                    <div align="center" class="text blue"><button name="tte"><h5>Refresh Plot</h5></button></div>
+                    <div align="center" class="text blue"><button name="refresh_plot"><h5>Refresh Plot</h5></button></div>
                     <!--<div class="panel-heading"><h3 class="panel-title text-center"></h3></div>-->
                     <div class="text blue" id="ts_list">
-                        <button name="test" type="button" onclick="newTS()">Add Series</button>
+                        <div>
+                            <div style="float: left;"><button name="test" type="button" onclick="newTS()">Add Series</button></div>
+                            {% if request.user.is_authenticated %}
+                            <div style="float: right;">
+                                <input type="text" name="name_of_series" value="Name of Series" onclick="clearSeriesText();">
+                                <button name="save_series" >Add to Favourites</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <br>
                         {% for series in time_series %}
                             <div id = "div_ts_{{forloop.counter0}}">
-                                <f5>
+                                <h5>
                                     <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
                                     {{forloop.counter0}}. Type
                                     <select name="ts_type_{{forloop.counter0}}" id="ts_type_{{forloop_counter0}}">
@@ -182,7 +189,7 @@ function newTS() {
                                     </select>
                                     <a href="javascript:removeTS({{forloop.counter0}})"> Remove</a>
 
-                                </f5>
+                                </h5>
                             </div>
                         {% endfor %}
                     </div>
