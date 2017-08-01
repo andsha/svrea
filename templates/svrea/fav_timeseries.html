@@ -27,6 +27,7 @@
                         <table width="100%">
                             <tr>
                                 <th>Creation Date</th>
+                                <th>Last Updated</th>
                                 <th>Title</th>
                                 <th>User Name</th>
                                 <th>User Group</th>
@@ -38,11 +39,11 @@
                                 {% elif s.flag == '2' %} class="flag_3"
                                 {% endif %}>
                                 <td>{{s.creationdate}}</td>
+                                <td>{{s.lastupdatedate}}</td>
                                 <td><a href="{% url 'plots_timeseries'%}?{{s.timeseriesdict }}">{{s.favouritename}}</a></td>
-                                <td>{{s.favouritename}}</td>
                                 <td>{{s.username}}</td>
                                 <td>{{s.usergroup}}</td>
-                                <td>{{s.comment}}</td>
+                                <td>{{s.comment|linebreaks}}</td>
                             </tr>
                             {% endfor %}
                         </table>
