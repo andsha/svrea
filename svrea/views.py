@@ -96,7 +96,7 @@ def fav_timeseries(request):
 
     if request.POST.get('runTS'):
         ts = EtlTimeSeriesFavourite.objects.values('timeseriesdict').get(id=request.POST.get('runTS').split('_')[1])['timeseriesdict']
-        print('URL PARSE', ts)
+        #print('URL PARSE', ts)
         return redirect(reverse('plots_timeseries') + '?%s' %ts)
         #return(get_plots_timeseries(ts, request))
 
@@ -604,20 +604,42 @@ def plots_timeseries(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
+    # Add to Favourite
     if request.GET.get('save_series') and request.user.is_authenticated():
         name = request.GET.get('name_of_series')
         ts = EtlTimeSeriesFavourite(
-            creationdate=datetime.datetime.today(),
+            creationdate=datetime.datetime.now(),
             favouritename=name,
             username=request.user.get_username(),
         )
         ts.save()
         r = request.GET.copy()
         r.pop('save_series')
-        r['id'] = ts.id
+        r['fav_tsid'] = ts.id
         ts.timeseriesdict=r.urlencode()
         ts.save()
         messages.info(request, "%s Saved in <a href='%s'>Favourites</a>" %(name, reverse(fav_timeseries)))
+
+    # Update Favourite
+    if request.GET.get('update_favourite') and request.user.is_authenticated():
+        id = request.GET.get('fav_tsid')
+        ts = EtlTimeSeriesFavourite.objects.get(id=id)
+        ts.comment = request.GET.get('fav_tscomment')
+        r = request.GET.copy()
+        r.pop('update_favourite')
+        ts.timeseriesdict = r.urlencode()
+        ts.lastupdatedate = datetime.datetime.now()
+        ts.save()
+        messages.info(request, "%s Was Updated in <a href='%s'>Favourites</a>" %(ts.favouritename, reverse(fav_timeseries)))
+
+    #Delete Favourite
+    if request.GET.get('delete_series') and request.user.is_authenticated():
+        id = request.GET.get('fav_tsid')
+        ts = EtlTimeSeriesFavourite.objects.get(id=id)
+        tsname = ts.favouritename
+        ts.delete()
+        messages.info(request,"%s Was Deleted from <a href='%s'>Favourites</a>" % (tsname, reverse(fav_timeseries)))
+
 
     # ************************  defaults  *********************
     time_series = [{ # this is a list containing info about all time series
@@ -637,10 +659,12 @@ def plots_timeseries(request):
     g_child = 1
 
     # **********************************************************
-    fav_tsid = None
-    if request.GET.get('fav_tsid'):
+    fav_ts = None
+    if request.GET.get('fav_tsid') and not request.GET.get('delete_series'):
         fav_tsid = request.GET.get('fav_tsid')
-    #print(tsdic)
+        fav_ts = EtlTimeSeriesFavourite.objects.get(id=fav_tsid)
+
+    #**************************************************************
     if request.GET.get('g_child'):  # if post, then ignore defaults
         #print(request.POST)
         time_series = []
@@ -769,7 +793,7 @@ def plots_timeseries(request):
                "x_axis_title": period_step,
                "y_axis_title": y_axis_title,
                "g_child": g_child,
-               "fav_id" : fav_tsid,
+               "fav_ts" : fav_ts,
                }
     #print(context)
     return render(request, "svrea/plots_timeseries.html", context=context)

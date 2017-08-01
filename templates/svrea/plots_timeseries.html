@@ -73,7 +73,7 @@ function newTS() {
                 ts_type.add(option1)
         h5.appendChild(ts_type)
 
-        h5.appendChild(document.createTextNode('  Region '));
+        h5.appendChild(document.createTextNode('  Region: '));
 
             county_select = document.createElement('select')
             county_select.name = 'county_selected_' + e
@@ -158,22 +158,33 @@ function clearSeriesText(){
             </div>
             <div class="col-md-12">
                 <div class="panel panel-primary" style="border:0;">
-                    <!--<div class="panel-heading"><h3 class="panel-title text-center"></h3></div>-->
-                    <div class="text blue" id="ts_list">
-                        <div>
-                            {% if request.user.is_authenticated %}
-                            <div >
-                                {% if fav.tsid %}
-                                    Time Series "{{ fav}}"
-                                {% endif %}
-
-                                <input type="text" name="name_of_series" id="name_of_series" value="Name of Series" onclick="clearSeriesText();">
-                                <button name="save_series" value=" ">Add to Favourites</button>
-                            </div>
-                            {% endif %}
-                            <div ><button name="test" type="button" onclick="newTS()">Add Series</button></div>
+                    {% if request.user.is_authenticated %}
+                    <div class="panel-primary text blue">
+                        {% if fav_ts %}
+                        <div style="">
+                            <input type="text" hidden name="fav_tsid" value="{{fav_ts.id}}">
+                            {{fav_ts.favouritename}}
+                            was created on {{fav_ts.creationdate}}
+                            and updated on {{fav_ts.lastupdatedate}}
+                            by {{fav_ts.username}}
+                            with comment <br><textarea name="fav_tscomment">{{fav_ts.comment}}</textarea>
                         </div>
-                        <br>
+                        {% endif %}
+                        <div style="float:left;">
+                            {% if fav_ts %}<button name="update_favourite" value=" ">Update {{fav_ts.favouritename}}</button>{% endif %}
+                            <button name="save_series" value=" ">{% if fav_ts %}Save as New Favourite{% else %}Add to Favourites{%endif%}</button>
+                            <input type="text" name="name_of_series" id="name_of_series" value="{% if fav_ts %} New Name{% else %}Series Name{%endif%}" onclick="clearSeriesText();">
+                        </div>
+                        <div style="float:right;">
+                            {% if fav_ts %}<button name="delete_series" value=" ">Delete {{fav_ts.favouritename}}</button>{%endif%}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="panel panel-primary" style="clear:both; border:0;" >
+                    <div class="text blue" id="ts_list">
+                        <div ><button name="test" type="button" onclick="newTS()">Add Series</button></div>
                         {% for series in time_series %}
                             <div id = "div_ts_{{forloop.counter0}}">
                                 <h5>

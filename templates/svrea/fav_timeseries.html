@@ -26,7 +26,6 @@
                     <div class="text-left blue">
                         <table width="100%">
                             <tr>
-                                <th></th>
                                 <th>Creation Date</th>
                                 <th>Title</th>
                                 <th>User Name</th>
@@ -34,18 +33,17 @@
                                 <th>Comment</th>
                             </tr>
                             {% for s in ts %}
-                                <tr {% if s.flag == '1' %} class="flag_1"
-                                    {% elif s.flag == '2' %} class="flag_2"
-                                    {% elif s.flag == '2' %} class="flag_3"
-                                    {% endif %}>
-                                    <td><button type="submit" name="runTS" value="runTS_{{s.id}}">Run</button></td>
-                                    <td>{{s.creationdate}}</td>
-                                    <td>{{s.favouritename}}</td>
-                                    <td>{{s.username}}</td>
-                                    <td>{{s.usergroup}}</td>
-                                    <td>{{s.comment}}</td>
-                                    <td><button type="submit" name="editTS" value="editTS_{{s.id}}">Edit</button></td>
-                                </tr>
+                            <tr {% if s.flag == '1' %} class="flag_1"
+                                {% elif s.flag == '2' %} class="flag_2"
+                                {% elif s.flag == '2' %} class="flag_3"
+                                {% endif %}>
+                                <td>{{s.creationdate}}</td>
+                                <td><a href="{% url 'plots_timeseries'%}?{{s.timeseriesdict }}">{{s.favouritename}}</a></td>
+                                <td>{{s.favouritename}}</td>
+                                <td>{{s.username}}</td>
+                                <td>{{s.usergroup}}</td>
+                                <td>{{s.comment}}</td>
+                            </tr>
                             {% endfor %}
                         </table>
                     </div>
