@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import models, connection
 from django.db.models import Count, Max, F, Sum, Func, Avg, Q, When, Case, Value, DateTimeField
 from django.db.models.functions import Coalesce
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 from svrea_script.models import Listings, Address
@@ -92,10 +93,29 @@ def fav_timeseries(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
+    # if request.POST.get('deleteInfo'):
+    #     infoid = request.POST.get('deleteInfo').split('_')[1]
+    #     num = Info.objects.get(id=infoid).delete()
 
+    fav_ts = EtlTimeSeriesFavourite.objects.all().order_by('-creationdate')
+    paginator = Paginator(fav_ts, 50, orphans=9)
+    page = request.GET.get('page')
 
+    try:
+        ts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        ts = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        ts = paginator.page(paginator.num_pages)
 
-    return render(request, 'svrea/fav_timeseries.html')
+    context = {
+        "info": ts
+    }
+
+    return render(request, 'svrea/fav_timeseries.html', context=context)
+
 
 @ratelimit(key='ip', rate='1/s')
 def plots_general(request):
@@ -582,17 +602,20 @@ def plots_timeseries(request):
             messages.error(request, "Please Enter Correct User Name and Password ")
 
     # save time series in favourites
-    if request.POST.get('save_series') and request.user.is_autenticated():
+    # print('POST')
+    # print(request.POST)
+    # print(request.POST.get('save_series') and request.user.is_authenticated())
+    # print('END')
+    if request.POST.get('save_series') and request.user.is_authenticated():
+        name = request.POST.get('name_of_series')
         ts = EtlTimeSeriesFavourite(
             creationdate = datetime.date.today(),
-            favouritename = request.POST.get('name_of_series'),
+            favouritename = name,
             username = request.user.get_username(),
-            timeseriesdict = dict(request.POST.iterlists())
+            timeseriesdict = dict(request.POST)
         )
         ts.save()
-        print(ts)
-
-
+        messages.info(request, "Time series %s saved in favourites" %name)
 
     # ************************  defaults  *********************
     time_series = [{ # this is a list containing info about all time series
