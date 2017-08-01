@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.shortcuts import render
 
 from .views import (
     index,
@@ -34,6 +35,9 @@ from svrea_script.views import script_logs as svrea_script_logs
 
 from uauth.views import uregister
 
+def notfound(request):
+    return render(request, '404.html')
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index, name = 'index'),
@@ -50,7 +54,8 @@ urlpatterns = [
     url(r'script_info$', svrea_script_info, name = 'script_info'),
     url(r'script_run$', svrea_script_run, name = 'script_run'),
     url(r'script_logs$', svrea_script_logs, name = 'script_logs'),
-    url(r'script_data$', svrea_script_data, name = 'script_data')
+    url(r'script_data$', svrea_script_data, name = 'script_data'),
+    url(r'^404.html', notfound),
 ]
 
 
