@@ -114,7 +114,7 @@ function clearSeriesText(){
 
 <div id="full">
     <div class="container-fluid ">
-        <form method="post" name="form_" id="histForm" value="hello"> {% csrf_token %}
+        <form method="get" name="form_" id="histForm" value="hello">
             <div class="col-md-12">
                 <div class="panel panel-primary text-center blue">
                     <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
@@ -132,6 +132,7 @@ function clearSeriesText(){
                     <div class="panel-heading"><h3 class="panel-title text-center">Time Series Plot</h3></div>
                     <div id="ts_chart" style="height:600px"></div>
                 </div>
+                <div align="center" class="panel text blue"><button name="refresh_plot"><h5>Refresh Plot</h5></button></div>
             </div>
             <div class="col-md-12">
                 <div class="panel panel-primary text-center blue">
@@ -157,17 +158,20 @@ function clearSeriesText(){
             </div>
             <div class="col-md-12">
                 <div class="panel panel-primary" style="border:0;">
-                    <div align="center" class="text blue"><button name="refresh_plot"><h5>Refresh Plot</h5></button></div>
                     <!--<div class="panel-heading"><h3 class="panel-title text-center"></h3></div>-->
                     <div class="text blue" id="ts_list">
                         <div>
-                            <div style="float: left;"><button name="test" type="button" onclick="newTS()">Add Series</button></div>
                             {% if request.user.is_authenticated %}
-                            <div style="float: right;">
+                            <div >
+                                {% if fav.tsid %}
+                                    Time Series "{{ fav}}"
+                                {% endif %}
+
                                 <input type="text" name="name_of_series" id="name_of_series" value="Name of Series" onclick="clearSeriesText();">
                                 <button name="save_series" value=" ">Add to Favourites</button>
                             </div>
                             {% endif %}
+                            <div ><button name="test" type="button" onclick="newTS()">Add Series</button></div>
                         </div>
                         <br>
                         {% for series in time_series %}

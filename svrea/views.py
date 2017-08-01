@@ -6,8 +6,9 @@ import calendar
 import numpy, math
 from operator import itemgetter
 from ratelimit.decorators import ratelimit
+import urllib
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -93,9 +94,11 @@ def fav_timeseries(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
-    # if request.POST.get('deleteInfo'):
-    #     infoid = request.POST.get('deleteInfo').split('_')[1]
-    #     num = Info.objects.get(id=infoid).delete()
+    if request.POST.get('runTS'):
+        ts = EtlTimeSeriesFavourite.objects.values('timeseriesdict').get(id=request.POST.get('runTS').split('_')[1])['timeseriesdict']
+        print('URL PARSE', ts)
+        return redirect(reverse('plots_timeseries') + '?%s' %ts)
+        #return(get_plots_timeseries(ts, request))
 
     fav_ts = EtlTimeSeriesFavourite.objects.all().order_by('-creationdate')
     paginator = Paginator(fav_ts, 50, orphans=9)
@@ -111,7 +114,7 @@ def fav_timeseries(request):
         ts = paginator.page(paginator.num_pages)
 
     context = {
-        "info": ts
+        "ts": ts
     }
 
     return render(request, 'svrea/fav_timeseries.html', context=context)
@@ -601,21 +604,20 @@ def plots_timeseries(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
-    # save time series in favourites
-    # print('POST')
-    # print(request.POST)
-    # print(request.POST.get('save_series') and request.user.is_authenticated())
-    # print('END')
-    if request.POST.get('save_series') and request.user.is_authenticated():
-        name = request.POST.get('name_of_series')
+    if request.GET.get('save_series') and request.user.is_authenticated():
+        name = request.GET.get('name_of_series')
         ts = EtlTimeSeriesFavourite(
-            creationdate = datetime.date.today(),
-            favouritename = name,
-            username = request.user.get_username(),
-            timeseriesdict = dict(request.POST)
+            creationdate=datetime.datetime.today(),
+            favouritename=name,
+            username=request.user.get_username(),
         )
         ts.save()
-        messages.info(request, "Time series %s saved in favourites" %name)
+        r = request.GET.copy()
+        r.pop('save_series')
+        r['id'] = ts.id
+        ts.timeseriesdict=r.urlencode()
+        ts.save()
+        messages.info(request, "%s Saved in <a href='%s'>Favourites</a>" %(name, reverse(fav_timeseries)))
 
     # ************************  defaults  *********************
     time_series = [{ # this is a list containing info about all time series
@@ -630,31 +632,33 @@ def plots_timeseries(request):
     qs = EtlListingsDaily.objects
     dtype = 'YYYY-MM-DD'
     chart_type = 'Line'
-    data_rep = 'Abs'
+    #data_rep = 'Abs'
     y_axis_title = 'Number of properties'
     g_child = 1
 
-
     # **********************************************************
-    #print(request.POST)
-    if request.POST.get('g_child'):  # if post, then ignore defaults
+    fav_tsid = None
+    if request.GET.get('fav_tsid'):
+        fav_tsid = request.GET.get('fav_tsid')
+    #print(tsdic)
+    if request.GET.get('g_child'):  # if post, then ignore defaults
         #print(request.POST)
         time_series = []
-        totnum = int(request.POST.get('g_child'))
+        totnum = int(request.GET.get('g_child'))
         idx = 0
 
         while idx < totnum:
-            if not request.POST.get('index_%s' % idx):
+            if not request.GET.get('index_%s' % idx):
                 idx += 1
                 continue
             time_series.append({})
-            time_series[-1]['ts_type'] = request.POST.get('ts_type_%s' % idx)
-            time_series[-1]['county_selected'] = request.POST.getlist('county_selected_%s' % idx)
+            time_series[-1]['ts_type'] = request.GET.get('ts_type_%s' % idx)
+            time_series[-1]['county_selected'] = request.GET.getlist('county_selected_%s' % idx)
             idx += 1
 
-        period_to = datetime.datetime.strptime(request.POST.get('period_to'),'%Y-%m-%d')
-        period_from = datetime.datetime.strptime(request.POST.get('period_from'),'%Y-%m-%d')
-        period_step = request.POST.get('period_step')
+        period_to = datetime.datetime.strptime(request.GET.get('period_to'),'%Y-%m-%d')
+        period_from = datetime.datetime.strptime(request.GET.get('period_from'),'%Y-%m-%d')
+        period_step = request.GET.get('period_step')
 
         if period_step == 'Week':
             qs = EtlListingsWeekly.objects
@@ -682,11 +686,10 @@ def plots_timeseries(request):
             dtype = 'YYYY'
             period_from = period_from.replace(day = 1, month = 1)
 
-        data_type = request.POST.get('data_type')
+        data_type = request.GET.get('data_type')
 
-        chart_type = request.POST.get('chart_type')
-        data_rep = request.POST.getlist('data_rep')
-        g_child = request.POST.get('g_child')
+        chart_type = request.GET.get('chart_type')
+        g_child = request.GET.get('g_child')
 
     if data_type == 'Number':
         y_axis_title = 'Number of properties'
@@ -694,11 +697,6 @@ def plots_timeseries(request):
         y_axis_title = 'Price, SEK'
     if data_type == 'Price m2':
         y_axis_title = 'Price / <sup>m2</sup>, SEK'
-
-    if data_rep == 'Rel':
-        rel = True
-    else:
-        rel = False
 
     # __________________________ Generate County List _______________________
 
@@ -765,16 +763,18 @@ def plots_timeseries(request):
                 "period_step" : period_step,
                 "data_type" : data_type,
                "chart_type": chart_type,
-               "data_rep": data_rep,
+               #"data_rep": data_rep,
                "time_series": time_series,
                "county_list": county_list,
                "x_axis_title": period_step,
                "y_axis_title": y_axis_title,
                "g_child": g_child,
+               "fav_id" : fav_tsid,
                }
     #print(context)
-
-
     return render(request, "svrea/plots_timeseries.html", context=context)
+
+
+
 
 

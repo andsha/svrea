@@ -140,4 +140,4 @@ class EtlTimeSeriesFavourite(models.Model):
     flag = models.IntegerField(null=True, blank=True)
     username = models.CharField(max_length=256, null=True, blank=True)
     usergroup = models.CharField(max_length=256, null=True, blank=True)
-    timeseriesdict = JSONField()
+    timeseriesdict = JSONField(null=True, blank=True)
