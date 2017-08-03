@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '0&%i(e3(@r0)^)dz^*t139h3c=5cmg+tjp4wh1g=*215$big@%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['svrea.herokuapp.com', '127.0.0.1', 'www.svrea.se']
 
