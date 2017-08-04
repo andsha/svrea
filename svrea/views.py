@@ -403,6 +403,7 @@ def maps(request):
         res = render(request, "svrea/maps.html", context=context)
     except Exception as e:
         print(e)
+
     return res
 
 
