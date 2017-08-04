@@ -173,7 +173,16 @@ def plots_general(request):
             fromdate = todate - datetime.timedelta(days=365 * 8 + 2)
             dtype = 'YYYY'
         #print(period)
-        active_list = al.annotate(al = Coalesce('active_listings', 0),st = Coalesce('sold_today', 0)) \
+        active_list = al.annotate(al = Coalesce('active_listings', 0),
+                                  st = Coalesce('sold_today', 0),
+                                  lpa = Coalesce('listing_price_avg', 0),
+                                  lpm=Coalesce('listing_price_med', 0),
+                                  spa=Coalesce('sold_price_avg', 0),
+                                  spm=Coalesce('sold_price_med', 0),
+                                  lpasqm=Coalesce('listing_price_sqm_avg', 0),
+                                  lpmsqm=Coalesce('listing_price_sqm_med', 0),
+                                  spasqm=Coalesce('sold_price_sqm_avg', 0),
+                                  spmsqm=Coalesce('sold_price_sqm_med', 0)) \
             .annotate(date=To_char('record_firstdate', dtype=dtype))\
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
@@ -182,14 +191,14 @@ def plots_general(request):
                       'geographic_name',
                       'al',
                       'st',
-                      'listing_price_avg',
-                      'listing_price_med',
-                      'listing_price_sqm_avg',
-                      'listing_price_sqm_med',
-                      'sold_price_avg',
-                      'sold_price_med',
-                      'sold_price_sqm_avg',
-                      'sold_price_sqm_med',
+                      'lpa',
+                      'lpm',
+                      'lpasqm',
+                      'lpmsqm',
+                      'spa',
+                      'spm',
+                      'spasqm',
+                      'spmsqm',
                       )\
             .filter(record_firstdate__range = (fromdate, todate)) \
             .order_by('record_firstdate')
@@ -197,14 +206,14 @@ def plots_general(request):
         listings = [[i['date'],                     #0
                      i['al'],          #1
                      i['st'],               #2
-                     i['listing_price_avg'],        #3
-                     i['listing_price_med'],        #4
-                     i['listing_price_sqm_avg'],    #5
-                     i['listing_price_sqm_med'],    #6
-                     i['sold_price_avg'],           #7
-                     i['sold_price_med'],           #8
-                     i['sold_price_sqm_avg'],       #9
-                     i['sold_price_sqm_med'],       #10
+                     i['lpa'],        #3
+                     i['lpm'],        #4
+                     i['lpasqm'],    #5
+                     i['lpmsqm'],    #6
+                     i['spa'],           #7
+                     i['spm'],           #8
+                     i['spasqm'],       #9
+                     i['spmsqm'],       #10
                      ] for i in active_list]
 
         # for q in connection.queries:
@@ -249,7 +258,7 @@ def plots_general(request):
 
 
 #@login_required(redirect_field_name = "", login_url="/")
-@ratelimit(key='ip', rate='1/s')
+#@ratelimit(key='ip', rate='1/s')
 def maps(request):
 
     if request.POST.get('submit') == 'Log Out':
@@ -390,7 +399,11 @@ def maps(request):
         "map_type" : map_type
     }
 
-    return render(request, "svrea/maps.html", context=context)
+    try:
+        res = render(request, "svrea/maps.html", context=context)
+    except Exception as e:
+        print(e)
+    return res
 
 
 #@login_required(redirect_field_name = "", login_url="/")
