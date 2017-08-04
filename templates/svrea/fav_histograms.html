@@ -40,7 +40,7 @@
                                 {% endif %}>
                                 <td>{{s.creationdate}}</td>
                                 <td>{{s.lastupdatedate}}</td>
-                                <td><a href="{% url 'plots_hist'%}?{{s.histdict}}">{{s.favouritename}}</a></td>
+                                <td><a href="{% url 'plots_histograms'%}?{{s.histdict}}">{{s.favouritename}}</a></td>
                                 <td>{{s.username}}</td>
                                 <td>{{s.usergroup}}</td>
                                 <td>{{s.comment|linebreaks}}</td>

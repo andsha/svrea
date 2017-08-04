@@ -91,7 +91,7 @@ function newHist() {
         index.value = e
         h5.appendChild(index)
 
-        h5.appendChild(document.createTextNode(g_child + '. Dates '));
+        h5.appendChild(document.createTextNode(g_child + '. Dates: '));
 
             period_type = document.createElement('select');
             period_type.name = "period_type_" + g_child;
@@ -109,6 +109,7 @@ function newHist() {
                 option3 = document.createElement('option');
                 option3.text = 'Quarter'
                 period_type.add(option3)
+                option4 = document.createElement('option');
                 option4.text = 'Year'
                 period_type.add(option4)
         h5.appendChild(period_type)
@@ -159,14 +160,14 @@ function newHist() {
             property_type.name = "property_type_" + e;
             //property_type.id = "property_type_" + e;
                 option0 = document.createElement('option');
-                option0.text = 'Listings'
+                option0.text = 'Active'
                 property_type.add(option0)
                 option1 = document.createElement('option');
                 option1.text = 'Sold'
                 property_type.add(option1)
         h5.appendChild(property_type)
 
-        h5.appendChild(document.createTextNode('  Region '));
+        h5.appendChild(document.createTextNode('  Region: '));
 
             county_select = document.createElement('select')
             county_select.name = 'county_selected_' + e

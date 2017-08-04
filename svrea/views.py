@@ -456,8 +456,8 @@ def plots_histograms(request):
             messages.error(request, "Please Enter Correct User Name and Password ")
 
     # Add to Favourite
-    if request.GET.get('save_series') and request.user.is_authenticated():
-        name = request.GET.get('name_of_series')
+    if request.GET.get('save_hist') and request.user.is_authenticated():
+        name = request.GET.get('name_of_hist')
 
         hist = EtlHistogramFavourite(
             creationdate = datetime.datetime.now(),
@@ -517,9 +517,9 @@ def plots_histograms(request):
     # ************************** Favourite Histogram ************************************
 
     fav_h = None
-    if request.GET.get('fav_tsid') and not request.GET.get('delete_series'):
-        fav_hid = request.GET.get('fav_tsid')
-        fav_h = EtlTimeSeriesFavourite.objects.get(id=fav_hid)
+    if request.GET.get('fav_hid') and not request.GET.get('delete_hist'):
+        fav_hid = request.GET.get('fav_hid')
+        fav_h = EtlHistogramFavourite.objects.get(id=fav_hid)
 
     #**********************************************************************************
 
