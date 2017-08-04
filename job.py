@@ -44,7 +44,7 @@ def job():
         tolog(INFO, e)
     #********************************************************************
     # period ETL
-    for p in ['Daily', 'Weekly', 'Monthly', 'Quaterly', 'Yearly']:
+    for p in ['Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly']:
         params = {'analyze': True,
                   'etlRange': '%s:%s' %(weekago.strftime('%Y-%m-%d'),
                                         yesterday.strftime('%Y-%m-%d')),

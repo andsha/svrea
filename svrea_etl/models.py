@@ -85,9 +85,9 @@ class EtlListingsMonthly(models.Model):
     sold_rent_med           = models.IntegerField(null=True, blank=True)
 
 
-class EtlListingsQuaterly(models.Model):
+class EtlListingsQuarterly(models.Model):
     record_firstdate        = models.DateTimeField(null=True, blank=True)
-    quaterofyear              = models.IntegerField(null=True, blank=True)
+    quarterofyear              = models.IntegerField(null=True, blank=True)
     geographic_type         = models.CharField(max_length = 50, null=True, blank=True)
     geographic_name         = models.CharField(max_length = 50, null=True, blank=True)
     active_listings         = models.IntegerField(null=True, blank=True)

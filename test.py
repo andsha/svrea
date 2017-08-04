@@ -95,25 +95,12 @@ SELECT "svrea_script_listings"."booliid", "svrea_script_listings"."datepublished
 
 
 
-select
-c.type,
-case when c.type='monucipality' then municipality
-        when c.type='city' then ciy
-        default county
-end as geogpr_name,
-count(*)
-FROM
-etl_listings
-join
-(
-SELECT
-        'municipality' as type
-UNION
-SELECT
-        'city' as type
-UNION
-SELECT
-        'county' as type
-) c on 1=1
-
+SELECT "svrea_etl_etllistingsweekly"."geographic_type",
+"svrea_etl_etllistingsweekly"."geographic_name",
+COALESCE("svrea_etl_etllistingsweekly"."active_listings", 0) AS "al",
+to_char("svrea_etl_etllistingsweekly"."record_firstdate", 'YYYY-"W"IW') AS "date"
+FROM "svrea_etl_etllistingsweekly"
+WHERE ("svrea_etl_etllistingsweekly"."geographic_name" = 'Uppsala'
+AND "svrea_etl_etllistingsweekly"."record_firstdate" BETWEEN '2017-01-02T00:00:00'::timestamp AND '2017-08-03T00:00:00'::timestamp)
+ORDER BY "svrea_etl_etllistingsweekly"."record_firstdate" ASC
 

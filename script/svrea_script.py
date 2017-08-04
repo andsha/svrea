@@ -15,7 +15,7 @@ import re
 from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
-from svrea_etl.models import EtlHistory, EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuaterly, EtlListingsYearly
+from svrea_etl.models import EtlHistory, EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuarterly, EtlListingsYearly
 import logging
 
 gCallerId = 'scr06as'
@@ -524,7 +524,7 @@ class Svrea_script():
                 startofperiod -= datetime.timedelta(days=1)
         elif self.options['etlPeriodType'] == 'Monthly':
             startofperiod = startofperiod.replace(day = 1)
-        elif self.options['etlPeriodType'] == 'Quaterly':
+        elif self.options['etlPeriodType'] == 'Quarterly':
             if startofperiod.month < 4:
                 startofperiod = startofperiod.replace(day = 1, month = 1)
             elif startofperiod.month < 7:
@@ -556,7 +556,7 @@ class Svrea_script():
                 dayTo = dayFrom + datetime.timedelta(days=7)
             elif self.options['etlPeriodType'] == 'Monthly':
                 dayTo = dayFrom + relativedelta(months=1)
-            elif self.options['etlPeriodType'] == 'Quaterly':
+            elif self.options['etlPeriodType'] == 'Quarterly':
                 dayTo = dayFrom + relativedelta(months=3)
             elif self.options['etlPeriodType'] == 'Yearly':
                 dayTo = dayFrom + relativedelta(years=1)
@@ -663,8 +663,8 @@ class Svrea_script():
                     etllistings = EtlListingsWeekly.objects
                 elif self.options['etlPeriodType'] == 'Monthly':
                     etllistings = EtlListingsMonthly.objects
-                elif self.options['etlPeriodType'] == 'Quaterly':
-                    etllistings = EtlListingsQuaterly.objects
+                elif self.options['etlPeriodType'] == 'Quarterly':
+                    etllistings = EtlListingsQuarterly.objects
                 elif self.options['etlPeriodType'] == 'Yearly':
                     etllistings = EtlListingsYearly.objects
                 (etllisting, created) = etllistings.update_or_create(
@@ -695,8 +695,8 @@ class Svrea_script():
                     etllisting.weekofyear = dayFrom.isocalendar()[1]
                 elif self.options['etlPeriodType'] == 'Monthly':
                     etllisting.monthofyear = dayFrom.month
-                elif self.options['etlPeriodType'] == 'Quaterly':
-                    etllisting.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+                elif self.options['etlPeriodType'] == 'Quarterly':
+                    etllisting.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
                 etllisting.save()
 
             for s in sold:
@@ -705,8 +705,8 @@ class Svrea_script():
                     etlsolds = EtlListingsWeekly.objects
                 elif self.options['etlPeriodType'] == 'Monthly':
                     etlsolds = EtlListingsMonthly.objects
-                elif self.options['etlPeriodType'] == 'Quaterly':
-                    etlsolds = EtlListingsQuaterly.objects
+                elif self.options['etlPeriodType'] == 'Quarterly':
+                    etlsolds = EtlListingsQuarterly.objects
                 elif self.options['etlPeriodType'] == 'Yearly':
                     etlsolds = EtlListingsYearly.objects
                 (etlsold, created) = etlsolds.update_or_create(
@@ -737,8 +737,8 @@ class Svrea_script():
                     etlsold.weekofyear = dayFrom.isocalendar()[1]
                 elif self.options['etlPeriodType'] == 'Monthly':
                     etlsold.monthofyear = dayFrom.month
-                elif self.options['etlPeriodType'] == 'Quaterly':
-                    etlsold.quaterofyear = int((dayFrom.month - 1) / 3)  + 1
+                elif self.options['etlPeriodType'] == 'Quarterly':
+                    etlsold.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
                 etlsold.save()
 
         etls = EtlListingsDaily.objects
@@ -746,8 +746,8 @@ class Svrea_script():
             etls = EtlListingsWeekly.objects
         elif self.options['etlPeriodType'] == 'Monthly':
             etls = EtlListingsMonthly.objects
-        elif self.options['etlPeriodType'] == 'Quaterly':
-            etls = EtlListingsQuaterly.objects
+        elif self.options['etlPeriodType'] == 'Quarterly':
+            etls = EtlListingsQuarterly.objects
         elif self.options['etlPeriodType'] == 'Yearly':
             etls = EtlListingsYearly.objects
 

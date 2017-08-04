@@ -23,7 +23,6 @@
 
    <script>
         function displayPeriodForm(){
-            console.log('hello')
             document.getElementById('period_day').style.display='none';
             document.getElementById('period_week').style.display='none';
             document.getElementById('period_month').style.display='none';
@@ -73,8 +72,8 @@
                     <option {%if period_type == "Day"%} selected {%endif%}> Day </option>
                     <option {%if period_type == "Week"%} selected {%endif%}> Week </option>
                     <option {%if period_type == "Month"%} selected {%endif%}> Month </option>
+                    <option {%if period_type == "Quarter"%} selected {%endif%}> Quarter </option>
                     <option {%if period_type == "Year"%} selected {%endif%}> Year </option>
-                    <option {%if period_type == "Period"%} selected {%endif%}> Period </option>
                 </select>
                 <input type="date" id="period_day"      name="period_day"   {% if period_type != "Day"%}  style="display:none" {%endif%} value="{{period_day}}">
                 <input type="week" id="period_week"     name="period_week"  {% if period_type != "Week"%}  style="display:none" {%endif%} value="{{period_week}}">

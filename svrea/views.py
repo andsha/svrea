@@ -22,7 +22,7 @@ from svrea_script.models import Listings, Address
 from svrea_etl.models import EtlListingsDaily, \
     EtlListingsWeekly, \
     EtlListingsMonthly, \
-    EtlListingsQuaterly, \
+    EtlListingsQuarterly, \
     EtlListingsYearly,\
     EtlTimeSeriesFavourite
 
@@ -163,8 +163,8 @@ def plots_general(request):
             al = EtlListingsMonthly.objects
             fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
             dtype = 'YYYY-MM'
-        elif period == 'Quaterly':
-            al = EtlListingsQuaterly.objects
+        elif period == 'Quarterly':
+            al = EtlListingsQuarterly.objects
             fromdate = todate - datetime.timedelta(days=365 * 4 + 1)
             dtype = 'YYYY-"Q"Q'
         elif period == 'Yearly':
@@ -205,6 +205,9 @@ def plots_general(request):
                      i['sold_price_sqm_avg'],       #9
                      i['sold_price_sqm_med'],       #10
                      ] for i in active_list]
+
+        # for q in connection.queries:
+        #     print(q)
 
         context = {
             "success" : True,
@@ -266,13 +269,18 @@ def maps(request):
     datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1])
     period_month = '%s-%s' % (datetime.date.today().year
                                ,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month)
+    period_quarter = '%s-Q%s' %(datetime.datetime.today().year, '1' if datetime.datetime.today().month < 4 else
+                               '2' if datetime.datetime.today().month < 7 else
+                               '3' if datetime.datetime.today().month < 10 else '4')
     period_year = '%s' % datetime.date.today().year
-    period_dayfrom = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
-    period_dayto = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+    # period_dayfrom = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+    # period_dayto = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
 
     map_type = 'listings'
+    listingobj = EtlListingsDaily.objects
+    map_date = datetime.date.today() - datetime.timedelta(days=1)
 
-    #print('request', request.POST)
+    print('request', request.POST)
     if request.POST.get('period_type'):
         #print('request', request.POST)
         period_type = request.POST.get('period_type')
@@ -284,30 +292,42 @@ def maps(request):
         period_dayto = request.POST.get('period_dayto')
         map_type = request.POST.get('map_type')
 
-    #print(period_type)
-    if period_type == 'Day':
-        datefrom = datetime.datetime.strptime(period_day, "%Y-%m-%d")
-        dateto = datefrom + datetime.timedelta(days=1)
-    elif period_type == 'Week':
+    if period_type == 'Week':
         #print(period_week)
-        datefrom = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
-        dateto = datefrom + datetime.timedelta(days=7)
-        #print(datefrom, dateto)
+        #datefrom = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
+        #dateto = datefrom + datetime.timedelta(days=7)
+        listingobj = EtlListingsWeekly.objects
+        map_date = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
     elif period_type == 'Month':
-        datefrom = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
-        dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
+        #datefrom = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
+        #dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
+        listingobj = EtlListingsMonthly.objects
+        map_date = datetime.datetime.strptime(period_month + '-1', "%Y-%m-%d")
+        #print(map_date)
+    elif period_type == 'Quarter':
+        listingobj = EtlListingsQuarterly.objects
+        map_date = datetime.date(day=1,
+                                 month=1 if period_quarter[6]=='1' else 4 if period_quarter[6] == '2' else 7 if period_quarter[6]=='3' else 10,
+                                 year = period_quarter[:4])
     elif period_type == 'Year':
-        datefrom = datetime.datetime.strptime(period_year + '-01-01', "%Y-%m-%d")
-        dateto = datetime.datetime.strptime(period_year + '-12-31',
-                                            "%Y-%m-%d") + datetime.timedelta(days=1)
-    else:  # Period
-        datefrom = "period_dayfrom"
-        dateto = datetime.datetime.strptime("period_dayto", '%Y-%m-%d') + datetime.timedelta(days=1)
+        listingobj = EtlListingsYearly.objects
+        map_date = datetime.date(day = 1,
+                                 month = 1,
+                                 year=period_quarter[:4])
+        #datefrom = datetime.datetime.strptime(period_year + '-01-01', "%Y-%m-%d")
+        #dateto = datetime.datetime.strptime(period_year + '-12-31',
+        #                                    "%Y-%m-%d") + datetime.timedelta(days=1)
+    # else:  # Period
+    #     datefrom = "period_dayfrom"
+    #     dateto = datetime.datetime.strptime("period_dayto", '%Y-%m-%d') + datetime.timedelta(days=1)
 
-    ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
+    #ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
+    print(map_date)
+    ml = listingobj.filter(geographic_type__exact='municipality', record_firstdate__date = map_date).values('geographic_name')
+
 
     if map_type == 'listings':
-        ml = ml.annotate(s=Avg('active_listings'))
+        ml = ml.annotate(s = F('active_listings'))
         text = 'Properties'
     elif map_type == 'listing_price':
         ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_med')) / Sum('active_listings'))
@@ -327,6 +347,8 @@ def maps(request):
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
+
+    #print(ml)
 
     muniListings = sorted(ml, key=itemgetter(1))
     maxMuniListings = muniListings[-int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
@@ -361,8 +383,6 @@ def maps(request):
         "period_week": period_week,
         "period_month": period_month,
         "period_year": period_year,
-        "period_dayfrom": period_dayfrom,
-        "period_dayto": period_dayto,
         "map_type" : map_type
     }
 
@@ -694,8 +714,8 @@ def plots_timeseries(request):
             qs = EtlListingsMonthly.objects
             dtype = 'YYYY-MM'
             period_from = period_from.replace(day = 1)
-        elif period_step == 'Quater':
-            qs = EtlListingsQuaterly.objects
+        elif period_step == 'Quarter':
+            qs = EtlListingsQuarterly.objects
             dtype = 'YYYY-"Q"Q'
             if period_from.month < 4:
                 period_from = period_from.replace(day = 1, month = 1)
