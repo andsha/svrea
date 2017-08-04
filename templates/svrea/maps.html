@@ -26,9 +26,8 @@
             document.getElementById('period_day').style.display='none';
             document.getElementById('period_week').style.display='none';
             document.getElementById('period_month').style.display='none';
+            document.getElementById('period_quarter').style.display='none';
             document.getElementById('period_year').style.display='none';
-            document.getElementById('period_dayfrom').style.display='none';
-            document.getElementById('period_dayto').style.display='none';
 
             switch (document.getElementById('period_type').selectedIndex){
                 case 0:
@@ -41,11 +40,10 @@
                     document.getElementById('period_month').style.display='';
                     break;
                 case 3:
-                    document.getElementById('period_year').style.display='';
+                    document.getElementById('period_quarter').style.display='';
                     break;
                 case 4:
-                    document.getElementById('period_dayfrom').style.display='';
-                    document.getElementById('period_dayto').style.display='';
+                    document.getElementById('period_year').style.display='';
                     break;
             };
         };
@@ -78,9 +76,8 @@
                 <input type="date" id="period_day"      name="period_day"   {% if period_type != "Day"%}  style="display:none" {%endif%} value="{{period_day}}">
                 <input type="week" id="period_week"     name="period_week"  {% if period_type != "Week"%}  style="display:none" {%endif%} value="{{period_week}}">
                 <input type="month"id="period_month"    name="period_month" {% if period_type != "Month"%} style="display:none" {%endif%} value="{{period_month}}">
-                <input type="year" id="period_year"     name="period_year"  {% if period_type != "Year"%}  style="display:none" {%endif%} value="{{period_year}}">
-                <input type="date" id="period_dayfrom"  name="period_dayfrom"   {% if period_type != "Period"%}  style="display:none" {%endif%} value="{{period_dayfrom}}">
-                <input type="date" id="period_dayto"    name="period_dayto"   {% if period_type != "Period"%}  style="display:none" {%endif%} value="{{period_dayto}}">
+                <input type="text" id="period_quarter"  name="period_quarter"  {% if period_type != "Quarter"%}  style="display:none" {%endif%} value="{{period_quarter}}">
+                <input type="text" id="period_year"     name="period_year"  {% if period_type != "Year"%}  style="display:none" {%endif%} value="{{period_year}}">
                 <button type="button" class="btn btn-default" onclick="this.form.submit();">Show</button>
             </h4>
         </form>

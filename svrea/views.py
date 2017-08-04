@@ -280,7 +280,7 @@ def maps(request):
     listingobj = EtlListingsDaily.objects
     map_date = datetime.date.today() - datetime.timedelta(days=1)
 
-    print('request', request.POST)
+    #print('request', request.POST)
     if request.POST.get('period_type'):
         #print('request', request.POST)
         period_type = request.POST.get('period_type')
@@ -308,12 +308,12 @@ def maps(request):
         listingobj = EtlListingsQuarterly.objects
         map_date = datetime.date(day=1,
                                  month=1 if period_quarter[6]=='1' else 4 if period_quarter[6] == '2' else 7 if period_quarter[6]=='3' else 10,
-                                 year = period_quarter[:4])
+                                 year = int(period_quarter[:4]))
     elif period_type == 'Year':
         listingobj = EtlListingsYearly.objects
         map_date = datetime.date(day = 1,
                                  month = 1,
-                                 year=period_quarter[:4])
+                                 year = int(period_year[:4]))
         #datefrom = datetime.datetime.strptime(period_year + '-01-01', "%Y-%m-%d")
         #dateto = datetime.datetime.strptime(period_year + '-12-31',
         #                                    "%Y-%m-%d") + datetime.timedelta(days=1)
@@ -322,33 +322,34 @@ def maps(request):
     #     dateto = datetime.datetime.strptime("period_dayto", '%Y-%m-%d') + datetime.timedelta(days=1)
 
     #ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
-    print(map_date)
+    #print(period_type, map_date)
     ml = listingobj.filter(geographic_type__exact='municipality', record_firstdate__date = map_date).values('geographic_name')
 
 
     if map_type == 'listings':
-        ml = ml.annotate(s = F('active_listings'))
+        ml = ml.annotate(s = Coalesce(F('active_listings'), 0))
         text = 'Properties'
     elif map_type == 'listing_price':
-        ml = ml.annotate(s=Sum(cast('active_listings', dtype = 'bigint') * F('listing_price_med')) / Sum('active_listings'))
+        ml = ml.annotate(s = Coalesce(F('listing_price_med'), 0))
         text = 'SEK'
     elif map_type == 'listing_price_sqm':
-        ml = ml.annotate(s=Coalesce(Sum(cast('active_listings', dtype='bigint') * F('listing_price_med')),0) / Coalesce(Sum(cast('active_listings', dtype='bigint') * F('listing_area_avg')),1))
-        text = 'SEK/m<sup>2<sup>'
+        ml = ml.annotate(s = Coalesce(F('listing_price_sqm_med'),0))
+        text = 'SEK/m<sup>2</sup>'
     elif map_type == 'sold':
-        ml = ml.annotate(s = Sum('sold_today'))
+        ml = ml.annotate(s = Coalesce(F('sold_today'), 0))
         text = 'Properties'
     elif map_type == 'sold_price':
-        ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype = 'bigint') * F('sold_price_med')) / Sum('sold_today'), 0))
+        ml = ml.annotate(s = Coalesce(F('sold_price_med'), 0))
         text = 'SEK'
     elif map_type == 'sold_price_sqm':
-        ml = ml.annotate(s=Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_price_med')), 0) / Coalesce(Sum(cast('sold_today', dtype='bigint') * F('sold_area_avg')), 1))
-        text = 'SEK/m<sup>2<sup>'
+        ml = ml.annotate(s = Coalesce(F('sold_price_sqm_med'), 0))
+        text = 'SEK/m<sup>2</sup>'
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
-    #print(ml)
+    #for m in ml:
+        #print(m)
 
     muniListings = sorted(ml, key=itemgetter(1))
     maxMuniListings = muniListings[-int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
@@ -382,6 +383,7 @@ def maps(request):
         "period_day" : period_day,
         "period_week": period_week,
         "period_month": period_month,
+        "period_quarter": period_quarter,
         "period_year": period_year,
         "map_type" : map_type
     }
