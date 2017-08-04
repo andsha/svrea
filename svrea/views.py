@@ -24,7 +24,8 @@ from svrea_etl.models import EtlListingsDaily, \
     EtlListingsMonthly, \
     EtlListingsQuarterly, \
     EtlListingsYearly,\
-    EtlTimeSeriesFavourite
+    EtlTimeSeriesFavourite,\
+    EtlHistogramFavourite
 
 
 class To_char(Func):
@@ -119,6 +120,45 @@ def fav_timeseries(request):
 
     return render(request, 'svrea/fav_timeseries.html', context=context)
 
+
+@login_required(redirect_field_name = "", login_url="/")
+def fav_hist(request):
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
+    if request.POST.get('runH'):
+        hist = EtlHistogramFavourite.objects.values('histdict').get(id=request.POST.get('runH').split('_')[1])['histdict']
+        return redirect(reverse('plots_hist') + '?%s' %hist)
+
+
+    fav_h = EtlHistogramFavourite.objects.all().order_by('-creationdate')
+    paginator = Paginator(fav_h, 50, orphans=9)
+    page = request.GET.get('page')
+
+    try:
+        hist = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        hist = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        hist = paginator.page(paginator.num_pages)
+
+    context = {
+        "hist": hist
+    }
+
+    return render(request, 'svrea/fav_histograms.html', context=context)
 
 @ratelimit(key='ip', rate='1/s')
 def plots_general(request):
@@ -276,13 +316,9 @@ def maps(request):
 
     period_type = 'Day'
     period_day = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
-    period_week = '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if
-    datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1])
-    period_month = '%s-%s' % (datetime.date.today().year
-                               ,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month)
-    period_quarter = '%s-Q%s' %(datetime.datetime.today().year, '1' if datetime.datetime.today().month < 4 else
-                               '2' if datetime.datetime.today().month < 7 else
-                               '3' if datetime.datetime.today().month < 10 else '4')
+    period_week = '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1])
+    period_month = '%s-%s' % (datetime.date.today().year ,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month)
+    period_quarter = '%s-Q%s' %(datetime.datetime.today().year, '1' if datetime.datetime.today().month < 4 else '2' if datetime.datetime.today().month < 7 else '3' if datetime.datetime.today().month < 10 else '4')
     period_year = '%s' % datetime.date.today().year
     # period_dayfrom = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
     # period_dayto = '%s' % (datetime.date.today() - datetime.timedelta(days=1))
@@ -399,12 +435,8 @@ def maps(request):
         "map_type" : map_type
     }
 
-    try:
-        res = render(request, "svrea/maps.html", context=context)
-    except Exception as e:
-        print(e)
 
-    return res
+    return render(request, "svrea/maps.html", context=context)
 
 
 #@login_required(redirect_field_name = "", login_url="/")
@@ -423,26 +455,57 @@ def plots_histograms(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
-    skip = False
-    # numHist = 0
+    # Add to Favourite
+    if request.GET.get('save_series') and request.user.is_authenticated():
+        name = request.GET.get('name_of_series')
+
+        hist = EtlHistogramFavourite(
+            creationdate = datetime.datetime.now(),
+            favouritename=name,
+            username=request.user.get_username(),
+        )
+        hist.save()
+        r = request.GET.copy()
+        r.pop('save_hist')
+        r['fav_hid'] = hist.id
+        hist.histdict=r.urlencode()
+        hist.save()
+        messages.info(request, "%s Saved in <a href='%s'>Favourites</a>" %(name, reverse('fav_hist')))
+
+    # Update Favourite
+    if request.GET.get('update_favourite') and request.user.is_authenticated():
+        id = request.GET.get('fav_hid')
+        hist = EtlHistogramFavourite.objects.get(id=id)
+        hist.comment = request.GET.get('fav_hcomment')
+        r = request.GET.copy()
+        r.pop('update_favourite')
+        hist.histdict = r.urlencode()
+        hist.lastupdatedate = datetime.datetime.now()
+        hist.save()
+        messages.info(request, "%s Was Updated in <a href='%s'>Favourites</a>" %(hist.favouritename, reverse('fav_hist')))
+
+    #Delete Favourite
+    if request.GET.get('delete_hist') and request.user.is_authenticated():
+        id = request.GET.get('fav_hid')
+        hist = EtlHistogramFavourite.objects.get(id=id)
+        hname = hist.favouritename
+        hist.delete()
+        messages.info(request,"%s Was Deleted from <a href='%s'>Favourites</a>" % (hname, reverse('fav_hist')))
+
+    # ************************  defaults  *********************
+
     histInfo = [{
-        "property_type": "Listings",
+        "property_type": "Active",
         "county_selected": ["Whole Sweden"],
         "period_type": "Day",
-        "period_day": '%s' % (datetime.date.today() - datetime.timedelta(days=1)),
-        "period_week": '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if
-        datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1]),
-        "period_month": '%s-%s' % (datetime.date.today().year,
-                                   '0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month),
-        "period_year": '%s' % datetime.date.today().year,
-        "period_dayfrom": '%s' % (datetime.date.today() - datetime.timedelta(days=1)),
-        "period_dayto": '%s' % (datetime.date.today() - datetime.timedelta(days=1))
+        "period_day": '%s' %(datetime.date.today() - datetime.timedelta(days=1)),
+        "period_week": '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1]),
+        "period_month": '%s-%s' % (datetime.date.today().year,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month),
+        "period_quarter": '%s-Q%s' %(datetime.date.today().year, 1 if datetime.date.today().month < 4 else 2 if datetime.date.today().month < 7 else 3 if datetime.date.today().month < 10 else 4),
+        "period_year": '%s' %datetime.date.today().year,
     }]
 
-    defHistInfo = histInfo[0]
-
-    # property_type = 'listings'
-    # county_selected = 'Whole Sweden'
+    defHistInfo = histInfo[0] # default histInfo used to create new histograms
     hist_type = 'Price'
     chart_type = 'Column'
     data_type = ['Abs']
@@ -451,36 +514,43 @@ def plots_histograms(request):
     UpperCutoff = 100 - LowerCutoff
     g_child = 1
 
-    if request.POST.get('g_child'):
-        histInfo = []
+    # ************************** Favourite Histogram ************************************
 
-        # for idx in range(0, int(request.POST.get('g_numHist'))):
-        totnum = int(request.POST.get('g_child'))
+    fav_h = None
+    if request.GET.get('fav_tsid') and not request.GET.get('delete_series'):
+        fav_hid = request.GET.get('fav_tsid')
+        fav_h = EtlTimeSeriesFavourite.objects.get(id=fav_hid)
+
+    #**********************************************************************************
+
+    if request.GET.get('g_child'):
+        histInfo = []
+        totnum = int(request.GET.get('g_child'))
         idx = 0
+
         while idx < totnum:
-            if not request.POST.get('index_%s' % idx):
+            if not request.GET.get('index_%s' % idx):
                 idx += 1
                 continue
 
             histInfo.append({})
-            histInfo[-1]['property_type'] = request.POST.get('property_type_%s' % idx)
-            histInfo[-1]['county_selected'] = request.POST.getlist('county_selected_%s' % idx)
-            histInfo[-1]['period_type'] = request.POST.get('period_type_%s' % idx)
-            histInfo[-1]['period_day'] = request.POST.get('period_day_%s' % idx)
-            histInfo[-1]['period_week'] = request.POST.get('period_week_%s' % idx)
-            histInfo[-1]['period_month'] = request.POST.get('period_month_%s' % idx)
-            histInfo[-1]['period_year'] = request.POST.get('period_year_%s' % idx)
-            histInfo[-1]['period_dayfrom'] = request.POST.get('period_dayfrom_%s' % idx)
-            histInfo[-1]['period_dayto'] = request.POST.get('period_dayto_%s' % idx)
+            histInfo[-1]['property_type'] = request.GET.get('property_type_%s' % idx)
+            histInfo[-1]['county_selected'] = request.GET.getlist('county_selected_%s' % idx)
+            histInfo[-1]['period_type'] = request.GET.get('period_type_%s' % idx)
+            histInfo[-1]['period_day'] = request.GET.get('period_day_%s' % idx)
+            histInfo[-1]['period_week'] = request.GET.get('period_week_%s' % idx)
+            histInfo[-1]['period_month'] = request.GET.get('period_month_%s' % idx)
+            histInfo[-1]['period_quarter'] = request.GET.get('period_quater_%s' % idx)
+            histInfo[-1]['period_year'] = request.GET.get('period_year_%s' % idx)
             idx += 1
 
-        hist_type = request.POST.get('hist_type')
-        chart_type = request.POST.get('chart_type')
-        data_type = request.POST.getlist('data_type')
-        num_bins = int(request.POST.getlist('num_bins')[0])
-        LowerCutoff = float(request.POST.getlist('LowerCutoff')[0])
-        UpperCutoff = float(request.POST.getlist('UpperCutoff')[0])
-        g_child = request.POST.get('g_child')
+        hist_type = request.GET.get('hist_type')
+        chart_type = request.GET.get('chart_type')
+        data_type = request.GET.getlist('data_type')
+        num_bins = int(request.GET.getlist('num_bins')[0])
+        LowerCutoff = float(request.GET.getlist('LowerCutoff')[0])
+        UpperCutoff = float(request.GET.getlist('UpperCutoff')[0])
+        g_child = request.GET.get('g_child')
 
     if hist_type == 'Price':
         field = 'latestprice'
@@ -512,12 +582,9 @@ def plots_histograms(request):
 
     county_list = ['Whole Sweden']
 
-    for i in [address.county for address in Address.objects.filter(listings__isactive__exact=True)
-            .distinct('county')
-            .order_by('county')]:
+    for i in [address.county for address in Address.objects.distinct('county').order_by('county')]:
         county_list.append(i)
 
-    #print(connection.queries)
     # __________________________ Templates for histograms ____________________
     listings_hist = [['Price']]
     listings_list_all = []
@@ -528,30 +595,34 @@ def plots_histograms(request):
         if hist["property_type"] == 'Sold':
             listings_qs = Listings.objects.filter(isactive__exact=False).filter(**filter_isnull_f).order_by(
                 field)
-        elif hist["property_type"] == 'Listings':
+        elif hist["property_type"] == 'Active':
             listings_qs = Listings.objects.filter(**filter_isnull_f).order_by(field)
         if hist_type == 'Price m2':
             listings_qs = listings_qs.exclude(latestprice=0).exclude(livingarea=0)
         # ______________________ Deal with time ranges _______________________
-        if hist["period_type"] == 'Day':
-            datefrom = datetime.datetime.strptime(hist["period_day"], "%Y-%m-%d")
-            dateto = datefrom + datetime.timedelta(days=1)
-        elif hist["period_type"] == 'Week':
+
+        datefrom = datetime.datetime.strptime(hist["period_day"], "%Y-%m-%d")
+        dateto = datefrom + datetime.timedelta(days=1)
+
+        if hist["period_type"] == 'Week':
             datefrom = datetime.datetime.strptime(hist["period_week"] + '-1', "%Y-W%W-%w")
             dateto = datefrom + datetime.timedelta(days=7)
             # print(datefrom, dateto)
         elif hist["period_type"] == 'Month':
             datefrom = datetime.datetime.strptime(hist["period_month"] + '-1', "%Y-%m-%d")
             dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
+        elif hist['period_type'] == 'Quarter':
+            datefrom = datetime.date(day = 1,
+                                     month = 1 if hist['period_quarter'][6] == '1' else 4 if hist['period_quarter'][6] == '2' else 7 if hist['period_quarter'][6] == '3' else 10,
+                                     year = int(hist['period_quarter'][:4]))
         elif hist["period_type"] == 'Year':
             datefrom = datetime.datetime.strptime(hist["period_year"] + '-01-01', "%Y-%m-%d")
-            dateto = datetime.datetime.strptime(hist["period_year"] + '-12-31',                                                "%Y-%m-%d") + datetime.timedelta(days=1)
-        else:  # Period
-            datefrom = hist["period_dayfrom"]
-            dateto = datetime.datetime.strptime(hist["period_dayto"], '%Y-%m-%d') + datetime.timedelta(days=1)
+            dateto = datetime.datetime.strptime(hist["period_year"] + '-12-31', "%Y-%m-%d") + datetime.timedelta(days=1)
+
+
         if hist["property_type"] == 'Sold':
             listings_qs = listings_qs.filter(datesold__range=(datefrom, dateto))
-        if hist["property_type"] == 'Listings':
+        if hist["property_type"] == 'Active':
             listings_qs = listings_qs.annotate(di=Case(
                 When(Q(dateinactive__isnull=False), then='dateinactive'),
                 default=Value(datetime.date.today()),
@@ -560,6 +631,7 @@ def plots_histograms(request):
         if (listings_qs.count()) == 0:
             messages.error(request, "No data for selected settings")
             break
+
         # _____________________ Generate ordered list of all results _______________
         for idy, county in enumerate(hist["county_selected"]):
             if county == 'Whole Sweden':
@@ -623,6 +695,7 @@ def plots_histograms(request):
                "LowerCutoff": LowerCutoff,
                "UpperCutoff": UpperCutoff,
                "g_child": g_child,
+               "fav_h" : fav_h
                }
 
     return render(request, "svrea/plots_histograms.html", context=context)
@@ -656,7 +729,7 @@ def plots_timeseries(request):
         r['fav_tsid'] = ts.id
         ts.timeseriesdict=r.urlencode()
         ts.save()
-        messages.info(request, "%s Saved in <a href='%s'>Favourites</a>" %(name, reverse(fav_timeseries)))
+        messages.info(request, "%s Saved in <a href='%s'>Favourites</a>" %(name, reverse('fav_timeseries')))
 
     # Update Favourite
     if request.GET.get('update_favourite') and request.user.is_authenticated():
@@ -668,7 +741,7 @@ def plots_timeseries(request):
         ts.timeseriesdict = r.urlencode()
         ts.lastupdatedate = datetime.datetime.now()
         ts.save()
-        messages.info(request, "%s Was Updated in <a href='%s'>Favourites</a>" %(ts.favouritename, reverse(fav_timeseries)))
+        messages.info(request, "%s Was Updated in <a href='%s'>Favourites</a>" %(ts.favouritename, reverse('fav_timeseries')))
 
     #Delete Favourite
     if request.GET.get('delete_series') and request.user.is_authenticated():
@@ -676,7 +749,7 @@ def plots_timeseries(request):
         ts = EtlTimeSeriesFavourite.objects.get(id=id)
         tsname = ts.favouritename
         ts.delete()
-        messages.info(request,"%s Was Deleted from <a href='%s'>Favourites</a>" % (tsname, reverse(fav_timeseries)))
+        messages.info(request,"%s Was Deleted from <a href='%s'>Favourites</a>" % (tsname, reverse('fav_timeseries')))
 
 
     # ************************  defaults  *********************
@@ -703,7 +776,7 @@ def plots_timeseries(request):
         fav_ts = EtlTimeSeriesFavourite.objects.get(id=fav_tsid)
 
     #**************************************************************
-    if request.GET.get('g_child'):  # if post, then ignore defaults
+    if request.GET.get('g_child'):  # if GET, then ignore defaults
         #print(request.POST)
         time_series = []
         totnum = int(request.GET.get('g_child'))

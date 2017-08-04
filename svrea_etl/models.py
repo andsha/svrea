@@ -142,3 +142,13 @@ class EtlTimeSeriesFavourite(models.Model):
     username = models.CharField(max_length=256, null=True, blank=True)
     usergroup = models.CharField(max_length=256, null=True, blank=True)
     timeseriesdict = JSONField(null=True, blank=True)
+
+class EtlHistogramFavourite(models.Model):
+    creationdate = models.DateTimeField(null=True, blank=True)
+    lastupdatedate = models.DateTimeField(null=True, blank=True)
+    favouritename = models.CharField(max_length=256, null=True, blank=True)
+    comment = models.CharField(max_length=2000, null=True, blank=True)
+    flag = models.IntegerField(null=True, blank=True)
+    username = models.CharField(max_length=256, null=True, blank=True)
+    usergroup = models.CharField(max_length=256, null=True, blank=True)
+    histdict = JSONField(null=True, blank=True)
