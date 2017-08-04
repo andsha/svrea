@@ -6,7 +6,7 @@ import calendar
 import numpy, math
 from operator import itemgetter
 from ratelimit.decorators import ratelimit
-import urllib
+import logging
 
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
@@ -122,6 +122,7 @@ def fav_timeseries(request):
 
 @ratelimit(key='ip', rate='1/s')
 def plots_general(request):
+    logger = logging.getLogger('testlogger')
 
     if request.POST.get('submit') == 'Log Out':
         logout(request)
@@ -238,11 +239,12 @@ def plots_general(request):
             "county" : county
         }
     except Exception as e:
-        print(e)
+        logger.info(e)
         sys.stdout.flush()
         context = {
             "success" : False
         }
+
     return render(request, "svrea/plots_general.html", context=context)
 
 
