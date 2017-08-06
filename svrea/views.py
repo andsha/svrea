@@ -100,8 +100,8 @@ def fav_timeseries(request):
         #print('URL PARSE', ts)
         return redirect(reverse('plots_timeseries') + '?%s' %ts)
         #return(get_plots_timeseries(ts, request))
-
-    fav_ts = EtlTimeSeriesFavourite.objects.all().order_by('-creationdate')
+    print()
+    fav_ts = EtlTimeSeriesFavourite.objects.all().filter(username = request.user.get_username()).order_by('-creationdate')
     paginator = Paginator(fav_ts, 50, orphans=9)
     page = request.GET.get('page')
 
@@ -141,7 +141,7 @@ def fav_hist(request):
         return redirect(reverse('plots_hist') + '?%s' %hist)
 
 
-    fav_h = EtlHistogramFavourite.objects.all().order_by('-creationdate')
+    fav_h = EtlHistogramFavourite.objects.all().filter(username = request.user.get_username()).order_by('-creationdate')
     paginator = Paginator(fav_h, 50, orphans=9)
     page = request.GET.get('page')
 
