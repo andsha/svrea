@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 import os,sys
 from urllib.request import urlopen
 from hashlib import sha1

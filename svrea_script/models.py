@@ -71,8 +71,8 @@ class Address(models.Model):
     house               = models.CharField(max_length=10, null=True, blank=True)
     street              = models.CharField(max_length=250, null=True, blank=True)
     city                = models.CharField(max_length=50, null=True, blank=True)
-    municipality        = models.CharField(max_length=50, null=True, blank=True)
-    county              = models.CharField(max_length=50, null=True, blank=True)
+    municipality        = models.CharField(db_index=True, max_length=50, null=True, blank=True)
+    county              = models.CharField(db_index=True, max_length=50, null=True, blank=True)
     areaname            = models.CharField(max_length=50, null=True, blank=True)
     country             = models.CharField(max_length=50, default='Sweden')
 
@@ -85,5 +85,3 @@ class Pricehistory(models.Model):
     price               = models.IntegerField(null=True, blank=True)
     date                = models.DateTimeField(null=True, blank=True)
     issoldprice         = models.BooleanField()
-
-
