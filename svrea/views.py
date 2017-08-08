@@ -921,22 +921,24 @@ def plots_timeseries(request):
 
 
 def getListOfAreas():
-    list_of_areas = {'Whole Sweden' : {}}
+    return GlobalVars.objects.get(var='list_of_areas').dicval
 
-
-    for county in Address.objects.distinct('county').order_by('county').values('county'):
-        if county['county'] is not None:
-            list_of_areas['Whole Sweden']['%s' %county['county']] = []
-
-            for muni in Address.objects.filter(county = county['county']).distinct('municipality').order_by('municipality').values('municipality'):
-                if muni['municipality'] is not None:
-                    list_of_areas['Whole Sweden']['%s' %county['county']].append(muni['municipality'])
-
-    var = GlobalVars.objects.get_or_create(var = 'list_of_',
-                                           defaults = {
-                                               'dicval': json.loads(list_of_areas)
-                                           })
-    return list_of_areas
+    # list_of_areas = {'Whole Sweden' : {}}
+    #
+    #
+    # for county in Address.objects.distinct('county').order_by('county').values('county'):
+    #     if county['county'] is not None:
+    #         list_of_areas['Whole Sweden']['%s' %county['county']] = []
+    #
+    #         for muni in Address.objects.filter(county = county['county']).distinct('municipality').order_by('municipality').values('municipality'):
+    #             if muni['municipality'] is not None:
+    #                 list_of_areas['Whole Sweden']['%s' %county['county']].append(muni['municipality'])
+    #
+    # var = GlobalVars.objects.get_or_create(var = 'list_of_',
+    #                                        defaults = {
+    #                                            'dicval': list_of_areas
+    #                                        })
+    # return list_of_areas
 
 
 
