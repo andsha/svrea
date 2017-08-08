@@ -85,3 +85,9 @@ class Pricehistory(models.Model):
     price               = models.IntegerField(null=True, blank=True)
     date                = models.DateTimeField(null=True, blank=True)
     issoldprice         = models.BooleanField()
+
+
+class GlobalVars(models.Model):
+    var = models.CharField(unique=True,max_length=64, null=True, blank=True)
+    charval = models.CharField(max_length= 256, null=True, blank=True)
+    dicval = JSONField(null=True, blank=True)

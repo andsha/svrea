@@ -7,6 +7,7 @@ import numpy, math
 from operator import itemgetter
 from ratelimit.decorators import ratelimit
 import logging
+import json
 
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
@@ -18,7 +19,7 @@ from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
-from svrea_script.models import Listings, Address
+from svrea_script.models import Listings, Address, GlobalVars
 from svrea_etl.models import EtlListingsDaily, \
     EtlListingsWeekly, \
     EtlListingsMonthly, \
@@ -922,6 +923,7 @@ def plots_timeseries(request):
 def getListOfAreas():
     list_of_areas = {'Whole Sweden' : {}}
 
+
     for county in Address.objects.distinct('county').order_by('county').values('county'):
         if county['county'] is not None:
             list_of_areas['Whole Sweden']['%s' %county['county']] = []
@@ -930,7 +932,10 @@ def getListOfAreas():
                 if muni['municipality'] is not None:
                     list_of_areas['Whole Sweden']['%s' %county['county']].append(muni['municipality'])
 
-    #print(list_of_areas)
+    var = GlobalVars.objects.get_or_create(var = 'list_of_',
+                                           defaults = {
+                                               'dicval': json.loads(list_of_areas)
+                                           })
     return list_of_areas
 
 
