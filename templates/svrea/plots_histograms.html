@@ -1,7 +1,28 @@
 {% extends '../base.html' %}
 {% load humanize %}
 {% load static %}
+{% load custom_ttags %}
 
+{% block head%}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+
+<style>
+    .js-example-basic-multiple{
+        width:50%;
+    }
+
+    .optionCounty{
+        font-weight: bold;
+    }
+
+    .optionMuni{
+        padding-left: 25px;
+    }
+
+</style>
+
+{% endblock%}
 
 {% block content %}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -17,7 +38,7 @@ var options = {
     legend : {position : 'right'},
     bar : {groupWidth: '100%'},
     hAxis:{
-        title : '{{x_axis_title}}'
+        title : '{{x_axis_title | safe}}'
     },
     vAxis:{
         title : 'Frequency'
@@ -30,15 +51,22 @@ chart.draw(data, options);
 }
 
 //$(document).ready(mselect());
-window.onload = mselect
+window.onload = function(){
+    listings_price_hist()
+    mselect()
+}
 
 function mselect(){
-        $('.county-select').multiselect({
-        enableClickableOptGroups: true,
-        buttonClass: 'btn btn-primary',
-        nonSelectedText: 'Choose County',
-        numberDisplayed: 1}
-        );
+    $(".js-example-basic-multiple").select2({
+        placeholder: "Select a region",
+        allowClear: true,
+        templateResult: function (data, container) {
+            if (data.element) {
+                $(container).addClass($(data.element).attr("class"));
+            }
+            return data.text;
+        }
+    });
 }
 
 function displayPeriodForm(sel){
@@ -168,23 +196,31 @@ function newHist() {
         h5.appendChild(property_type)
 
         h5.appendChild(document.createTextNode('  Region: '));
+            area_select = document.createElement('select')
+            area_select.name = 'county_selected_' + e
+            area_select.className = "js-example-basic-multiple"
+            area_select.multiple = "multiple"
+                opt = document.createElement('option')
+                opt.text = 'Whole Sweden'
+                opt.className = "optionCounty"
+                area_select.appendChild(opt)
+                var county_list = {{county_list | safe}}
 
-            county_select = document.createElement('select')
-            county_select.name = 'county_selected_' + e
-            //county_select.id = 'county-select'
-            county_select.className = "county-select"
-            county_select.multiple = "multiple"
-                optgroup = document.createElement('optgroup')
-                optgroup.label = 'all'
-                    {% for c in county_list %}
+                for (county in county_list['Whole Sweden']){
+                    var val = county_list[county]
+                    og = document.createElement('option')
+                    og.text = county
+                    og.className = "optionCounty"
+                    area_select.appendChild(og)
+
+                    for (var muni in county_list['Whole Sweden'][county]){
                         option = document.createElement('option')
-                        option.text = '{{c}}'
-                        option.value = '{{c}}'
-                        {% if c == "Whole Sweden" %}option.selected=true{%endif%}
-                    optgroup.appendChild(option)
-                    {% endfor %}
-            county_select.appendChild(optgroup)
-        h5.appendChild(county_select)
+                        option.text = county_list['Whole Sweden'][county][muni]
+                        option.className = "optionMuni"
+                        area_select.appendChild(option)
+                    }
+                }
+        h5.appendChild(area_select)
 
         hlink = document.createElement('a')
         hlink.href = 'javascript:removeHist(' + g_child + ')'
@@ -306,12 +342,18 @@ function clearHistText(){
                                         <option {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
                                     </select>
                                     Region:
-                                    <select class="county-select" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
-                                        <optgroup label="All">
-                                            {% for c in county_list %}
-                                        <option value="{{c}}" {% if c in hist.county_selected %} selected {% endif%}>{{c}}</option>
+                                    <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
+                                         <option class="optionCounty" {% if 'Whole Sweden' in hist.county_selected %} selected {% endif%}>Whole Sweden</option>
+                                        {% with clist=county_list|get_dic_value:"Whole Sweden" %}
+                                        {% for county, munis in clist.items %}
+                                            <option class="optionCounty" {% if county in hist.county_selected %} selected {% endif%}>{{county}}</option>
+                                            {% for muni in munis%}
+                                            <option class="optionMuni" {% if muni in hist.county_selected %} selected {% endif %}>{{muni}}</option>
+                                            {% endfor %}
+
                                         {% endfor %}
-                                        </optgroup>
+                                        {% endwith %}
+
                                     </select>
                                     <a href="javascript:removeHist({{forloop.counter0}})"> Remove</a>
                                 </h5>

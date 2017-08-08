@@ -458,11 +458,16 @@ def plots_histograms(request):
     # Add to Favourite
     if request.GET.get('save_hist') and request.user.is_authenticated():
         name = request.GET.get('name_of_hist')
-
+        name = request.GET.get('name_of_series')
+        if request.GET.get('fav_tscomment'):
+            comment = request.GET.get('fav_tscomment')
+        else:
+            comment = None
         hist = EtlHistogramFavourite(
             creationdate = datetime.datetime.now(),
             favouritename=name,
             username=request.user.get_username(),
+            comment = comment
         )
         hist.save()
         r = request.GET.copy()
@@ -580,16 +585,13 @@ def plots_histograms(request):
 
     # __________________________ Generate County List _______________________
 
-    county_list = ['Whole Sweden']
-
-    for i in [address.county for address in Address.objects.distinct('county').order_by('county')]:
-        county_list.append(i)
+    county_list = getListOfAreas()
 
     # __________________________ Templates for histograms ____________________
     listings_hist = [['Price']]
     listings_list_all = []
     county_chart_all = []
-    #print("there",connection.queries)
+    #print('histInfo:',histInfo)
     for idx, hist in enumerate(histInfo):
         # ____________________ make initial QS ________________________
         if hist["property_type"] == 'Sold':
@@ -634,6 +636,7 @@ def plots_histograms(request):
 
         # _____________________ Generate ordered list of all results _______________
         for idy, county in enumerate(hist["county_selected"]):
+            #print('county:', county)
             if county == 'Whole Sweden':
                 if hist_type == 'Price m2':
                     listings_list_all.append([int(r['latestprice'] / r['livingarea']) for r in
@@ -645,15 +648,19 @@ def plots_histograms(request):
             else:
                 if hist_type == 'Price m2':
                     listings_list_all.append([int(r['latestprice'] / r['livingarea']) for r in
-                                              listings_qs.filter(address__county=county).values(
+                                              listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values(
                                                   'latestprice',
                                                   'livingarea')])
                 else:
+                    # print('QS:')
+                    # for i in listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values(field):
+                    #     print(i)
                     listings_list_all.append(
-                        [int(r[field]) for r in listings_qs.filter(address__county=county).values(field)])
+                        [int(r[field]) for r in listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values(field)])
                 county_chart_all.append(
                     "%s. %s(%s)" % (idx, hist["county_selected"][idy], len(listings_list_all[-1])))
     # ______________________ Define highest and lowest cutoffs ____________________
+
 
     percentH_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], UpperCutoff)
     percentL_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], LowerCutoff)
@@ -718,10 +725,15 @@ def plots_timeseries(request):
     # Add to Favourite
     if request.GET.get('save_series') and request.user.is_authenticated():
         name = request.GET.get('name_of_series')
+        if request.GET.get('fav_tscomment'):
+            comment = request.GET.get('fav_tscomment')
+        else:
+            comment = None
         ts = EtlTimeSeriesFavourite(
             creationdate=datetime.datetime.now(),
             favouritename=name,
             username=request.user.get_username(),
+            comment = comment
         )
         ts.save()
         r = request.GET.copy()
@@ -831,14 +843,11 @@ def plots_timeseries(request):
     elif data_type == 'Price':
         y_axis_title = 'Price, SEK'
     if data_type == 'Price m2':
-        y_axis_title = 'Price / <sup>m2</sup>, SEK'
+        y_axis_title = 'Price / m2, SEK'
 
     # __________________________ Generate County List _______________________
 
-    county_list = ['Whole Sweden']
-
-    for i in [address.county for address in Address.objects.distinct('county').order_by('county')]:
-        county_list.append(i)
+    county_list = getListOfAreas()
 
     # ______________________________________________
 
@@ -890,7 +899,7 @@ def plots_timeseries(request):
                 #print(idx, qqs[idx])
                 ts_data[idx+1].append(qqs[idx]['p'])
 
-    #print(period_to)
+    #print(time_series)
 
     context = {"ts_data":ts_data,
                 "period_to" : period_to.strftime('%Y-%m-%d'),
@@ -908,6 +917,22 @@ def plots_timeseries(request):
                }
     #print(context)
     return render(request, "svrea/plots_timeseries.html", context=context)
+
+
+def getListOfAreas():
+    list_of_areas = {'Whole Sweden' : {}}
+
+    for county in Address.objects.distinct('county').order_by('county').values('county'):
+        if county['county'] is not None:
+            list_of_areas['Whole Sweden']['%s' %county['county']] = []
+
+            for muni in Address.objects.filter(county = county['county']).distinct('municipality').order_by('municipality').values('municipality'):
+                if muni['municipality'] is not None:
+                    list_of_areas['Whole Sweden']['%s' %county['county']].append(muni['municipality'])
+
+    #print(list_of_areas)
+    return list_of_areas
+
 
 
 
