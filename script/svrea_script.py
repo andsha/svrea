@@ -654,7 +654,7 @@ class Svrea_script():
                           sold_rent_med=Percentile(expression='rent', percentiles=.5),
                           #sold_rent_15=Percentile(expression='rent', percentiles=.15),
                           #sold_rent_85=Percentile(expression='rent', percentiles=.85),
-                          sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished'))
+                         # sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished'))
                           )
 
             for l in listing:
@@ -731,7 +731,7 @@ class Svrea_script():
                         'sold_rent_med'         : s['sold_rent_med'],
                         #'sold_rent_15'          : s['sold_rent_15'],
                         #'sold_rent_85'          : s['sold_rent_85'],
-                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg']
+                       # 'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg']
                     })
 
                 if self.options['etlPeriodType'] == 'Weekly':
