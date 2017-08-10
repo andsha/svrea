@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('svrea_etl', '0017_auto_20170810_1649'),
+        ('svrea_etl', '0016_etllistingsdaily_sold_daysbeforesold_avg'),
     ]
 
     operations = [
