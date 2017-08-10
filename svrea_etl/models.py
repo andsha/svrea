@@ -33,7 +33,7 @@ class EtlListingsDaily(models.Model):
     sold_area_med           = models.IntegerField(null=True, blank=True)
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
-    sold_daysbeforesold_avg = models.IntegerField(null=True, blank=True)
+    sold_daysbeforesold_avg = models.DurationField(null=True, blank=True)
 
 
 class EtlListingsWeekly(models.Model):
