@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max
+from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuarterly, EtlListingsYearly
@@ -630,7 +630,7 @@ class Svrea_script():
                           #listing_area_15=Percentile(expression='livingarea', percentiles=.15),
                           #listing_area_85=Percentile(expression='livingarea', percentiles=.85),
                           listing_rent_avg=Avg('rent'),
-                          listing_rent_med=Percentile(expression='rent', percentiles=.5)
+                          listing_rent_med=Percentile(expression='rent', percentiles=.5),
                           #listing_rent_15=Percentile(expression='rent', percentiles=.15),
                           #listing_rent_85=Percentile(expression='rent', percentiles=.85),
                           )
@@ -654,6 +654,7 @@ class Svrea_script():
                           sold_rent_med=Percentile(expression='rent', percentiles=.5),
                           #sold_rent_15=Percentile(expression='rent', percentiles=.15),
                           #sold_rent_85=Percentile(expression='rent', percentiles=.85),
+                          sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished'))
                           )
 
             for l in listing:
@@ -730,6 +731,7 @@ class Svrea_script():
                         'sold_rent_med'         : s['sold_rent_med'],
                         #'sold_rent_15'          : s['sold_rent_15'],
                         #'sold_rent_85'          : s['sold_rent_85'],
+                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg']
                     })
 
                 if self.options['etlPeriodType'] == 'Weekly':

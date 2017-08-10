@@ -104,3 +104,5 @@ WHERE ("svrea_etl_etllistingsweekly"."geographic_name" = 'Uppsala'
 AND "svrea_etl_etllistingsweekly"."record_firstdate" BETWEEN '2017-01-02T00:00:00'::timestamp AND '2017-08-03T00:00:00'::timestamp)
 ORDER BY "svrea_etl_etllistingsweekly"."record_firstdate" ASC
 
+
+select avg()

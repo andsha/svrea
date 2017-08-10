@@ -190,10 +190,16 @@ function clearSeriesText(){
                                 <option {%if period_step == "Quarter"%} selected {%endif%}> Quarter </option>
                                 <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
                         </select>
-                        Display:<select name="data_type" id="data_type">
-                                <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
-                                <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
-                                <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
+                        Display:
+                        <select name="data_type" id="data_type">
+                            <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
+                            <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
+                            <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
+                            <option {%if data_type == "Area"%} selected {%endif%}>Area</option>
+                            <option {%if data_type == "Rent"%} selected {%endif%}>Rent</option>
+                            <option {%if data_type == "Days Before Sold"%} selected {%endif%}>Days Before Sold</option>
+                            <option {%if data_type == "Price / Rent"%} selected {%endif%}>Price / Rent</option>
+                            <option {%if data_type == "Price m2 / Rent"%} selected {%endif%}>Price m2 / Rent</option>
                         </select>
                     </div>
                 </div>
