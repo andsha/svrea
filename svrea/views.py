@@ -843,8 +843,13 @@ def plots_timeseries(request):
         y_axis_title = 'Number of properties'
     elif data_type == 'Price':
         y_axis_title = 'Price, SEK'
-    if data_type == 'Price m2':
+    elif data_type == 'Price m2':
         y_axis_title = 'Price / m2, SEK'
+    elif data_type == 'Area':
+        y_axis_title = 'Living area, m2'
+    elif data_type == 'Rent':
+        y_axis_title = 'Rent per month, SEK'
+
 
     # __________________________ Generate County List _______________________
 
@@ -880,6 +885,10 @@ def plots_timeseries(request):
                 elif data_type == 'Price m2':
                     qqs = qqs.annotate(p=Coalesce('listing_price_sqm_med', 0)) \
                         .values('record_firstdate','p')
+                elif data_type == 'Area':
+                    qqs = qqs.annotate(p=Coalesce('listing_area_med', 0)).values('record_firstdate','p')
+                elif data_type == 'Rent':
+                    qqs = qqs.annotate(p=Coalesce('listing_rent_med', 0)).values('record_firstdate','p')
             elif ts['ts_type'] == 'Sold':
                 if data_type == 'Number':
                     qqs = qqs.annotate(p=Coalesce('sold_today', 0)) \
@@ -890,6 +899,10 @@ def plots_timeseries(request):
                 elif data_type == 'Price m2':
                     qqs = qqs.annotate(p=Coalesce('sold_price_sqm_med', 0)) \
                         .values('record_firstdate','p')
+                elif data_type == 'Area':
+                    qqs = qqs.annotate(p=Coalesce('sold_area_med', 0)).values('record_firstdate','p')
+                elif data_type == 'Rent':
+                    qqs = qqs.annotate(p=Coalesce('sold_rent_med', 0)).values('record_firstdate','p')
 
             qqs = qqs.order_by('record_firstdate')
             ts_data[0].append('%s, %s, %s' % (county, ts['ts_type'], data_type))

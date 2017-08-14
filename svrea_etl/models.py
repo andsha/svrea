@@ -33,6 +33,7 @@ class EtlListingsDaily(models.Model):
     sold_area_med           = models.IntegerField(null=True, blank=True)
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
+    sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     
 
 
