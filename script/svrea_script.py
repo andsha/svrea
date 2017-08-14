@@ -731,7 +731,7 @@ class Svrea_script():
                         'sold_rent_med'         : s['sold_rent_med'],
                         #'sold_rent_15'          : s['sold_rent_15'],
                         #'sold_rent_85'          : s['sold_rent_85'],
-                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg']
+                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg'].total_seconds / (3600*24)
                     })
 
                 if self.options['etlPeriodType'] == 'Weekly':
