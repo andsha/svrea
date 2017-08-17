@@ -58,6 +58,9 @@ class Datetime_to_date(Func):
     function = 'EXTRACT'
     template = '%(expressions)s::date'
 
+class Extract_date(Func):
+    function = 'EXTRACT'
+    template = "%(function)s('%(dtype)s' from %(expressions)s)"
 
 class Percentile(Aggregate):
     function = None
@@ -637,6 +640,7 @@ class Svrea_script():
 
             sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country') \
                 .filter(Q(datesold__date__lte = dayTo) & Q(datesold__date__gt = dayFrom)) \
+                .annotate(sold_year = Extract_date('datesold', dtype = 'year'))\
                 .annotate(sold_counts=Count('booliid'),
                           sold_price_avg=Avg('latestprice'),
                           sold_price_med=Percentile(expression='latestprice', percentiles=0.5),
@@ -654,7 +658,8 @@ class Svrea_script():
                           sold_rent_med=Percentile(expression='rent', percentiles=.5),
                           #sold_rent_15=Percentile(expression='rent', percentiles=.15),
                           #sold_rent_85=Percentile(expression='rent', percentiles=.85),
-                          sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished'))
+                          sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished')),
+                          sold_propertyage_avg = Avg(F('sold_year') - F('constructionyear'))
                           )
 
             for l in listing:
@@ -731,7 +736,8 @@ class Svrea_script():
                         'sold_rent_med'         : s['sold_rent_med'],
                         #'sold_rent_15'          : s['sold_rent_15'],
                         #'sold_rent_85'          : s['sold_rent_85'],
-                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg'].total_seconds() / (3600*24)
+                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg'].total_seconds() / (3600*24),
+                        'sold_propertyage_avg' : s['sold_propertyage_avg']
                     })
 
                 if self.options['etlPeriodType'] == 'Weekly':
