@@ -62,6 +62,7 @@ class EtlListingsWeekly(models.Model):
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
+    sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
 
 class EtlListingsMonthly(models.Model):
@@ -88,6 +89,7 @@ class EtlListingsMonthly(models.Model):
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
+    sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
 
 class EtlListingsQuarterly(models.Model):
@@ -114,6 +116,7 @@ class EtlListingsQuarterly(models.Model):
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
+    sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
 
 class EtlListingsYearly(models.Model):
@@ -139,6 +142,7 @@ class EtlListingsYearly(models.Model):
     sold_rent_avg           = models.IntegerField(null=True, blank=True)
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
+    sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
 
 class EtlTimeSeriesFavourite(models.Model):
