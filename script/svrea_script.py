@@ -11,7 +11,7 @@ import random
 import time
 import re
 
-from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper
+from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper, IntegerField, FloatField
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
 from svrea_etl.models import EtlHistory, EtlListingsDaily, EtlListingsWeekly, EtlListingsMonthly, EtlListingsQuarterly, EtlListingsYearly
@@ -659,7 +659,7 @@ class Svrea_script():
                           #sold_rent_15=Percentile(expression='rent', percentiles=.15),
                           #sold_rent_85=Percentile(expression='rent', percentiles=.85),
                           sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished')),
-                          sold_propertyage_avg = Avg(F('sold_year') - F('constructionyear'))
+                          sold_propertyage_avg = Avg(F('sold_year') - F('constructionyear'), output_field=FloatField())
                           )
 
             for l in listing:
