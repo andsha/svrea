@@ -275,10 +275,12 @@ function clearHistText(){
                         <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
                         Type:
                         <select name="hist_type">
-                            <option value="Price" {% if hist_type == "Price" %} selected {% endif%}>Price</option>
-                            <option value="Price m2" {% if hist_type == "Price m2" %} selected {% endif%}>Price m2</option>
-                            <option value="Area" {% if hist_type == "Area" %} selected {% endif%}>Area</option>
-                            <option value="Rent" {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
+                            <option {% if hist_type == "Price" %} selected {% endif%}>Price</option>
+                            <option {% if hist_type == "Price m2" %} selected {% endif%}>Price m2</option>
+                            <option {% if hist_type == "Area" %} selected {% endif%}>Area</option>
+                            <option {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
+                            <option  {% if hist_type == "Days Before Sold" %} selected {% endif%}>Days Before Sold</option>
+                            <option {% if hist_type == "Property Age" %} selected {% endif%}>Property Age</option>
                         </select>
                         Data:
                         <select name="data_type">

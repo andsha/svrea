@@ -14,7 +14,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import models, connection
-from django.db.models import Count, Max, F, Sum, Func, Avg, Q, When, Case, Value, DateTimeField
+from django.db.models import Count, Max, F, Sum, Func, Avg, Q, When, Case, Value, DateTimeField, FloatField, ExpressionWrapper
 from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -38,6 +38,10 @@ class cast(Func):
     template = "%(expressions)s::%(dtype)s"
     if '%(dtype)s' == 'bigint':
         output_field = models.BigIntegerField()
+
+class Extract_date(Func):
+    function = 'EXTRACT'
+    template = "%(function)s('%(dtype)s' from %(expressions)s)"
 
 
 def gindex(request):
@@ -558,26 +562,36 @@ def plots_histograms(request):
         UpperCutoff = float(request.GET.getlist('UpperCutoff')[0])
         g_child = request.GET.get('g_child')
 
+    #print(hist_type)
     if hist_type == 'Price':
-        field = 'latestprice'
-        filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
+        formula = F('latestprice')
+        filter = {'latestprice__isnull': False}
         x_axis_title = 'Price, SEK'
     elif hist_type == 'Rent':
-        field = 'rent'
-        filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
+        formula = F('rent')
+        filter = {'rent__isnull': False}
         x_axis_title = 'Rent, SEK'
     elif hist_type == 'Area':
-        field = 'livingarea'
-        filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
+        formula = F('livingarea')
+        filter = {'livingarea__isnull': False}
         x_axis_title = 'Living Area, m2'
     elif hist_type == 'Price m2':
-        field = 'latestprice'
-        filter_isnull_f = {'{0}__{1}'.format('latestprice', 'isnull'): False,
-                           '{0}__{1}'.format('livingarea', 'isnull'): False}
+        formula = F('latestprice')
+        filter = {'latestprice__isnull': False,
+                           'livingarea__isnull': False}
         x_axis_title = 'Price per m2, SEK'
-    else:
-        field = 'latestprice'
-        filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
+    elif hist_type == 'Days Before Sold':
+        formula = (Extract_date('datesold', dtype='epoch') - Extract_date('datepublished', dtype='epoch')) / (3600 * 24)
+        filter = {'datesold__isnull': False}
+        x_axis_title = 'Days Before Sold'
+    elif hist_type == 'Property Age':
+        formula = Extract_date('datesold', dtype='year') - F('constructionyear')
+        filter = {'datesold__isnull': False,
+                           'constructionyear__range':(1800,2100)}
+        x_axis_title = 'Property Age, Yrs'
+    # else:
+    #     field = 'latestprice'
+    #     filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
 
     if data_type[0] == 'Rel':
         rel = True
@@ -596,10 +610,11 @@ def plots_histograms(request):
     for idx, hist in enumerate(histInfo):
         # ____________________ make initial QS ________________________
         if hist["property_type"] == 'Sold':
-            listings_qs = Listings.objects.filter(isactive__exact=False).filter(**filter_isnull_f).order_by(
-                field)
+            listings_qs = Listings.objects.filter(isactive__exact=False).filter(**filter).annotate(f=ExpressionWrapper(formula,
+                                                                                                  output_field=FloatField())).order_by('f')
         elif hist["property_type"] == 'Active':
-            listings_qs = Listings.objects.filter(**filter_isnull_f).order_by(field)
+            listings_qs = Listings.objects.filter(**filter).annotate(f=ExpressionWrapper(formula,
+                                                                                                  output_field=FloatField())).order_by('f')
         if hist_type == 'Price m2':
             listings_qs = listings_qs.exclude(latestprice=0).exclude(livingarea=0)
         # ______________________ Deal with time ranges _______________________
@@ -643,7 +658,7 @@ def plots_histograms(request):
                     listings_list_all.append([int(r['latestprice'] / r['livingarea']) for r in
                                               listings_qs.values('latestprice', 'livingarea')])
                 else:
-                    listings_list_all.append([int(r[field]) for r in listings_qs.values(field)])
+                    listings_list_all.append([int(r['f']) for r in listings_qs.values('f')])
                 county_chart_all.append(
                     "%s. %s(%s)" % (idx, hist["county_selected"][idy], len(listings_list_all[-1])))
             else:
@@ -851,6 +866,8 @@ def plots_timeseries(request):
         y_axis_title = 'Rent per month, SEK'
     elif data_type == 'Days Before Sold':
         y_axis_title = 'Days Before Sold'
+    elif data_type == 'Property Age':
+        y_axis_title = 'Property Age'
 
 
     # __________________________ Generate County List _______________________
@@ -893,6 +910,8 @@ def plots_timeseries(request):
                     qqs = qqs.annotate(p=Coalesce('listing_rent_med', 0)).values('record_firstdate','p')
                 elif data_type == 'Days Before Sold':
                     qqs = qqs.annotate(p=Coalesce('sold_daysbeforesold_avg', 0)).values('record_firstdate','p')
+                elif data_type == 'Property Age':
+                    qqs = qqs.annotate(p=Coalesce('sold_propertyage_avg', 0)).values('record_firstdate','p')
             elif ts['ts_type'] == 'Sold':
                 if data_type == 'Number':
                     qqs = qqs.annotate(p=Coalesce('sold_today', 0)) \
@@ -909,6 +928,8 @@ def plots_timeseries(request):
                     qqs = qqs.annotate(p=Coalesce('sold_rent_med', 0)).values('record_firstdate','p')
                 elif data_type == 'Days Before Sold':
                     qqs = qqs.annotate(p=Coalesce('sold_daysbeforesold_avg', 0)).values('record_firstdate','p')
+                elif data_type == 'Property Age':
+                    qqs = qqs.annotate(p=Coalesce('sold_propertyage_avg', 0)).values('record_firstdate','p')
 
             qqs = qqs.order_by('record_firstdate')
             ts_data[0].append('%s, %s, %s' % (county, ts['ts_type'], data_type))
