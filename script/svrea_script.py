@@ -614,139 +614,145 @@ class Svrea_script():
 
     def fill_listings_daily_stats(self, dayFrom, dayTo):
         geographic_types = ['county', 'municipality', 'country']
+        property_types = ['Villa', 'Lägenhet']
         #logging.info('bebebe')
 
         for gtype in geographic_types:
-            listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country')\
-                .filter(Q(datepublished__date__lt=dayTo) & (Q(dateinactive__isnull=True) | Q(dateinactive__date__gte=dayFrom))) \
-                .annotate(listing_counts=Count('booliid'),
-                          listing_price_avg = Avg('latestprice'),
-                          listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
-                          # listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
-                          # listing_price_15=Percentile(expression='latestprice', percentiles=0.15),
-                          listing_price_sqm_avg = Avg(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)),
-                          listing_price_sqm_med = Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)), percentiles=.5),
-                          #listing_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
-                          #listing_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
-                          listing_area_avg = Avg('livingarea'),
-                          listing_area_med = Percentile(expression='livingarea', percentiles=.5),
-                          #listing_area_15=Percentile(expression='livingarea', percentiles=.15),
-                          #listing_area_85=Percentile(expression='livingarea', percentiles=.85),
-                          listing_rent_avg=Avg('rent'),
-                          listing_rent_med=Percentile(expression='rent', percentiles=.5),
-                          #listing_rent_15=Percentile(expression='rent', percentiles=.15),
-                          #listing_rent_85=Percentile(expression='rent', percentiles=.85),
-                          )
+            for ptype in property_types:
+                listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country')\
+                    .filter(Q(datepublished__date__lt=dayTo) & (Q(dateinactive__isnull=True) | Q(dateinactive__date__gte=dayFrom))) \
+                    .filter(propertytype = ptype)\
+                    .annotate(listing_counts=Count('booliid'),
+                              listing_price_avg = Avg('latestprice'),
+                              listing_price_med = Percentile(expression='latestprice', percentiles=0.5),
+                              # listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
+                              # listing_price_15=Percentile(expression='latestprice', percentiles=0.15),
+                              listing_price_sqm_avg = Avg(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)),
+                              listing_price_sqm_med = Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact = 0), then='livingarea'), default=None)), percentiles=.5),
+                              #listing_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
+                              #listing_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
+                              listing_area_avg = Avg('livingarea'),
+                              listing_area_med = Percentile(expression='livingarea', percentiles=.5),
+                              #listing_area_15=Percentile(expression='livingarea', percentiles=.15),
+                              #listing_area_85=Percentile(expression='livingarea', percentiles=.85),
+                              listing_rent_avg=Avg('rent'),
+                              listing_rent_med=Percentile(expression='rent', percentiles=.5),
+                              #listing_rent_15=Percentile(expression='rent', percentiles=.15),
+                              #listing_rent_85=Percentile(expression='rent', percentiles=.85),
+                              )
 
-            sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country') \
-                .filter(Q(datesold__date__lt = dayTo) & Q(datesold__date__gte = dayFrom)) \
-                .annotate(sold_year = Extract_date('datesold', dtype = 'year'))\
-                .annotate(sold_counts=Count('booliid'),
-                          sold_price_avg=Avg('latestprice'),
-                          sold_price_med=Percentile(expression='latestprice', percentiles=0.5),
-                          #sold_price_85=Percentile(expression='latestprice', percentiles=0.85),
-                          #sold_price_15=Percentile(expression='latestprice', percentiles=0.15),
-                          sold_price_sqm_avg=Avg(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),
-                          sold_price_sqm_med=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.5),
-                          #sold_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
-                          #sold_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
-                          sold_area_avg=Avg('livingarea'),
-                          sold_area_med=Percentile(expression='livingarea', percentiles=.5),
-                          #sold_area_15=Percentile(expression='livingarea', percentiles=.15),
-                          #sold_area_85=Percentile(expression='livingarea', percentiles=.85),
-                          sold_rent_avg=Avg('rent'),
-                          sold_rent_med=Percentile(expression='rent', percentiles=.5),
-                          #sold_rent_15=Percentile(expression='rent', percentiles=.15),
-                          #sold_rent_85=Percentile(expression='rent', percentiles=.85),
-                          sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished')),
-                          sold_propertyage_avg = Avg(F('sold_year') - F('constructionyear'), output_field=FloatField())
-                          )
+                sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country') \
+                    .filter(Q(datesold__date__lt = dayTo) & Q(datesold__date__gte = dayFrom)) \
+                    .filter(propertytype=ptype) \
+                    .annotate(sold_year = Extract_date('datesold', dtype = 'year'))\
+                    .annotate(sold_counts=Count('booliid'),
+                              sold_price_avg=Avg('latestprice'),
+                              sold_price_med=Percentile(expression='latestprice', percentiles=0.5),
+                              #sold_price_85=Percentile(expression='latestprice', percentiles=0.85),
+                              #sold_price_15=Percentile(expression='latestprice', percentiles=0.15),
+                              sold_price_sqm_avg=Avg(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),
+                              sold_price_sqm_med=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.5),
+                              #sold_price_sqm_15=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.15),
+                              #sold_price_sqm_85=Percentile(expression=(F('latestprice') / Case(When(~Q(livingarea__exact=0), then='livingarea'), default=None)),percentiles=.85),
+                              sold_area_avg=Avg('livingarea'),
+                              sold_area_med=Percentile(expression='livingarea', percentiles=.5),
+                              #sold_area_15=Percentile(expression='livingarea', percentiles=.15),
+                              #sold_area_85=Percentile(expression='livingarea', percentiles=.85),
+                              sold_rent_avg=Avg('rent'),
+                              sold_rent_med=Percentile(expression='rent', percentiles=.5),
+                              #sold_rent_15=Percentile(expression='rent', percentiles=.15),
+                              #sold_rent_85=Percentile(expression='rent', percentiles=.85),
+                              sold_daysbeforesold_avg=Avg(F('datesold') - F('datepublished')),
+                              sold_propertyage_avg = Avg(F('sold_year') - F('constructionyear'), output_field=FloatField())
+                              )
 
-            for l in listing:
-                etllistings = EtlListingsDaily.objects
-                if self.options['etlPeriodType'] == 'Weekly':
-                    etllistings = EtlListingsWeekly.objects
-                elif self.options['etlPeriodType'] == 'Monthly':
-                    etllistings = EtlListingsMonthly.objects
-                elif self.options['etlPeriodType'] == 'Quarterly':
-                    etllistings = EtlListingsQuarterly.objects
-                elif self.options['etlPeriodType'] == 'Yearly':
-                    etllistings = EtlListingsYearly.objects
-                (etllisting, created) = etllistings.update_or_create(
-                    record_firstdate        = dayFrom,
-                    geographic_type         = gtype,
-                    geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
-                    defaults                = {
-                        'active_listings'       : l['listing_counts'],
-                        'listing_price_avg'     : l['listing_price_avg'],
-                        'listing_price_med'     : l['listing_price_med'],
-                        #'listing_price_85'      : l['listing_price_85'],
-                        #'listing_price_15'      : l['listing_price_15'],
-                        'listing_price_sqm_avg' : l['listing_price_sqm_avg'],
-                        'listing_price_sqm_med' : l['listing_price_sqm_med'],
-                        #'listing_price_sqm_15'  : l['listing_price_sqm_15'],
-                        #'listing_price_sqm_85'  : l['listing_price_sqm_85'],
-                        'listing_area_avg'      : l['listing_area_avg'],
-                        'listing_area_med'      : l['listing_area_med'],
-                        #'listing_area_15'       : l['listing_area_15'],
-                        #'listing_area_85'       : l['listing_area_85'],
-                        'listing_rent_avg'      : l['listing_rent_avg'],
-                        'listing_rent_med'      : l['listing_rent_med'],
-                        #'listing_rent_15'       : l['listing_rent_15'],
-                        #'listing_rent_85'       : l['listing_rent_85'],
-                    })
+                for l in listing:
+                    etllistings = EtlListingsDaily.objects
+                    if self.options['etlPeriodType'] == 'Weekly':
+                        etllistings = EtlListingsWeekly.objects
+                    elif self.options['etlPeriodType'] == 'Monthly':
+                        etllistings = EtlListingsMonthly.objects
+                    elif self.options['etlPeriodType'] == 'Quarterly':
+                        etllistings = EtlListingsQuarterly.objects
+                    elif self.options['etlPeriodType'] == 'Yearly':
+                        etllistings = EtlListingsYearly.objects
+                    (etllisting, created) = etllistings.update_or_create(
+                        record_firstdate        = dayFrom,
+                        geographic_type         = gtype,
+                        geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
+                        propertytype            = ptype,
+                        defaults                = {
+                            'active_listings'       : l['listing_counts'],
+                            'listing_price_avg'     : l['listing_price_avg'],
+                            'listing_price_med'     : l['listing_price_med'],
+                            #'listing_price_85'      : l['listing_price_85'],
+                            #'listing_price_15'      : l['listing_price_15'],
+                            'listing_price_sqm_avg' : l['listing_price_sqm_avg'],
+                            'listing_price_sqm_med' : l['listing_price_sqm_med'],
+                            #'listing_price_sqm_15'  : l['listing_price_sqm_15'],
+                            #'listing_price_sqm_85'  : l['listing_price_sqm_85'],
+                            'listing_area_avg'      : l['listing_area_avg'],
+                            'listing_area_med'      : l['listing_area_med'],
+                            #'listing_area_15'       : l['listing_area_15'],
+                            #'listing_area_85'       : l['listing_area_85'],
+                            'listing_rent_avg'      : l['listing_rent_avg'],
+                            'listing_rent_med'      : l['listing_rent_med'],
+                            #'listing_rent_15'       : l['listing_rent_15'],
+                            #'listing_rent_85'       : l['listing_rent_85'],
+                        })
 
-                if self.options['etlPeriodType'] == 'Weekly':
-                    etllisting.weekofyear = dayFrom.isocalendar()[1]
-                elif self.options['etlPeriodType'] == 'Monthly':
-                    etllisting.monthofyear = dayFrom.month
-                elif self.options['etlPeriodType'] == 'Quarterly':
-                    etllisting.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
-                etllisting.save()
+                    if self.options['etlPeriodType'] == 'Weekly':
+                        etllisting.weekofyear = dayFrom.isocalendar()[1]
+                    elif self.options['etlPeriodType'] == 'Monthly':
+                        etllisting.monthofyear = dayFrom.month
+                    elif self.options['etlPeriodType'] == 'Quarterly':
+                        etllisting.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
+                    etllisting.save()
 
-            for s in sold:
-                etlsolds = EtlListingsDaily.objects
-                if self.options['etlPeriodType'] == 'Weekly':
-                    etlsolds = EtlListingsWeekly.objects
-                elif self.options['etlPeriodType'] == 'Monthly':
-                    etlsolds = EtlListingsMonthly.objects
-                elif self.options['etlPeriodType'] == 'Quarterly':
-                    etlsolds = EtlListingsQuarterly.objects
-                elif self.options['etlPeriodType'] == 'Yearly':
-                    etlsolds = EtlListingsYearly.objects
-                (etlsold, created) = etlsolds.update_or_create(
-                    record_firstdate=dayFrom,
-                    geographic_type=gtype,
-                    geographic_name=s['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
-                    defaults={
-                        'sold_today'            : s['sold_counts'],
-                        'sold_price_avg'        : s['sold_price_avg'],
-                        'sold_price_med'        : s['sold_price_med'],
-                        #'sold_price_85'         : s['sold_price_85'],
-                        #'sold_price_15'         : s['sold_price_15'],
-                        'sold_price_sqm_avg'    : s['sold_price_sqm_avg'],
-                        'sold_price_sqm_med'    : s['sold_price_sqm_med'],
-                        #'sold_price_sqm_15'     : s['sold_price_sqm_15'],
-                        #'sold_price_sqm_85'     : s['sold_price_sqm_85'],
-                        'sold_area_avg'         : s['sold_area_avg'],
-                        'sold_area_med'         : s['sold_area_med'],
-                        #'sold_area_15'          : s['sold_area_15'],
-                        #'sold_area_85'          : s['sold_area_85'],
-                        'sold_rent_avg'         : s['sold_rent_avg'],
-                        'sold_rent_med'         : s['sold_rent_med'],
-                        #'sold_rent_15'          : s['sold_rent_15'],
-                        #'sold_rent_85'          : s['sold_rent_85'],
-                        'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg'].total_seconds() / (3600*24),
-                        'sold_propertyage_avg' : s['sold_propertyage_avg']
-                    })
+                for s in sold:
+                    etlsolds = EtlListingsDaily.objects
+                    if self.options['etlPeriodType'] == 'Weekly':
+                        etlsolds = EtlListingsWeekly.objects
+                    elif self.options['etlPeriodType'] == 'Monthly':
+                        etlsolds = EtlListingsMonthly.objects
+                    elif self.options['etlPeriodType'] == 'Quarterly':
+                        etlsolds = EtlListingsQuarterly.objects
+                    elif self.options['etlPeriodType'] == 'Yearly':
+                        etlsolds = EtlListingsYearly.objects
+                    (etlsold, created) = etlsolds.update_or_create(
+                        record_firstdate=dayFrom,
+                        geographic_type=gtype,
+                        geographic_name=s['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
+                        propertytype=ptype,
+                        defaults={
+                            'sold_today'            : s['sold_counts'],
+                            'sold_price_avg'        : s['sold_price_avg'],
+                            'sold_price_med'        : s['sold_price_med'],
+                            #'sold_price_85'         : s['sold_price_85'],
+                            #'sold_price_15'         : s['sold_price_15'],
+                            'sold_price_sqm_avg'    : s['sold_price_sqm_avg'],
+                            'sold_price_sqm_med'    : s['sold_price_sqm_med'],
+                            #'sold_price_sqm_15'     : s['sold_price_sqm_15'],
+                            #'sold_price_sqm_85'     : s['sold_price_sqm_85'],
+                            'sold_area_avg'         : s['sold_area_avg'],
+                            'sold_area_med'         : s['sold_area_med'],
+                            #'sold_area_15'          : s['sold_area_15'],
+                            #'sold_area_85'          : s['sold_area_85'],
+                            'sold_rent_avg'         : s['sold_rent_avg'],
+                            'sold_rent_med'         : s['sold_rent_med'],
+                            #'sold_rent_15'          : s['sold_rent_15'],
+                            #'sold_rent_85'          : s['sold_rent_85'],
+                            'sold_daysbeforesold_avg' : s['sold_daysbeforesold_avg'].total_seconds() / (3600*24),
+                            'sold_propertyage_avg' : s['sold_propertyage_avg']
+                        })
 
-                if self.options['etlPeriodType'] == 'Weekly':
-                    etlsold.weekofyear = dayFrom.isocalendar()[1]
-                elif self.options['etlPeriodType'] == 'Monthly':
-                    etlsold.monthofyear = dayFrom.month
-                elif self.options['etlPeriodType'] == 'Quarterly':
-                    etlsold.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
-                etlsold.save()
+                    if self.options['etlPeriodType'] == 'Weekly':
+                        etlsold.weekofyear = dayFrom.isocalendar()[1]
+                    elif self.options['etlPeriodType'] == 'Monthly':
+                        etlsold.monthofyear = dayFrom.month
+                    elif self.options['etlPeriodType'] == 'Quarterly':
+                        etlsold.quarterofyear = int((dayFrom.month - 1) / 3)  + 1
+                    etlsold.save()
 
         etls = EtlListingsDaily.objects
         if self.options['etlPeriodType'] == 'Weekly':
