@@ -680,7 +680,7 @@ class Svrea_script():
                         record_firstdate        = dayFrom,
                         geographic_type         = gtype,
                         geographic_name         = l['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
-                        propertytype            = ptype,
+                        property_type            = ptype,
                         defaults                = {
                             'active_listings'       : l['listing_counts'],
                             'listing_price_avg'     : l['listing_price_avg'],
@@ -723,7 +723,7 @@ class Svrea_script():
                         record_firstdate=dayFrom,
                         geographic_type=gtype,
                         geographic_name=s['address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
-                        propertytype=ptype,
+                        property_type=ptype,
                         defaults={
                             'sold_today'            : s['sold_counts'],
                             'sold_price_avg'        : s['sold_price_avg'],
