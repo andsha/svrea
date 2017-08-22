@@ -15,6 +15,7 @@ class EtlListingsDaily(models.Model):
     record_firstdate        = models.DateTimeField(null=True, blank=True)
     geographic_type         = models.CharField(max_length = 50, null=True, blank=True)
     geographic_name         = models.CharField(max_length = 50, null=True, blank=True) 
+    property_type           = models.CharField(max_length=20, null=True, blank=True)
     active_listings         = models.IntegerField(null=True, blank=True)
     sold_today              = models.IntegerField(null=True, blank=True)
     listing_price_avg       = models.IntegerField(null=True, blank=True)
@@ -35,6 +36,7 @@ class EtlListingsDaily(models.Model):
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
+
     
 
 
