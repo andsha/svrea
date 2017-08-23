@@ -883,6 +883,7 @@ def plots_timeseries(request):
     qts = qs.annotate(date=To_char('record_firstdate', dtype=dtype))\
         .values('date').distinct().order_by('record_firstdate')
 
+    #print('qts', len(qts))
     for t in qts:
         ts_data.append([t['date']])
 #        xaxis.append(t['record_firstdate'])
@@ -892,7 +893,8 @@ def plots_timeseries(request):
             if county == 'Whole Sweden':
                 county = 'Sweden'
             qqs = qs
-            qqs = qqs.filter(geographic_name = county)
+            qqs = qqs.filter(geographic_name = county, property_type__isnull = True)
+            #print('qqs', len(qqs))
 
             if ts['ts_type'] == 'Active':
                 if data_type == 'Number':
@@ -935,7 +937,7 @@ def plots_timeseries(request):
             ts_data[0].append('%s, %s, %s' % (county, ts['ts_type'], data_type))
             #print(ts_data)
 
-            #print(qqs)
+            #print('PRINT', len(qqs), len(ts_data))
             for idx in range (0,len(qqs)):
                 #print(idx, qqs[idx])
                 ts_data[idx+1].append(float(qqs[idx]['p']))
