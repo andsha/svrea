@@ -9,7 +9,7 @@
 
 <style>
     .js-example-basic-multiple{
-        width:75%;
+        width:70%;
     }
 
     .optionCounty{
@@ -103,6 +103,17 @@ function newTS() {
                 option1.text = 'Sold'
                 ts_type.add(option1)
         h5.appendChild(ts_type)
+
+        h5.appendChild(document.createTextNode(' Property '));
+            p_type = document.createElement('select');
+            p_type.name = "p_type_" + e;
+                option0 = document.createElement('option');
+                option0.text = 'Villa'
+                p_type.add(option0)
+                option1 = document.createElement('option');
+                option1.text = 'Lägenhet'
+                p_type.add(option1)
+        h5.appendChild(p_type)
 
         h5.appendChild(document.createTextNode('  Region: '));
             area_select = document.createElement('select')
@@ -236,10 +247,16 @@ function clearSeriesText(){
                             <div id = "div_ts_{{forloop.counter0}}">
                                 <h5>
                                     <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
-                                    {{forloop.counter0}}. Type
+                                    {{forloop.counter0}}.
+                                    Type
                                     <select name="ts_type_{{forloop.counter0}}" id="ts_type_{{forloop_counter0}}">
                                         <option {% if series.ts_type == "Active" %} selected {% endif%}>Active</option>
                                         <option {% if series.ts_type == "Sold" %} selected {% endif%}>Sold</option>
+                                    </select>
+                                    Property
+                                    <select name="p_type_{{forloop.counter0}}" id="p_type_{{forloop_counter0}}">
+                                        <option {% if series.p_type == "Villa" %} selected {% endif%}>Villa</option>
+                                        <option {% if series.p_type == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
                                     </select>
                                     Region:
                                     <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>

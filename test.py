@@ -1,28 +1,14 @@
-string= 'BANANA'
-v = 'AEIOU'
-stu = {}
-kev = {}
-for idx in range(len(string)):
-        for idy in range(idx + 1, len(string) + 1):
-                sub = string[idx:idy]
-            if sub[0] in v:
-                if sub in kev:
-                    kev[sub] += 1
-                else:
-                    kev[sub] = 1
-            else:
-                if sub in stu:
-                    stu[sub] += 1
-                else:
-                    stu[sub] = 1
-kevscore = 0
-for word in kev:
-        kevscore += kev[word]
+n,m = map(int, input().split())
+arr = list(map(int, input().split()))
+A = set(map(int, input().split()))
+B = set(map(int, input().split()))
 
-stuscore = 0
-for word in stu:
-        stuscore += stu[word]
+s = 0
 
-print('Kevin %' % kevscore if kevscore > stuscore else 'Stuart %s' % stuscore)
+for i in arr:
+    if i in A:
+        s+=1
+    elif i in B:
+        s -= 1
 
-aefa
+print(s)

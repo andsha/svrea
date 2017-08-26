@@ -508,6 +508,7 @@ def plots_histograms(request):
         "property_type": "Active",
         "county_selected": ["Whole Sweden"],
         "period_type": "Day",
+        "property": "Lägenhet",
         "period_day": '%s' %(datetime.date.today() - datetime.timedelta(days=1)),
         "period_week": '%s-W%s' % (datetime.date.today().year, '0%s' % datetime.date.today().isocalendar()[1] if datetime.date.today().isocalendar()[1] < 10 else datetime.date.today().isocalendar()[1]),
         "period_month": '%s-%s' % (datetime.date.today().year,'0%s' % datetime.date.today().month if datetime.date.today().month < 10 else datetime.date.today().month),
@@ -547,6 +548,7 @@ def plots_histograms(request):
             histInfo[-1]['property_type'] = request.GET.get('property_type_%s' % idx)
             histInfo[-1]['county_selected'] = request.GET.getlist('county_selected_%s' % idx)
             histInfo[-1]['period_type'] = request.GET.get('period_type_%s' % idx)
+            histInfo[-1]['property'] = request.GET.get('property_%s' % idx)
             histInfo[-1]['period_day'] = request.GET.get('period_day_%s' % idx)
             histInfo[-1]['period_week'] = request.GET.get('period_week_%s' % idx)
             histInfo[-1]['period_month'] = request.GET.get('period_month_%s' % idx)
@@ -592,7 +594,7 @@ def plots_histograms(request):
     # else:
     #     field = 'latestprice'
     #     filter_isnull_f = {'{0}__{1}'.format(field, 'isnull'): False}
-
+    #print(formula)
     if data_type[0] == 'Rel':
         rel = True
     else:
@@ -607,6 +609,8 @@ def plots_histograms(request):
     listings_list_all = []
     county_chart_all = []
     #print('histInfo:',histInfo)
+    errs = 0
+
     for idx, hist in enumerate(histInfo):
         # ____________________ make initial QS ________________________
         if hist["property_type"] == 'Sold':
@@ -637,6 +641,7 @@ def plots_histograms(request):
             datefrom = datetime.datetime.strptime(hist["period_year"] + '-01-01', "%Y-%m-%d")
             dateto = datetime.datetime.strptime(hist["period_year"] + '-12-31', "%Y-%m-%d") + datetime.timedelta(days=1)
 
+        listings_qs = listings_qs.filter(propertytype = hist['property'])
 
         if hist["property_type"] == 'Sold':
             listings_qs = listings_qs.filter(datesold__range=(datefrom, dateto))
@@ -648,6 +653,7 @@ def plots_histograms(request):
             )).filter(datepublished__lt=dateto, di__gte=datefrom)
         if (listings_qs.count()) == 0:
             messages.error(request, "No data for selected settings")
+            errs += 1
             break
 
         # _____________________ Generate ordered list of all results _______________
@@ -672,39 +678,40 @@ def plots_histograms(request):
                     # for i in listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values(field):
                     #     print(i)
                     listings_list_all.append(
-                        [int(r[field]) for r in listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values(field)])
+                        [int(r['f']) for r in listings_qs.filter(Q(address__county=county)|Q(address__municipality=county)).values('f')])
                 county_chart_all.append(
                     "%s. %s(%s)" % (idx, hist["county_selected"][idy], len(listings_list_all[-1])))
     # ______________________ Define highest and lowest cutoffs ____________________
 
 
-    percentH_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], UpperCutoff)
-    percentL_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], LowerCutoff)
-    bins = [percentL_price + (percentH_price - percentL_price) / num_bins * i for i in range(0, num_bins + 1)]
+    if errs == 0:
+        percentH_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], UpperCutoff)
+        percentL_price = numpy.percentile([int(i) for sub in listings_list_all for i in sub], LowerCutoff)
+        bins = [percentL_price + (percentH_price - percentL_price) / num_bins * i for i in range(0, num_bins + 1)]
 
-    # ______________________ label X axis with bins __________________________
+        # ______________________ label X axis with bins __________________________
 
-    listings_hist.append(["<%s" % "{0:,}".format(int(percentL_price))])
+        listings_hist.append(["<%s" % "{0:,}".format(int(percentL_price))])
 
-    for idx, p in enumerate(bins):
-        if idx == len(bins) - 1:
-            break
-        listings_hist.append(["{0:,}".format(int((p + bins[idx + 1]) / 2))])
+        for idx, p in enumerate(bins):
+            if idx == len(bins) - 1:
+                break
+            listings_hist.append(["{0:,}".format(int((p + bins[idx + 1]) / 2))])
 
-    listings_hist.append([">%s" % "{0:,}".format(int(percentH_price))])
+        listings_hist.append([">%s" % "{0:,}".format(int(percentH_price))])
 
-    # _______________________ fill Y axis with histograms ________________________
+        # _______________________ fill Y axis with histograms ________________________
 
-    for idx, (listings_list, county) in enumerate(zip(listings_list_all, county_chart_all)):
-        hist = numpy.histogram(listings_list, bins=bins)
-        listings_hist[0].append('%s' % county)
-        tot = len(listings_list)
-        listings_hist[1].append(len([n for n in listings_list if n < percentL_price]) / (tot if rel else 1))
+        for idx, (listings_list, county) in enumerate(zip(listings_list_all, county_chart_all)):
+            hist = numpy.histogram(listings_list, bins=bins)
+            listings_hist[0].append('%s' % county)
+            tot = len(listings_list)
+            listings_hist[1].append(len([n for n in listings_list if n < percentL_price]) / (tot if rel else 1))
 
-        for i, h in enumerate(hist[0]):
-            listings_hist[i + 2].append(h / (tot if rel else 1))
+            for i, h in enumerate(hist[0]):
+                listings_hist[i + 2].append(h / (tot if rel else 1))
 
-        listings_hist[-1].append(len([n for n in listings_list if n > percentH_price]) / (tot if rel else 1))
+            listings_hist[-1].append(len([n for n in listings_list if n > percentH_price]) / (tot if rel else 1))
     #print(connection.queries)
     context = {"histInfo": histInfo,
                "defHistInfo": defHistInfo,
@@ -783,6 +790,7 @@ def plots_timeseries(request):
     # ************************  defaults  *********************
     time_series = [{ # this is a list containing info about all time series
         "ts_type": "Active",
+        "p_type" : 'Lägenhet',
         "county_selected": ["Whole Sweden"],
     }]
 
@@ -816,6 +824,7 @@ def plots_timeseries(request):
                 continue
             time_series.append({})
             time_series[-1]['ts_type'] = request.GET.get('ts_type_%s' % idx)
+            time_series[-1]['p_type'] = request.GET.get('p_type_%s' % idx)
             time_series[-1]['county_selected'] = request.GET.getlist('county_selected_%s' % idx)
             idx += 1
 
@@ -893,7 +902,8 @@ def plots_timeseries(request):
             if county == 'Whole Sweden':
                 county = 'Sweden'
             qqs = qs
-            qqs = qqs.filter(geographic_name = county, property_type__isnull = True)
+            qqs = qqs.filter(geographic_name = county, property_type = ts['p_type'])
+
             #print('qqs', len(qqs))
 
             if ts['ts_type'] == 'Active':
@@ -934,7 +944,7 @@ def plots_timeseries(request):
                     qqs = qqs.annotate(p=Coalesce('sold_propertyage_avg', 0)).values('record_firstdate','p')
 
             qqs = qqs.order_by('record_firstdate')
-            ts_data[0].append('%s, %s, %s' % (county, ts['ts_type'], data_type))
+            ts_data[0].append('%s, %s, %s, %s' % (county, ts['p_type'], ts['ts_type'], data_type))
             #print(ts_data)
 
             #print('PRINT', len(qqs), len(ts_data))

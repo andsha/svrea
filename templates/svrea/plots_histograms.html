@@ -182,7 +182,7 @@ function newHist() {
             input_year.value = '{{defHistInfo.period_year}}'
         h5.appendChild(input_year)
 
-        h5.appendChild(document.createTextNode('  Property Type: '));
+        h5.appendChild(document.createTextNode(' Type: '));
 
             property_type = document.createElement('select');
             property_type.name = "property_type_" + e;
@@ -194,6 +194,19 @@ function newHist() {
                 option1.text = 'Sold'
                 property_type.add(option1)
         h5.appendChild(property_type)
+
+        h5.appendChild(document.createTextNode(' Property: '));
+
+            property = document.createElement('select');
+            property.name = "property_" + e;
+            //property.id = "property_" + e;
+                option0 = document.createElement('option');
+                option0.text = 'Villa'
+                property.add(option0)
+                option1 = document.createElement('option');
+                option1.text = 'Lägenhet'
+                property.add(option1)
+        h5.appendChild(property)
 
         h5.appendChild(document.createTextNode('  Region: '));
             area_select = document.createElement('select')
@@ -338,10 +351,15 @@ function clearHistText(){
                                     <input type="month"id="period_month_{{forloop.counter0}}"    name="period_month_{{forloop.counter0}}" {% if hist.period_type != "Month"%} style="display:none" {%endif%} value="{{hist.period_month}}">
                                     <input type="text" id="period_quarter_{{forloop.counter0}}"     name="period_quarter_{{forloop.counter0}}"  {% if hist.period_type != "Quarter"%}  style="display:none" {%endif%} value="{{hist.period_quarter}}">
                                     <input type="year" id="period_year_{{forloop.counter0}}"     name="period_year_{{forloop.counter0}}"  {% if hist.period_type != "Year"%}  style="display:none" {%endif%} value="{{hist.period_year}}">
-                                    Property Type:
+                                    Type:
                                     <select name="property_type_{{forloop.counter0}}">
                                         <option {% if hist.property_type == "Active" %} selected {% endif%}>Active</option>
                                         <option {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
+                                    </select>
+                                    Property:
+                                    <select name="property_{{forloop.counter0}}">
+                                        <option {% if hist.property == "Villa" %} selected {% endif%}>Villa</option>
+                                        <option {% if hist.property == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
                                     </select>
                                     Region:
                                     <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
