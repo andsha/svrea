@@ -945,7 +945,7 @@ def plots_timeseries(request):
 
             qqs = qqs.order_by('record_firstdate')
             ts_data[0].append('%s, %s, %s, %s' % (county, ts['p_type'], ts['ts_type'], data_type))
-            #print(ts_data)
+            #print(qqs)
 
             #print('PRINT', len(qqs), len(ts_data))
             for idx in range (0,len(qqs)):
