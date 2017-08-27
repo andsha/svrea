@@ -620,7 +620,7 @@ class Svrea_script():
         for gtype in geographic_types:
             #for ptype in property_types:
             listing = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country', 'propertytype')\
-                .filter(Q(propertytype = 'Villa') | Q(propertytype = 'Lägenhet'))\
+                .filter(propertytype__in = property_types)\
                 .filter(Q(datepublished__date__lt=dayTo) & (Q(dateinactive__isnull=True) | Q(dateinactive__date__gte=dayFrom))) \
                 .annotate(listing_counts=Count('booliid'),
                           listing_price_avg = Avg('latestprice'),
@@ -643,7 +643,7 @@ class Svrea_script():
 
             sold = Listings.objects.values('address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country', 'propertytype') \
                 .filter(Q(datesold__date__lt = dayTo) & Q(datesold__date__gte = dayFrom)) \
-                .filter(Q(propertytype='Villa') | Q(propertytype='Lägenhet')) \
+                .filter(propertytype__in = property_types) \
                 .annotate(sold_year = Extract_date('datesold', dtype = 'year'))\
                 .annotate(sold_counts=Count('booliid'),
                           sold_price_avg=Avg('latestprice'),
