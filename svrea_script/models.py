@@ -18,7 +18,7 @@ class Info(models.Model):
 class Log(models.Model):
     when = models.DateTimeField(auto_now=True)
     level = models.CharField(max_length=20)
-    entry = models.CharField(max_length=500, default="None")
+    entry = models.CharField(max_length=2000, default="None")
 
 
 class Rawdata(models.Model):
