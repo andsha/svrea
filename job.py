@@ -48,7 +48,8 @@ def job():
         params = {'analyze': True,
                   'etlRange': '%s:%s' %(weekago.strftime('%Y-%m-%d'),
                                         yesterday.strftime('%Y-%m-%d')),
-                  'etlPeriodType': p
+                  'etlPeriodType': p,
+                  'numThreads' : '4'
                   }
         script = Svrea_script(params=params, username=uname)
         try:

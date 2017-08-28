@@ -577,8 +577,6 @@ class Svrea_script():
                 thread = ETLThread(s, dayFrom, dayTo, self.options['etlPeriodType'], True)
                 #tolog(INFO, 'thread:%s' %thread)
                 thread.start()
-
-                #thread.join()
                 #tolog(INFO, 'thread')
                 self.threadPool.add(thread)
 
@@ -691,16 +689,13 @@ class ETLThread(threading.Thread):
                     'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country',
                     'propertytype') \
                     .filter(propertytype__in=property_types)
-                #tolog(INFO, "LEN:%s" %len(qset))
+                #tolog(INFO, '1')
                 if self.ptype =='listings':
                     qset = qset.filter(Q(datepublished__date__lt=self.dayTo) & (Q(dateinactive__isnull=True) | Q(dateinactive__date__gte=self.dayFrom)))
                 else: # ptype == 'sold'
                     qset = qset.filter(Q(datesold__date__lt=self.dayTo) & Q(datesold__date__gte=self.dayFrom))
-                #tolog(INFO, 'line 694')
-                qset = qset.annotate(sold_year=Extract_date('datesold', dtype='year')) \
-                        .annotate(datesold_sec=Extract_date('datesold', dtype='epoch')) \
-                        .annotate(datepublished_sec=Extract_date('datepublished', dtype='epoch')) \
-                        .annotate(p_counts=Count('booliid'),
+                #tolog(INFO, '2')
+                qset = qset.annotate(p_counts=Count('booliid'),
                               p_price_avg=Avg('latestprice'),
                               p_price_med=Percentile(expression='latestprice', percentiles=0.5),
                               # listing_price_85=Percentile(expression='latestprice', percentiles=0.85),
@@ -721,21 +716,23 @@ class ETLThread(threading.Thread):
                               # listing_rent_15=Percentile(expression='rent', percentiles=.15),
                               # listing_rent_85=Percentile(expression='rent', percentiles=.85),
                               )
+                #tolog(INFO, '3')
                 if self.ptype == 'sold':
                     qset = qset.annotate(
-                              p_daysbeforesold_avg=Avg((F('datesold_sec') - F('datepublished_sec'))/(3600*24), output_field=FloatField()),
+                              p_daysbeforesold_avg=Avg((Extract_date('datesold', dtype='epoch') - Extract_date('datepublished', dtype='epoch'))/(3600*24), output_field=FloatField()),
                               #p_propertyage_avg = Avg((F('datesold_sec') - F('datepublished_sec'))/(3600*24), output_field=FloatField())
                               p_propertyage_avg = Avg(Case(
                                   When(
                                       Q(constructionyear__isnull = False) & Q(constructionyear__gt = 1800) & Q(constructionyear__lt = 2100),
-                                      then = F('sold_year') - F('constructionyear')),
+                                      then = Extract_date('datesold', dtype='year') - F('constructionyear')),
                                   default=None,
                                   output_field=FloatField()
                               ), output_field=FloatField())
                               )
 
-                #tolog(INFO, "QSET: %s" %len(qset))
-                for q in qset:
+                #tolog(INFO, '3')
+                for idx, q in enumerate(qset):
+                    #tolog(INFO, 'idx %s 1' %idx)
                     etllistings = EtlListingsDaily.objects
                     if self.etlPeriodType == 'Weekly':
                         etllistings = EtlListingsWeekly.objects
@@ -746,32 +743,38 @@ class ETLThread(threading.Thread):
                     elif self.etlPeriodType == 'Yearly':
                         etllistings = EtlListingsYearly.objects
 
+                    #tolog(INFO, 'idx %s 2' % idx)
+
                     d= dict(zip(
                             self.listings_fields if self.ptype == 'listings' else self.sold_fields,
                             [q[i] for i in (self.query_lfields if self.ptype == 'listings' else self.query_sfields)]
                             ))
-                    #tolog(INFO, d)
+                    gname = q[
+                            'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country']
+
+                    #tolog(INFO, 'idx %s 3 %s' % (idx, q))
 
                     (etlquery, created) = etllistings.update_or_create(
                         record_firstdate=self.dayFrom,
                         geographic_type=gtype,
-                        geographic_name=q[
-                            'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
+                        geographic_name=gname,
                         property_type=q['propertytype'],
                         defaults=d
                         )
-
+                    #tolog(INFO, 'idx %s 4' % idx)
                     if self.etlPeriodType == 'Weekly':
                         etlquery.weekofyear = self.dayFrom.isocalendar()[1]
                     elif self.etlPeriodType == 'Monthly':
                         etlquery.monthofyear = self.dayFrom.month
                     elif self.etlPeriodType == 'Quarterly':
                         etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
-                        etlquery.save()
+                    etlquery.save()
+                    #tolog(INFO, 'idx %s 5' % idx)
+
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:300]))
                 self.err+=1
-
+        #tolog(INFO, '4')
         etls = EtlListingsDaily.objects
         if self.etlPeriodType == 'Weekly':
             etls = EtlListingsWeekly.objects
@@ -781,9 +784,11 @@ class ETLThread(threading.Thread):
             etls = EtlListingsQuarterly.objects
         elif self.etlPeriodType == 'Yearly':
             etls = EtlListingsYearly.objects
-
+        #tolog(INFO, '5')
         etls.filter(record_firstdate__date=self.dayFrom, active_listings__isnull=True).update(active_listings=0)
+        #tolog(INFO, '6')
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
+        #tolog(INFO, '7')
         return 0
 
 
