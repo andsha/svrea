@@ -120,7 +120,8 @@
                             <option value="Monthly" {% if etlperiodtype == 'Monthly'%} selected {% endif%}>Monthly</option>
                             <option value="Quarterly" {% if etlperiodtype == 'Quarterly'%} selected {% endif%}>Quarterly</option>
                             <option value="Yearly" {% if etlperiodtype == 'Yearly'%} selected {% endif%}>Yearly</option>
-                        </select>
+                        </select></br>
+                        Number Threads <input type="text" id="numThreads" name="numThreads" value="4"><br>
                         <div class="btns"><button type="submit" name="analyze" value="analyze">Do ETL</button></div>
                     </div>
                 </div>

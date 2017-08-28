@@ -77,10 +77,12 @@ def script_run(request):
     elif request.POST.get('analyze'):
         q = Queue(connection=conn)
         etlperiodtype = request.POST.get('etlperiodtype')
+        numThreads = request.POST.get('numThreads')
         params = {'analyze' : True,
                   'forced' : True,
                   'etlRange' : "%s:%s" %(request.POST.get('etlFromDate'), request.POST.get('etlToDate')),
-                  'etlPeriodType' : etlperiodtype
+                  'etlPeriodType' : etlperiodtype,
+                  'numThreads' : numThreads
                   }
         script = Svrea_script(params=params, username=request.user.username)
 
