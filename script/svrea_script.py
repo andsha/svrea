@@ -793,6 +793,7 @@ class ETLThread(threading.Thread):
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
+                tolog(ERROR, '%s' %q)
                 self.err+=1
         #tolog(INFO, '4')
         etls = EtlListingsDaily.objects
