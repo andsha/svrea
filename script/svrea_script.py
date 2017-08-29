@@ -609,6 +609,26 @@ class Svrea_script():
 
             dayFrom = dayTo
 
+        while len(self.threadPool) > 0:
+            if Aux.objects.get(key='AnalyzeAuxKey').value != 'run':
+                for th in self.threadPool:
+                    th.run = False
+                    while not th.is_alive():
+                        time.sleep(0.1)
+                info.status = 'stopped'
+                info.save()
+                tolog(ERROR, 'script %s %s was stopped by %s' % (info.id, info.config, self.username))
+                return 1
+
+            for th in self.threadPool.copy():
+                if not th.is_alive():
+                    if th.err != 0:
+                        tolog(ERROR, '%s errors when analyzing %s %s for %s ' % (
+                        th.err, th.etlPeriodType, th.ptype, th.dayFrom))
+                    self.threadPool.discard(th)
+
+            time.sleep(1)
+
         info.status = 'done'
         info.save()
         tolog(INFO, 'Analysis completed')
