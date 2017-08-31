@@ -13,6 +13,7 @@ import re
 import threading
 import traceback
 
+from django.db import transaction
 from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper, IntegerField, FloatField, Value
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
@@ -774,21 +775,22 @@ class ETLThread(threading.Thread):
 
                     #tolog(INFO, 'idx %s 3 %s' % (idx, q))
 
-                    (etlquery, created) = etllistings.update_or_create(
-                        record_firstdate=self.dayFrom,
-                        geographic_type=gtype,
-                        geographic_name=gname,
-                        property_type=q['propertytype'],
-                        defaults=d
-                        )
-                    #tolog(INFO, 'idx %s 4' % idx)
-                    if self.etlPeriodType == 'Weekly':
-                        etlquery.weekofyear = self.dayFrom.isocalendar()[1]
-                    elif self.etlPeriodType == 'Monthly':
-                        etlquery.monthofyear = self.dayFrom.month
-                    elif self.etlPeriodType == 'Quarterly':
-                        etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
-                    etlquery.save()
+                    with transaction.atomic():
+                        (etlquery, created) = etllistings.update_or_create(
+                            record_firstdate=self.dayFrom,
+                            geographic_type=gtype,
+                            geographic_name=gname,
+                            property_type=q['propertytype'],
+                            defaults=d
+                            )
+                        #tolog(INFO, 'idx %s 4' % idx)
+                        if self.etlPeriodType == 'Weekly':
+                            etlquery.weekofyear = self.dayFrom.isocalendar()[1]
+                        elif self.etlPeriodType == 'Monthly':
+                            etlquery.monthofyear = self.dayFrom.month
+                        elif self.etlPeriodType == 'Quarterly':
+                            etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
+                        etlquery.save()
                     #tolog(INFO, 'idx %s 5' % idx)
 
             except Exception as e:
