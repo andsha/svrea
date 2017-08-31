@@ -776,7 +776,7 @@ class ETLThread(threading.Thread):
                     #tolog(INFO, 'idx %s 3 %s' % (idx, q))
 
                     with connection.cursor() as cursor:
-                        cursor.execute("LOCK TABLE %s IN ACCESS EXCLUSIVE MODE" %etllistings._meta.db_table)
+                        cursor.execute("LOCK TABLE %s IN ACCESS EXCLUSIVE MODE" %etllistings.model._meta.db_table)
                         (etlquery, created) = etllistings.update_or_create(
                             record_firstdate=self.dayFrom,
                             geographic_type=gtype,
