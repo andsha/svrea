@@ -13,7 +13,7 @@ import re
 import threading
 import traceback
 
-from django.db import connection
+from django.db import connection, transaction
 from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper, IntegerField, FloatField, Value
 from django.db.models.functions import Coalesce
 from svrea_script.models import Info, Log, Rawdata, Aux, Listings, Source, Address, Pricehistory
@@ -775,24 +775,25 @@ class ETLThread(threading.Thread):
 
                     #tolog(INFO, 'idx %s 3 %s' % (idx, q))
 
-                    with connection.cursor() as cursor:
-                        cursor.execute("LOCK TABLE %s IN ACCESS EXCLUSIVE MODE" %etllistings.model._meta.db_table)
-                        (etlquery, created) = etllistings.update_or_create(
-                            record_firstdate=self.dayFrom,
-                            geographic_type=gtype,
-                            geographic_name=gname,
-                            property_type=q['propertytype'],
-                            defaults=d
-                            )
-                        #tolog(INFO, 'idx %s 4' % idx)
-                        if self.etlPeriodType == 'Weekly':
-                            etlquery.weekofyear = self.dayFrom.isocalendar()[1]
-                        elif self.etlPeriodType == 'Monthly':
-                            etlquery.monthofyear = self.dayFrom.month
-                        elif self.etlPeriodType == 'Quarterly':
-                            etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
-                        etlquery.save()
-                        #tolog(INFO, 'idx %s 5' % idx)
+                    with transaction.atomic():
+                        with connection.cursor() as cursor:
+                            cursor.execute("LOCK TABLE %s IN ACCESS EXCLUSIVE MODE" %etllistings.model._meta.db_table)
+                            (etlquery, created) = etllistings.update_or_create(
+                                record_firstdate=self.dayFrom,
+                                geographic_type=gtype,
+                                geographic_name=gname,
+                                property_type=q['propertytype'],
+                                defaults=d
+                                )
+                            #tolog(INFO, 'idx %s 4' % idx)
+                            if self.etlPeriodType == 'Weekly':
+                                etlquery.weekofyear = self.dayFrom.isocalendar()[1]
+                            elif self.etlPeriodType == 'Monthly':
+                                etlquery.monthofyear = self.dayFrom.month
+                            elif self.etlPeriodType == 'Quarterly':
+                                etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
+                            etlquery.save()
+                            #tolog(INFO, 'idx %s 5' % idx)
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
