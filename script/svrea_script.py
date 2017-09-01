@@ -698,6 +698,7 @@ class ETLThread(threading.Thread):
         tm = datetime.datetime.now()
         times = {"querying listings" : {"county":0.0,"municipality":0.0,"country":0.0},
                  "insertion to ETL" : {"county":0.0,"municipality":0.0,"country":0.0},
+                 "insertion to ETL count" : {"county":0.0,"municipality":0.0,"country":0.0}
                  "overall time":0.0,
                  } #
 
@@ -754,7 +755,7 @@ class ETLThread(threading.Thread):
                               ), output_field=FloatField())
                               )
 
-                times["querying listings"][gtype] = (times["querying listings"][gtype] * idy + (datetime.datetime.now() - tm1).seconds)/(idy+1)
+                times["querying listings"][gtype] = (times["querying listings"][gtype] * idy + (datetime.datetime.now() - tm1).microseconds/1000000.0)/(idy+1)
                 #tolog(WARNING,"%s %s %s" %((datetime.datetime.now() - tm1).microseconds/1000000.0, tm1, datetime.datetime.now()))
                 tolog(WARNING, times)
 
@@ -794,8 +795,8 @@ class ETLThread(threading.Thread):
                             etlquery.save()
                     times["insertion to ETL"][gtype] = (times["insertion to ETL"][gtype] * idx + (
                     datetime.datetime.now() - tm2).microseconds/1000000.0) / (idx + 1)
-                    #tolog(WARNING, "%s %s" %(tm2,
-                     #                        (datetime.datetime.now() - tm2).microseconds/1000000.0))
+                    tolog(WARNING, idx)
+                times["insertion to ETL count"][gtype] = idx
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
