@@ -698,7 +698,7 @@ class ETLThread(threading.Thread):
         tm = datetime.datetime.now()
         times = {"querying listings" : {"county":0.0,"municipality":0.0,"country":0.0},
                  "insertion to ETL" : {"county":0.0,"municipality":0.0,"country":0.0},
-                 "insertion to ETL count" : {"county":0.0,"municipality":0.0,"country":0.0}
+                 "insertion to ETL count" : {"county":0.0,"municipality":0.0,"country":0.0},
                  "overall time":0.0,
                  } #
 
