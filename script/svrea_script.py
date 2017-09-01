@@ -696,9 +696,9 @@ class ETLThread(threading.Thread):
 
     def run(self):
         tm = datetime.datetime.now()
-        times = {"querying listings" : {"county":0,"municipality":0,"country":0},
-                 "insertion to ETL" : {"county":0,"municipality":0,"country":0},
-                 "overall time":0,
+        times = {"querying listings" : {"county":0.0,"municipality":0.0,"country":0.0},
+                 "insertion to ETL" : {"county":0.0,"municipality":0.0,"country":0.0},
+                 "overall time":0.0,
                  } #
 
         geographic_types = ['county', 'municipality', 'country']
@@ -755,6 +755,7 @@ class ETLThread(threading.Thread):
                               )
 
                 times["querying listings"][gtype] = (times["querying listings"][gtype] * idy + (datetime.datetime.now() - tm1).seconds)/(idy+1)
+                tolog(WARNING,(datetime.datetime.now() - tm1).seconds)
                 tolog(WARNING, times)
 
                 for idx, q in enumerate(qset):
@@ -816,6 +817,7 @@ class ETLThread(threading.Thread):
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
 
         tolog(WARNING, "overall %s" %(datetime.datetime.now() - tm).seconds)
+        tolog(WARNING, times)
         return 0
 
 
