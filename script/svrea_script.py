@@ -791,8 +791,8 @@ class ETLThread(threading.Thread):
                             elif self.etlPeriodType == 'Quarterly':
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
-                    times["insertion to ETL"][gtype] = (times["querying listings"][gtype] * idy + (
-                    datetime.datetime.now() - tm2).seconds) / (idy + 1)
+                    times["insertion to ETL"][gtype] = (times["querying listings"][gtype] * idx + (
+                    datetime.datetime.now() - tm2).seconds) / (idx + 1)
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
@@ -814,7 +814,7 @@ class ETLThread(threading.Thread):
         etls.filter(record_firstdate__date=self.dayFrom, active_listings__isnull=True).update(active_listings=0)
         #tolog(INFO, '6')
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
-        
+
         tolog(WARNING, "overall %s" %(datetime.datetime.now() - tm).seconds)
         return 0
 
