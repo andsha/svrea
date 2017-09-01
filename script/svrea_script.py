@@ -787,7 +787,7 @@ class ETLThread(threading.Thread):
                             elif self.etlPeriodType == 'Quarterly':
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
-                    
+
                     tolog(INFO, "End transaction %s" % (datetime.datetime.now() - tm))
 
                 tolog(INFO, "After insertion to ETL %s" % (datetime.datetime.now() - tm))
