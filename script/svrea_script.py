@@ -792,7 +792,7 @@ class ETLThread(threading.Thread):
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
                     time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
-                tolog(WARNING, "%s ETL time %s. Overall %s time %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3)))
+                tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
 
 
             except Exception as e:
@@ -815,7 +815,7 @@ class ETLThread(threading.Thread):
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
 
         tolog(WARNING,"insert %s" %((datetime.datetime.now() - tm2).microseconds/1000000.0))
-        tolog(WARNING, "All %s" %((datetime.datetime.now() - tm).microseconds/1000000.0))
+        tolog(WARNING, "All %s" %(datetime.datetime.now() - tm))
         return 0
 
 
