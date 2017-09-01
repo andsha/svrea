@@ -695,10 +695,10 @@ class ETLThread(threading.Thread):
 
 
     def run(self):
-        tm = datetime.datetime.now()
-        time1 = []
-        time2 = []
-        time3 = []
+        #tm = datetime.datetime.now()
+        #time1 = []
+        #time2 = []
+        #time3 = []
 
 
         geographic_types = ['county', 'municipality', 'country']
@@ -708,8 +708,8 @@ class ETLThread(threading.Thread):
             if not self.trun:
                 return 0
             try:
-                tm1 = datetime.datetime.now()
-                time1 = []
+                #tm1 = datetime.datetime.now()
+                #time1 = []
                 qset = Listings.objects.values(
                     'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country',
                     'propertytype') \
@@ -755,10 +755,10 @@ class ETLThread(threading.Thread):
                               ), output_field=FloatField())
                               )
 
-                tolog(WARNING, "%s query time %s " %(gtype, (datetime.datetime.now() - tm1).microseconds/1000000.0))
-                time3 = []
+                #tolog(WARNING, "%s query time %s " %(gtype, (datetime.datetime.now() - tm1).microseconds/1000000.0))
+                #time3 = []
                 for idx, q in enumerate(qset):
-                    tm3 = datetime.datetime.now()
+                    #tm3 = datetime.datetime.now()
                     etllistings = EtlListingsDaily.objects
                     if self.etlPeriodType == 'Weekly':
                         etllistings = EtlListingsWeekly.objects
@@ -791,15 +791,15 @@ class ETLThread(threading.Thread):
                             elif self.etlPeriodType == 'Quarterly':
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
-                    time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
-                tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
+                    #time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
+                #tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
 
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
                 tolog(ERROR, '%s' %q)
                 self.err+=1
-        tm2 = datetime.datetime.now()
+        #tm2 = datetime.datetime.now()
 
         etls = EtlListingsDaily.objects
         if self.etlPeriodType == 'Weekly':
@@ -814,8 +814,8 @@ class ETLThread(threading.Thread):
         etls.filter(record_firstdate__date=self.dayFrom, active_listings__isnull=True).update(active_listings=0)
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
 
-        tolog(WARNING,"insert %s" %((datetime.datetime.now() - tm2).microseconds/1000000.0))
-        tolog(WARNING, "All %s" %(datetime.datetime.now() - tm))
+        #tolog(WARNING,"insert %s" %((datetime.datetime.now() - tm2).microseconds/1000000.0))
+        #tolog(WARNING, "All %s" %(datetime.datetime.now() - tm))
         return 0
 
 
