@@ -755,7 +755,7 @@ class ETLThread(threading.Thread):
                               )
 
                 times["querying listings"][gtype] = (times["querying listings"][gtype] * idy + (datetime.datetime.now() - tm1).seconds)/(idy+1)
-                tolog(WARNING,"%s %s %s" %((datetime.datetime.now() - tm1).seconds, tm1, datetime.datetime.now()))
+                #tolog(WARNING,"%s %s %s" %((datetime.datetime.now() - tm1).microseconds/1000000.0, tm1, datetime.datetime.now()))
                 tolog(WARNING, times)
 
                 for idx, q in enumerate(qset):
@@ -793,16 +793,16 @@ class ETLThread(threading.Thread):
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
                     times["insertion to ETL"][gtype] = (times["insertion to ETL"][gtype] * idx + (
-                    datetime.datetime.now() - tm2).seconds) / (idx + 1)
-                    tolog(WARNING, "%s %s" %(tm2, (
-                    datetime.datetime.now() - tm2).seconds))
+                    datetime.datetime.now() - tm2).microseconds/1000000.0) / (idx + 1)
+                    #tolog(WARNING, "%s %s" %(tm2,
+                     #                        (datetime.datetime.now() - tm2).microseconds/1000000.0))
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
                 tolog(ERROR, '%s' %q)
                 self.err+=1
 
-        tolog(WARNING, "end of insertion %s" %(datetime.datetime.now() - tm).seconds)
+        tolog(WARNING, "end of insertion %s" %((datetime.datetime.now() - tm).microseconds/1000000.0))
 
         etls = EtlListingsDaily.objects
         if self.etlPeriodType == 'Weekly':
@@ -818,7 +818,7 @@ class ETLThread(threading.Thread):
         #tolog(INFO, '6')
         etls.filter(record_firstdate__date=self.dayFrom, sold_today__isnull=True).update(sold_today=0)
 
-        tolog(WARNING, "overall %s" %(datetime.datetime.now() - tm).seconds)
+        tolog(WARNING, "overall %s" %((datetime.datetime.now() - tm).seconds/1000000.0))
         tolog(WARNING, times)
         return 0
 
