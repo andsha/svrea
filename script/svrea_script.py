@@ -755,7 +755,7 @@ class ETLThread(threading.Thread):
                               )
 
                 times["querying listings"][gtype] = (times["querying listings"][gtype] * idy + (datetime.datetime.now() - tm1).seconds)/(idy+1)
-                tolog(WARNING,"%s %s %s" %((datetime.datetime.now() - tm1).seconds), tm1, datetime.datetime.now())
+                tolog(WARNING,"%s %s %s" %((datetime.datetime.now() - tm1).seconds, tm1, datetime.datetime.now()))
                 tolog(WARNING, times)
 
                 for idx, q in enumerate(qset):
