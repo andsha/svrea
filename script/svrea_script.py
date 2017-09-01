@@ -695,17 +695,16 @@ class ETLThread(threading.Thread):
 
 
     def run(self):
+        tm = datetime.datetime.now()
 
         geographic_types = ['county', 'municipality', 'country']
         property_types = ['Villa', 'Lägenhet']
-        # logging.info('bebebe')
 
         for gtype in geographic_types:
             if not self.trun:
                 return 0
-            #tolog(INFO, gtype)
             try:
-
+                tolog(INFO, "For %s %s" %(gtype, datetime.datetime.now()-tm))
                 qset = Listings.objects.values(
                     'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country',
                     'propertytype') \
@@ -751,7 +750,7 @@ class ETLThread(threading.Thread):
                               ), output_field=FloatField())
                               )
 
-                #tolog(INFO, '3')
+                tolog(INFO, "Before insertion to ETL %s" % (datetime.datetime.now() - tm))
                 for idx, q in enumerate(qset):
                     #tolog(INFO, 'idx %s 1' %idx)
                     etllistings = EtlListingsDaily.objects
@@ -764,16 +763,7 @@ class ETLThread(threading.Thread):
                     elif self.etlPeriodType == 'Yearly':
                         etllistings = EtlListingsYearly.objects
 
-                    #tolog(INFO, 'idx %s 2' % idx)
-
-                    d= dict(zip(
-                            self.listings_fields if self.ptype == 'listings' else self.sold_fields,
-                            [q[i] for i in (self.query_lfields if self.ptype == 'listings' else self.query_sfields)]
-                            ))
-                    gname = q[
-                            'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country']
-
-                    #tolog(INFO, 'idx %s 3 %s' % (idx, q))
+                    tolog(INFO, "Begin transaction for %s %s" % (idx, datetime.datetime.now() - tm))
 
                     with transaction.atomic():
                         with connection.cursor() as cursor:
@@ -781,9 +771,13 @@ class ETLThread(threading.Thread):
                             (etlquery, created) = etllistings.update_or_create(
                                 record_firstdate=self.dayFrom,
                                 geographic_type=gtype,
-                                geographic_name=gname,
+                                geographic_name=q[
+                            'address__county' if gtype == 'county' else 'address__municipality' if gtype == 'municipality' else 'address__country'],
                                 property_type=q['propertytype'],
-                                defaults=d
+                                defaults=dict(zip(
+                            self.listings_fields if self.ptype == 'listings' else self.sold_fields,
+                            [q[i] for i in (self.query_lfields if self.ptype == 'listings' else self.query_sfields)]
+                            ))
                                 )
                             #tolog(INFO, 'idx %s 4' % idx)
                             if self.etlPeriodType == 'Weekly':
@@ -793,7 +787,10 @@ class ETLThread(threading.Thread):
                             elif self.etlPeriodType == 'Quarterly':
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
                             etlquery.save()
-                            #tolog(INFO, 'idx %s 5' % idx)
+                    
+                    tolog(INFO, "End transaction %s" % (datetime.datetime.now() - tm))
+
+                tolog(INFO, "After insertion to ETL %s" % (datetime.datetime.now() - tm))
 
             except Exception as e:
                 tolog(ERROR, 'Error while analysing %s %s for %s: %s\n %s' %(self.etlPeriodType, self.ptype, self.dayFrom, e, traceback.format_exc()[:2800]))
