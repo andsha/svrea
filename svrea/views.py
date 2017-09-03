@@ -489,7 +489,7 @@ def maps_listings(request):
                                                                          'latitude',
                                                                          'longitude',
                                                                          'propertytype'
-                                                                         )[:1000]  # , booliid__exact = '2162349')
+                                                                         )#[:1000]  # , booliid__exact = '2162349')
     #print(len(listing_list))
 
     data = []  # ['Lat', 'Long', 'tip', 'type']

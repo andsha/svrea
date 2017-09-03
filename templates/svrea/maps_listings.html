@@ -34,52 +34,59 @@
     <script>
         var map;
         function initMap() {
-          var map = new google.maps.Map(document.getElementById('map'), {
+            var map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 63.210463, lng:  14.256282},
                 zoom: 5,
-                maxZoom:12,
-                minZoom: 5,
                 scaleControl: true
-          });
-         markers = {{ data | safe }}
+            });
+            markers = {{ data | safe }}
 
-         var info = new google.maps.InfoWindow()
-         icourl = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/16/'
-         ico_lag = icourl + 'Map-Marker-Marker-Outside-Pink-icon.png';
-         ico_vil = icourl + 'Map-Marker-Marker-Outside-Chartreuse-icon.png';
-         ico_def = icourl + 'Map-Marker-Marker-Outside-Azure-icon.png'
+            var info = new google.maps.InfoWindow()
+            icourl = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/16/'
+            ico_lag = icourl + 'Map-Marker-Marker-Outside-Pink-icon.png';
+            ico_vil = icourl + 'Map-Marker-Marker-Outside-Chartreuse-icon.png';
+            ico_def = icourl + 'Map-Marker-Marker-Outside-Azure-icon.png'
 
-         for (i = 0; i < markers.length; i ++){
-          switch(markers[i][3]){
-              case "lagenhet":
-                  ico = ico_lag;
-                  break;
-              case "villa":
-                  ico = ico_vil;
-                  break;
-              default:
-                  ico = ico_def;
-          }
+            var mlist = []
 
-         var marker = new google.maps.Marker({
-          position: {lat: markers[i][0], lng: markers[i][1]},
-          map : map,
-          title : markers[i][2],
-          icon : ico
-          });
+            for (i = 0; i < markers.length; i ++){
+                switch(markers[i][3]){
+                    case "lagenhet":
+                        ico = ico_lag;
+                        break;
+                    case "villa":
+                        ico = ico_vil;
+                        break;
+                    default:
+                        ico = ico_def;
+                }
 
-          marker.addListener('click', (function(marker, i) {
-          return function() {
-            info.setContent(marker.title);
-            info.open(map, marker);
-              }
-              })(marker, i));
-          }
+                var marker = new google.maps.Marker({
+                    position: {lat: markers[i][0], lng: markers[i][1]},
+                    map : map,
+                    title : markers[i][2],
+                    icon : ico
+                });
 
+                marker.addListener('click', (function(marker, i) {
+                    return function() {
+                    info.setContent(marker.title);
+                    info.open(map, marker);
+                    }
+                 })(marker, i));
+
+                mlist.push(marker)
+            }
+
+            var markerCluster = new MarkerClusterer(map,mlist,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
+                                                              maxZoom:13
+                                                              })
         }
 
         </script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnIE9wJPz5n13I1vcB02dx9mM2tcKNJ6A&callback=initMap"
-        async defer></script></body>
+        <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnIE9wJPz5n13I1vcB02dx9mM2tcKNJ6A&libraries=visualization&callback=initMap">
+    </script>
 
 {% endblock %}
