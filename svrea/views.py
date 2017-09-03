@@ -467,7 +467,6 @@ def maps_density(request):
     return render(request, "svrea/maps_density.html", context=context)
 
 
-@cache_page(60 * 60 * 2) # s * min * hrs
 def maps_listings(request):
 
     if request.POST.get('submit') == 'Log Out':

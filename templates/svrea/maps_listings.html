@@ -1,6 +1,7 @@
 {% extends '../base.html' %}
 {% load humanize %}
 {% load static %}
+{% load cache %}
 
 
 {% block head %}
@@ -26,7 +27,9 @@
     <div class="text-center blue">
         <h4> Map of Properties Currently Available for Sale</h4>
     </div>
+    {% cache 7200 maps_listings  %}
     <div id="map"> </div>
+    {% endcache %}
 
     <script>
         var map;
