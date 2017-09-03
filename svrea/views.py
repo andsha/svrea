@@ -516,11 +516,13 @@ def maps_listings(request):
 
         tip = """%s<br/>
                 %s m<sup>2</sup>, %s</br>
+                %s SEK</br>
                 %s
 
         """ % (l['propertytype'],
-               l['latestprice'],
-               ("%s floor" %l['floor']) if l['floor'] is not None else "",
+               l['livingarea'],
+               "1st floor" if l['floor'] == '1' else "2dn floor" if l['floor']=='2' else "3rd floor" if l['floor'] == '3' else ("%sth floor" %l['floor']) if l['floor'] is not None else "",
+               format(l['latestprice'], ',d') if l['latestprice'] is not None else "",
                saddress)
 
         data.append([float(l['latitude']),

@@ -39,7 +39,7 @@
                 zoom: 5,
                 scaleControl: true
             });
-            markers = {{ data | safe }}
+            markers = {{ data | safe | intcomma }}
 
             var info = new google.maps.InfoWindow()
             icourl = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/'
@@ -79,7 +79,7 @@
             }
 
             var markerCluster = new MarkerClusterer(map,mlist,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
-                                                              maxZoom:13,
+                                                              maxZoom:12,
                                                               zoomOnClick: 0
                                                               })
         }
