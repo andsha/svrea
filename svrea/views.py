@@ -480,7 +480,7 @@ def maps_listings(request):
             login(request, user)
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
-    # ***************** only 500 results are displayed! *************************
+    # ***************** only 5000 results are displayed! *************************
     listing_list = Listings.objects.filter(isactive='True').values('address__street',
                                                                          'address__house',
                                                                          'address__city',
@@ -489,7 +489,7 @@ def maps_listings(request):
                                                                          'latitude',
                                                                          'longitude',
                                                                          'propertytype'
-                                                                         )#[:1000]  # , booliid__exact = '2162349')
+                                                                         )[:5000]  # , booliid__exact = '2162349')
     #print(len(listing_list))
 
     data = []  # ['Lat', 'Long', 'tip', 'type']
