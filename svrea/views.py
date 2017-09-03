@@ -482,7 +482,7 @@ def maps_listings(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
-    listing_list = Listings.objects.all().filter(isactive='True').values('address__street',
+    listing_list = Listings.objects.filter(isactive='True').values('address__street',
                                                                          'address__house',
                                                                          'address__city',
                                                                          'address__municipality',
@@ -490,7 +490,7 @@ def maps_listings(request):
                                                                          'latitude',
                                                                          'longitude',
                                                                          'propertytype'
-                                                                         )  # , booliid__exact = '2162349')
+                                                                         )[:1000]  # , booliid__exact = '2162349')
     #print(len(listing_list))
 
     data = []  # ['Lat', 'Long', 'tip', 'type']
