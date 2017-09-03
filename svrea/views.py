@@ -482,14 +482,17 @@ def maps_listings(request):
             messages.error(request, "Please Enter Correct User Name and Password ")
     # ***************** only 5000 results are displayed! *************************
     listing_list = Listings.objects.filter(isactive='True').values('address__street',
-                                                                         'address__house',
-                                                                         'address__city',
-                                                                         'address__municipality',
-                                                                         'address__county',
-                                                                         'latitude',
-                                                                         'longitude',
-                                                                         'propertytype'
-                                                                         )[:5000]  # , booliid__exact = '2162349')
+                                                                   'address__house',
+                                                                   'address__city',
+                                                                   'address__municipality',
+                                                                   'address__county',
+                                                                   'latitude',
+                                                                   'longitude',
+                                                                   'propertytype',
+                                                                   'latestprice',
+                                                                   'livingarea',
+                                                                   'floor'
+                                                                         )[:2000]  # , booliid__exact = '2162349')
     #print(len(listing_list))
 
     data = []  # ['Lat', 'Long', 'tip', 'type']
@@ -511,7 +514,14 @@ def maps_listings(request):
         if l['propertytype'] == 'Villa':
             marker = 'villa'
 
-        tip = """%s<br/>%s""" % (l['propertytype'],saddress)
+        tip = """%s<br/>
+                %s m<sup>2</sup>, %s</br>
+                %s
+
+        """ % (l['propertytype'],
+               l['latestprice'],
+               ("%s floor" %l['floor']) if l['floor'] is not None else "",
+               saddress)
 
         data.append([float(l['latitude']),
                      float(l['longitude']),
