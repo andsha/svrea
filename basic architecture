@@ -1,0 +1,39 @@
+web app www.svrea.se is dedicated to fetching, and analysing past as well as current situation on the Swedish real
+estate market.
+
+Below described basic workflow and used components of the application:
+
+Every day at 2.30am UTC a worker process (Redis/RQ) on the website (hosting Heroku) executes following procedures:
+  1. Download available/sold properties in Sweden from booli.com (available in open source for non-commercial purposes)
+  in text format
+  3. Upload downloaded data into PostgreSQL using help of Django Models
+  4. Perform ETL analysis to calculate several aggregated metrics (e.g. number of properties, their prices, areas, prices
+  per area, age, and days past before they had been sold) for current (past) day, week, month, quarter, and year. This
+  procedure also uses Django Models to access and upload data as well as generate queries.
+
+The above procedures could also be done manually at any point via some sort of admin panel on the website
+
+At any point users of the website can access aggregated data in form of plots or on the map.
+Website uses google API (charts and maps) for plotting the aggregated data:
+
+POST/GET/HTTP request -> server on Heroku -> Python/Django (receiving and handling request) -> PostgreSQL ->
+-> Python/Django (generating webpage) -> server on Heroku -> Browser
+
+
+Used libraries:
+
+appdirs==1.4.0
+click==6.7
+dj-database-url==0.4.2
+Django==1.10.5
+django-ratelimit==1.0.1
+gunicorn==19.6.0
+numpy==1.12.1
+packaging==16.8
+psycopg2==2.7.1
+pyparsing==2.1.10
+python-dateutil==2.6.1
+redis==2.10.5
+rq==0.7.1
+six==1.10.0
+whitenoise==3.3.0
