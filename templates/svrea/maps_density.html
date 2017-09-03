@@ -64,15 +64,23 @@
                     <option {%if map_type == "sold"%} selected {%endif%} value="sold"> Sold </option>
                     <option {%if map_type == "sold_price"%} selected {%endif%} value="sold_price"> Sold Prices </option>
                     <option {%if map_type == "sold_price_sqm"%} selected {%endif%} value="sold_price_sqm"> Sold Prices per m<sub>2</sub> </option>
+                    <option {%if map_type == "days_before_sold"%} selected {%endif%} value="days_before_sold">Days Before Sold</option>
+                    <option {%if map_type == "sold_property_age"%} selected {%endif%} value="sold_property_age">Sold Property Age</option>
                 </select>
                 for
-                <select name="period_type" id="period_type" onchange="displayPeriodForm()">
-                    <option {%if period_type == "Day"%} selected {%endif%}> Day </option>
-                    <option {%if period_type == "Week"%} selected {%endif%}> Week </option>
-                    <option {%if period_type == "Month"%} selected {%endif%}> Month </option>
-                    <option {%if period_type == "Quarter"%} selected {%endif%}> Quarter </option>
-                    <option {%if period_type == "Year"%} selected {%endif%}> Year </option>
+                <select name="property_type" id="property_type">
+                    <option {%if property_type == "Lägenhet"%} selected {%endif%}>Lägenhet</option>
+                    <option {%if property_type == "Villa"%} selected {%endif%}>Villa</option>
                 </select>
+                on the
+                <select name="period_type" id="period_type" onchange="displayPeriodForm()">
+                    <option {%if period_type == "Day"%} selected {%endif%}>Day</option>
+                    <option {%if period_type == "Week"%} selected {%endif%}>Week</option>
+                    <option {%if period_type == "Month"%} selected {%endif%}>Month</option>
+                    <option {%if period_type == "Quarter"%} selected {%endif%}>Quarter</option>
+                    <option {%if period_type == "Year"%} selected {%endif%}>Year</option>
+                </select>
+                of
                 <input type="date" id="period_day"      name="period_day"   {% if period_type != "Day"%}  style="display:none" {%endif%} value="{{period_day}}">
                 <input type="week" id="period_week"     name="period_week"  {% if period_type != "Week"%}  style="display:none" {%endif%} value="{{period_week}}">
                 <input type="month"id="period_month"    name="period_month" {% if period_type != "Month"%} style="display:none" {%endif%} value="{{period_month}}">

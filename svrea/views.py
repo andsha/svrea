@@ -12,11 +12,12 @@ import json
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db import models, connection
 from django.db.models import Count, Max, F, Sum, Func, Avg, Q, When, Case, Value, DateTimeField, FloatField, ExpressionWrapper
 from django.db.models.functions import Coalesce
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.cache import cache_page
 
 
 from svrea_script.models import Listings, Address, GlobalVars
@@ -49,22 +50,24 @@ def gindex(request):
 
 @ratelimit(key='ip', rate='1/s')
 def index(request):
-    if request.POST.get('submit') == 'Log Out':
-        logout(request)
-        return redirect('index')
-    elif request.POST.get('submit') == 'Log In':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-        else:
-            messages.error(request, "Please Enter Correct User Name and Password ")
-
-    context = {}
-    return render(request, "svrea/index.html", context=context)
-
+    return redirect('maps_listings')
+ #********************** do not delete this code *********************************
+    # if request.POST.get('submit') == 'Log Out':
+    #     logout(request)
+    #     return redirect('index')
+    # elif request.POST.get('submit') == 'Log In':
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     user = authenticate(username=username, password=password)
+    #
+    #     if user is not None:
+    #         login(request, user)
+    #     else:
+    #         messages.error(request, "Please Enter Correct User Name and Password ")
+    #
+    # context = {}
+    # return render(request, "svrea/index.html", context=context)
+#*****************************************************************************
 
 @ratelimit(key='ip', rate='1/s')
 def legal(request):
@@ -304,7 +307,7 @@ def plots_general(request):
 
 #@login_required(redirect_field_name = "", login_url="/")
 #@ratelimit(key='ip', rate='1/s')
-def maps(request):
+def maps_density(request):
 
     if request.POST.get('submit') == 'Log Out':
         logout(request)
@@ -331,6 +334,7 @@ def maps(request):
     map_type = 'listings'
     listingobj = EtlListingsDaily.objects
     map_date = datetime.date.today() - datetime.timedelta(days=1)
+    property_type = 'Lägenhet'
 
     #print('request', request.POST)
     if request.POST.get('period_type'):
@@ -343,7 +347,10 @@ def maps(request):
         period_dayfrom = request.POST.get('period_dayfrom')
         period_dayto = request.POST.get('period_dayto')
         map_type = request.POST.get('map_type')
+        property_type = request.POST.get('property_type')
 
+    if period_type == 'Day':
+        map_date = period_day
     if period_type == 'Week':
         #print(period_week)
         #datefrom = datetime.datetime.strptime(period_week + '-1', "%Y-W%W-%w")
@@ -375,7 +382,13 @@ def maps(request):
 
     #ml = EtlListingsDaily.objects.filter(geographic_type__exact='municipality', record_firstdate__range = (datefrom,dateto)).values('geographic_name')
     #print(period_type, map_date)
-    ml = listingobj.filter(geographic_type__exact='municipality', record_firstdate__date = map_date).values('geographic_name')
+    #print(len(listingobj))
+    #print(period_type, map_date)
+
+    ml = listingobj.filter(geographic_type__exact='municipality',
+                           record_firstdate__date = map_date,
+                           property_type = property_type
+                           ).values('geographic_name')
 
 
     if map_type == 'listings':
@@ -396,12 +409,18 @@ def maps(request):
     elif map_type == 'sold_price_sqm':
         ml = ml.annotate(s = Coalesce(F('sold_price_sqm_med'), 0))
         text = 'SEK/m<sup>2</sup>'
+    elif map_type == 'days_before_sold':
+        ml = ml.annotate(s=Coalesce(F('sold_daysbeforesold_avg'), 0))
+        text = 'Days'
+    elif map_type == 'sold_property_age':
+        ml = ml.annotate(s=Coalesce(F('sold_propertyage_avg'), 0))
+        text = 'Years'
     else:
         return redirect('index')
     ml = ml.values_list('geographic_name', 's')
 
     #for m in ml:
-        #print(m)
+    #    print(m)
 
     muniListings = sorted(ml, key=itemgetter(1))
     maxMuniListings = muniListings[-int(len(muniListings)/50)][1] if len(muniListings) > 0 else 0
@@ -415,6 +434,9 @@ def maps(request):
         '#FF8402', #dark orange
         '#FF0000' #dark red
     ]
+
+
+
     minuListingsColors = {}
     for m in muniListings:
         a = m[1] - minMuniListings
@@ -427,7 +449,7 @@ def maps(request):
         minuListingsColors[m[0]] = {"color" : map_colors[idx] if idx < len(map_colors) else '#000000',
                                     "text" : "%s %s" %(int(m[1]), text)
                                     }
-
+    #print("SQL", connection.queries)
     context = {
         "success": False,
         "minuListingsColors" : minuListingsColors,
@@ -437,11 +459,72 @@ def maps(request):
         "period_month": period_month,
         "period_quarter": period_quarter,
         "period_year": period_year,
-        "map_type" : map_type
+        "map_type" : map_type,
+        "property_type" : property_type
     }
 
 
-    return render(request, "svrea/maps.html", context=context)
+    return render(request, "svrea/maps_density.html", context=context)
+
+
+@cache_page(60 * 60 * 2) # s * min * hrs
+def maps_listings(request):
+
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
+    listing_list = Listings.objects.all().filter(isactive='True').values('address__street',
+                                                                         'address__house',
+                                                                         'address__city',
+                                                                         'address__municipality',
+                                                                         'address__county',
+                                                                         'latitude',
+                                                                         'longitude',
+                                                                         'propertytype'
+                                                                         )  # , booliid__exact = '2162349')
+    #print(len(listing_list))
+
+    data = []  # ['Lat', 'Long', 'tip', 'type']
+
+    for l in listing_list:
+        #print(l[:])
+        saddress = "%s %s, %s, %s" % (l['address__street'],
+                                      l['address__house'],
+                                      (l['address__city'] if l['address__city'] == l['address__municipality']
+                                       else "%s, %s" % (
+                                          l['address__city'], l['address__municipality'])),
+                                      l['address__county']
+                                      )
+        marker = 'default'
+
+        if l['propertytype'] == 'Lägenhet':
+            marker = 'lagenhet'
+
+        if l['propertytype'] == 'Villa':
+            marker = 'villa'
+
+        tip = """%s<br/>%s""" % (l['propertytype'],saddress)
+
+        data.append([float(l['latitude']),
+                     float(l['longitude']),
+                     tip,
+                     marker
+                     ])
+
+    context = {
+        "data": data,
+    }
+
+    return render(request, "svrea/maps_listings.html", context=context)
 
 
 #@login_required(redirect_field_name = "", login_url="/")

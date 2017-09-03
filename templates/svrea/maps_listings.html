@@ -1,0 +1,82 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+
+
+{% block head %}
+<style>
+    .full, html, body {
+        height:100%;
+        margin:0;
+    }
+    .full {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #map {
+        flex:2;
+        display: flex;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+    <div class="text-center blue">
+        <h4> Map of Properties Currently Available for Sale</h4>
+    </div>
+    <div id="map"> </div>
+
+    <script>
+        var map;
+        function initMap() {
+          var map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 63.210463, lng:  14.256282},
+                zoom: 5,
+                maxZoom:12,
+                minZoom: 5,
+                scaleControl: true
+          });
+         markers = {{ data | safe }}
+
+         var info = new google.maps.InfoWindow()
+         icourl = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/16/'
+         ico_lag = icourl + 'Map-Marker-Marker-Outside-Pink-icon.png';
+         ico_vil = icourl + 'Map-Marker-Marker-Outside-Chartreuse-icon.png';
+         ico_def = icourl + 'Map-Marker-Marker-Outside-Azure-icon.png'
+
+         for (i = 0; i < markers.length; i ++){
+          switch(markers[i][3]){
+              case "lagenhet":
+                  ico = ico_lag;
+                  break;
+              case "villa":
+                  ico = ico_vil;
+                  break;
+              default:
+                  ico = ico_def;
+          }
+
+         var marker = new google.maps.Marker({
+          position: {lat: markers[i][0], lng: markers[i][1]},
+          map : map,
+          title : markers[i][2],
+          icon : ico
+          });
+
+          marker.addListener('click', (function(marker, i) {
+          return function() {
+            info.setContent(marker.title);
+            info.open(map, marker);
+              }
+              })(marker, i));
+          }
+
+        }
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnIE9wJPz5n13I1vcB02dx9mM2tcKNJ6A&callback=initMap"
+        async defer></script></body>
+
+{% endblock %}
