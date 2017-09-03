@@ -481,7 +481,7 @@ def maps_listings(request):
             login(request, user)
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
-
+    # ***************** only 500 results are displayed! *************************
     listing_list = Listings.objects.filter(isactive='True').values('address__street',
                                                                          'address__house',
                                                                          'address__city',
