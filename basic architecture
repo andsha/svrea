@@ -22,18 +22,18 @@ POST/GET/HTTP request -> server on Heroku -> Python/Django (receiving and handli
 
 Used libraries:
 
-appdirs==1.4.0
-click==6.7
-dj-database-url==0.4.2
-Django==1.10.5
-django-ratelimit==1.0.1
-gunicorn==19.6.0
-numpy==1.12.1
-packaging==16.8
-psycopg2==2.7.1
-pyparsing==2.1.10
-python-dateutil==2.6.1
-redis==2.10.5
-rq==0.7.1
-six==1.10.0
-whitenoise==3.3.0
+appdirs==1.4.0 (MIT)
+click==6.7 (BSD)
+dj-database-url==0.4.2 (BSD)
+Django==1.10.5 (BSD)
+django-ratelimit==1.0.1 (Apache)
+gunicorn==19.6.0 (MIT)
+numpy==1.12.1 (BSD)
+packaging==16.8 (BSD/Apache)
+psycopg2==2.7.1 (LGPL with exceptions or ZPL)
+pyparsing==2.1.10 (MIT)
+python-dateutil==2.6.1 (BSD)
+redis==2.10.5 (BSD)
+rq==0.7.1 (BSD)
+six==1.10.0 (MIT)
+whitenoise==3.3.0 (MIT)

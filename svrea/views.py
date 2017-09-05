@@ -187,12 +187,13 @@ def plots_general(request):
 
     period = 'Daily'
     county = 'Whole Sweden'
+    property_type = 'Lägenhet'
 
     if request.POST:
         if request.POST.get("period"):
             period = request.POST.get("period")
-        if request.POST.get('county'):
             county = request.POST.get('county')
+            property_type = request.POST.get('property_type')
 
     try:
         county_list = [county.geographic_name for county in EtlListingsDaily.objects
@@ -234,6 +235,7 @@ def plots_general(request):
             .annotate(date=To_char('record_firstdate', dtype=dtype))\
             .filter(geographic_type__exact='country' if county == 'Whole Sweden' else 'county') \
             .filter(geographic_name__exact = 'Sweden' if county == 'Whole Sweden' else county) \
+            .filter(property_type = property_type)\
             .values('date',
                       'geographic_type',
                       'geographic_name',
@@ -293,7 +295,8 @@ def plots_general(request):
                                    'Average',
                                    'Median'
                                ]] + [[i[0], i[9], i[10]] for i in listings],
-            "county" : county
+            "county" : county,
+            'property_type' : property_type
         }
     except Exception as e:
         logger.info(e)

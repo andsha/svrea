@@ -37,6 +37,9 @@ class EtlListingsDaily(models.Model):
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
+    class Meta:
+        index_together = ['record_firstdate', 'geographic_name']
+
     
 
 
@@ -67,6 +70,9 @@ class EtlListingsWeekly(models.Model):
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
+    class Meta:
+        index_together = ['record_firstdate', 'geographic_name']
+
 
 class EtlListingsMonthly(models.Model):
     record_firstdate        = models.DateTimeField(null=True, blank=True)
@@ -94,6 +100,9 @@ class EtlListingsMonthly(models.Model):
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        index_together = ['record_firstdate', 'geographic_name']
 
 
 class EtlListingsQuarterly(models.Model):
@@ -123,6 +132,9 @@ class EtlListingsQuarterly(models.Model):
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
 
+    class Meta:
+        index_together = ['record_firstdate', 'geographic_name']
+
 
 class EtlListingsYearly(models.Model):
     record_firstdate        = models.DateTimeField(null=True, blank=True)
@@ -149,6 +161,9 @@ class EtlListingsYearly(models.Model):
     sold_rent_med           = models.IntegerField(null=True, blank=True)
     sold_daysbeforesold_avg = models.DecimalField(null=True, blank=True, max_digits=5, decimal_places=1)
     sold_propertyage_avg = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        index_together = ['record_firstdate', 'geographic_name']
 
 
 class EtlTimeSeriesFavourite(models.Model):

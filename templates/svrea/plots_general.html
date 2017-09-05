@@ -114,10 +114,15 @@
                         <option value="Daily" {% if period == 'Daily'%} selected {% endif%}>Daily</option>
                         <option value="Weekly" {% if period == 'Weekly'%} selected {% endif%}>Weekly</option>
                         <option value="Monthly" {% if period == 'Monthly'%} selected {% endif%}>Monthly</option>
-                        <option value="Quaterly" {% if period == 'Quaterly'%} selected {% endif%}>Quaterly</option>
+                        <option value="Quarterly" {% if period == 'Quarterly'%} selected {% endif%}>Quarterly</option>
                         <option value="Yearly" {% if period == 'Yearly'%} selected {% endif%}>Yearly</option>
                     </select>
                     statistics for
+                    <select name="property_type" data-style="btn-primary">
+                        <option {% if property_type == 'Lägenhet'%} selected {% endif%}>Lägenhet</option>
+                        <option {% if property_type == 'Villa'%} selected {% endif%}>Villa</option>
+                    </select>
+                    in
                     <select name="county" data-style="btn-primary">
                         <option value="Whole Sweden" {% if county == 'Whole Sweden'%} selected {% endif%}>Whole Sweden</option>
                         {% for c in county_list %}

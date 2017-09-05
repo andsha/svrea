@@ -790,7 +790,9 @@ class ETLThread(threading.Thread):
                                 etlquery.monthofyear = self.dayFrom.month
                             elif self.etlPeriodType == 'Quarterly':
                                 etlquery.quarterofyear = int((self.dayFrom.month - 1) / 3) + 1
-                            etlquery.save()
+                            #etlquery.save()
+                            #print(connection.queries)
+                            #return 0
                     #time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
                 #tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
 
