@@ -793,6 +793,7 @@ class ETLThread(threading.Thread):
                             #etlquery.save()
                             #print(connection.queries)
                             #return 0
+                    connection.close()
                     #time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
                 #tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
 
