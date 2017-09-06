@@ -13,6 +13,7 @@ import re
 import threading
 import traceback
 
+from django import db
 from django.db import connection, transaction
 from django.db.models import Func, Count, Q, F, Avg, Aggregate, When, Case, Min, Max, ExpressionWrapper, IntegerField, FloatField, Value
 from django.db.models.functions import Coalesce
@@ -793,7 +794,7 @@ class ETLThread(threading.Thread):
                             #etlquery.save()
                             #print(connection.queries)
                             #return 0
-                    connection.close()
+
                     #time3.append((datetime.datetime.now() - tm3).microseconds/1000000.0)
                 #tolog(WARNING, "%s ETL time %s. Overall %s time %s. %s" %(gtype, sum(time3)/float(len(time3)), gtype, sum(time3), idx))
 
@@ -819,6 +820,8 @@ class ETLThread(threading.Thread):
 
         #tolog(WARNING,"insert %s" %((datetime.datetime.now() - tm2).microseconds/1000000.0))
         #tolog(WARNING, "All %s" %(datetime.datetime.now() - tm))
+
+        connection.close()
         return 0
 
 
