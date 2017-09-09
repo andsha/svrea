@@ -50,7 +50,8 @@ def gindex(request):
 
 @ratelimit(key='ip', rate='1/s')
 def index(request):
-    return redirect('posts:posts')
+    return redirect('maps_listings')
+    #return redirect('posts:posts')
  #********************** do not delete this code *********************************
     # if request.POST.get('submit') == 'Log Out':
     #     logout(request)
