@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
+from .models import Posts
+
 
 
 @ratelimit(key='ip', rate='1/s')
@@ -23,5 +25,7 @@ def posts(request):
         else:
             messages.error(request, "Please Enter Correct User Name and Password ")
 
-    context = {}
+    posts = Posts.objects.all()
+
+    context = {"posts" : posts}
     return render(request, "posts/posts.html", context=context)
