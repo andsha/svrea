@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'svrea_data',
     'svrea_script',
     'svrea_etl',
-    'svrea'
+    'svrea',
+    'posts'
 ]
 
 MIDDLEWARE = [

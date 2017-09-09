@@ -42,6 +42,7 @@ def notfound(request):
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^posts/', include('posts.urls', namespace='posts')),
     url(r'^$', index, name = 'index'),
     url(r'googleb070a3405a28a8d0.html', gindex, name = 'gindex'),
     url(r'^legal/', legal, name = 'legal'),
