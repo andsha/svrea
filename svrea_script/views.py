@@ -137,12 +137,12 @@ def script_run(request):
             'sold_area_med'
             ).order_by('record_firstdate', 'geographic_name')
 
-        for r in data:
-            print (r)
+        # for r in data:
+        #     print (r)
         rdata = {regions[i] : data[i::len(regions)] for i in range(len(regions))}
 
-        for r in rdata:
-            print(r, rdata[r])
+        # for r in rdata:
+        #     print(r, rdata[r])
 
         for a in rdata:
             rdata[a][0]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][0]['active_listings'] -1)*100
