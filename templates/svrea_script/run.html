@@ -17,6 +17,11 @@
             }
         });
         $("#etlFromDate").datepicker("setDate", new Date());
+        $("#blogperiod").datepicker({
+            defaultDate: new Date(),
+            dateFormat: "yy-mm-dd",
+        });
+        $("#blogperiod").datepicker("setDate", new Date());
         $('#etlToDate').datepicker({
             defaultDate: new Date(),
             dateFormat: "yy-mm-dd",
@@ -131,6 +136,19 @@
                         <textarea name="sqlquery" rows="4" cols="50" wrap="soft">{{sqlquery}}</textarea><br>
                         <textarea name="sqlres"  rows="4" cols="50" wrap="soft">{{sqlres}}</textarea><br>
                         <div class="btns"><button type="submit" name="runsql" value="runsql">Run</button></div>
+
+                    </div>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">Make New Blog Post</div>
+                        Period<input type="text" id="blogperiod" name="blogperiod"><br>
+                        <select name="blogperiodtype" data-style="btn-primary">
+                            <option {% if blogperiodtype == 'Monthly'%} selected {% endif%}>Monthly</option>
+                            <option {% if blogperiodtype == 'Quarterly'%} selected {% endif%}>Quarterly</option>
+                            <option {% if blogperiodtype == 'Yearly'%} selected {% endif%}>Yearly</option>
+                        </select>
+                        <div class="btns"><button type="submit" name="newpost" value="runsql">New Post</button></div>
 
                     </div>
                 </div>

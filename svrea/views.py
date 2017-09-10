@@ -33,7 +33,7 @@ from svrea_etl.models import EtlListingsDaily, \
 class To_char(Func):
     function = 'to_char'
     template = "%(function)s(%(expressions)s, '%(dtype)s')"
-    utput_field = models.IntegerField()
+    #output_field = models.IntegerField()
 
 class cast(Func):
     template = "%(expressions)s::%(dtype)s"

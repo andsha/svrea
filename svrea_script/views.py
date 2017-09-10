@@ -1,20 +1,26 @@
 import time
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth import logout
-from django.contrib import messages
-
-from script.svrea_script import Svrea_script, area_list
-from svrea_script.models import Info, Aux, Log, Rawdata
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db import connection
-from django.db.models import Func
-from django.db.models.functions import Length
-
+import datetime
 from rq import Queue
 from worker import conn
 
 from globalvars import workertimeout
+
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth import logout
+from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db import connection
+from django.db.models import Func
+from django.shortcuts import render, redirect
+from django.template.defaulttags import register
+from django.template.loader import render_to_string
+
+
+
+from script.svrea_script import Svrea_script, area_list
+from svrea_script.models import Info, Aux, Log, Rawdata
+from svrea_etl.models import EtlListingsMonthly, EtlListingsQuarterly, EtlListingsYearly
+from posts.models import Posts
 
 class Len_Of_JSON_Field(Func):
     # function = 'length'
@@ -22,6 +28,13 @@ class Len_Of_JSON_Field(Func):
     # select
     template = "jsonb_array_length(COALESCE(%(expressions)s->'sold', %(expressions)s->'listings') )"
 
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+class To_char(Func):
+    function = 'to_char'
+    template = "%(function)s(%(expressions)s, '%(dtype)s')"
 
 @login_required(redirect_field_name = "", login_url="/")
 @permission_required('svrea_script.can_run_script')
@@ -96,6 +109,90 @@ def script_run(request):
                 sqlres = [[str(s) for s in row] for row in cursor.fetchall()]
             except Exception as e:
                 sqlres = e
+    elif request.POST.get("newpost"):
+        blogperiodtype = request.POST.get('blogperiodtype')
+        blogperiod = datetime.datetime.strptime(request.POST.get('blogperiod'), '%Y-%m-%d')
+
+        if blogperiodtype == 'Monthly':
+            blogperiod = blogperiod.replace(day = 1)
+            previous_period1 = blogperiod.replace(month = blogperiod.month - 1)
+            previous_period2 = blogperiod.replace(year = blogperiod.year - 1)
+            previous_period3 = blogperiod.replace(year = blogperiod.year - 2)
+            qs = EtlListingsMonthly.objects
+
+        regions = ['Sweden', 'Uppsala', 'Göteborg', 'Malmö', 'Stockholm']
+        regions.sort()
+        data = qs.filter(
+            record_firstdate__in = [blogperiod, previous_period1, previous_period2, previous_period3],
+            geographic_name__in = regions,
+            property_type = 'Lägenhet'
+            ).annotate(date = To_char('record_firstdate', dtype = 'YYYY-MM-DD'))\
+            .values(
+            'date',
+            'geographic_name',
+            'active_listings',
+            'sold_today',
+            'sold_price_med',
+            'sold_price_sqm_med',
+            'sold_area_med'
+            ).order_by('record_firstdate', 'geographic_name')
+
+        for r in data:
+            print (r)
+        rdata = {regions[i] : data[i::len(regions)] for i in range(len(regions))}
+
+        for r in rdata:
+            print(r, rdata[r])
+
+        for a in rdata:
+            rdata[a][0]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][0]['active_listings'] -1)*100
+            rdata[a][1]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][1]['active_listings'] - 1)*100
+            rdata[a][2]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][2]['active_listings'] - 1)*100
+
+            rdata[a][0]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][0]['sold_today'] - 1)*100
+            rdata[a][1]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][1]['sold_today'] - 1)*100
+            rdata[a][2]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][2]['sold_today'] - 1)*100
+
+            rdata[a][0]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][0]['sold_price_med'] - 1)*100
+            rdata[a][1]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][1]['sold_price_med'] - 1)*100
+            rdata[a][2]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][2]['sold_price_med'] - 1)*100
+
+            rdata[a][0]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][0]['sold_price_sqm_med'] - 1)*100
+            rdata[a][1]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][1]['sold_price_sqm_med'] - 1)*100
+            rdata[a][2]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][2]['sold_price_sqm_med'] - 1)*100
+
+            rdata[a][0]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][0]['sold_area_med'] - 1)*100
+            rdata[a][1]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][1]['sold_area_med'] - 1)*100
+            rdata[a][2]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][2]['sold_area_med'] - 1)*100
+
+        # for d in rdata:
+        #     print(d)
+
+        post = Posts(
+            dateofcreation=datetime.datetime.now(),
+            createdby=request.user.username if request.user.is_authenticated() else '',
+            source='',
+            title='Monthly statistics for %s %s' %(blogperiod.strftime('%B'), blogperiod.strftime('%Y')),
+            text=''
+        )
+        post.save()
+
+        context = {
+            "idnum": post.id,
+            "Sweden" : rdata['Sweden'],
+            "Uppsala": rdata['Uppsala'],
+            "Göteborg": rdata['Göteborg'],
+            "Malmö": rdata['Malmö'],
+            "Stockholm": rdata['Stockholm']
+        }
+
+        text = render_to_string('posts/post_template.html', context=context)
+        post.text = text
+        post.save()
+
+
+
+
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 

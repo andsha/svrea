@@ -1,0 +1,78 @@
+{% load humanize %}
+
+<script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart', 'line']});
+    google.charts.setOnLoadCallback(display_ts_{{idnum}});
+
+    function display_ts_{{idnum}}() {
+        var data = google.visualization.arrayToDataTable({{ ts_data | safe}});
+        var options = {
+            title : '',
+            legend : {position : 'right'},
+            bar : {groupWidth: '100%'},
+            hAxis:{title : '{{x_axis_title | safe}}'},
+            vAxis:{title : '{{y_axis_title | safe}}'}
+        }
+        var chart = new google.visualization.{{chart_type | safe}}Chart(document.getElementById('ts_chart_{{idnum}}'));
+        chart.draw(data, options);
+    }
+    window.onload = function(){display_ts_{{idnum}}()};
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Whole Sweden</th>
+            <th>Stockholm</th>
+            <th>Uppsala</th>
+            <th>Göteborg</th>
+            <th>Malmö</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Available for Sale</td>
+            <td>{{listings[0]}}</td>
+            <td>{{listings[1]}}</td>
+            <td>{{listings[2]}}</td>
+            <td>{{listings[3]}}</td>
+        </tr>
+        <tr>
+            <td>Sold</td>
+            <td>{{sold[0]}}</td>
+            <td>{{sold[1]}}</td>
+            <td>{{sold[2]}}</td>
+            <td>{{sold[3]}}</td>
+        </tr>
+        <tr>
+            <td>Sold Price</td>
+            <td>{{soldprice[0]}}</td>
+            <td>{{soldprice[1]}}</td>
+            <td>{{soldprice[2]}}</td>
+            <td>{{soldprice[3]}}</td>
+        </tr>
+        <tr>
+            <td>Sold Price per m<sup>2</sup></td>
+            <td>{{soldpricesqm[0]}}</td>
+            <td>{{soldpricesqm[1]}}</td>
+            <td>{{soldpricesqm[2]}}</td>
+            <td>{{soldpricesqm[3]}}</td>
+        </tr>
+        <tr>
+            <td>Area (sold)</td>
+            <td>{{soldarea[0]}}</td>
+            <td>{{soldarea[1]}}</td>
+            <td>{{soldarea[2]}}</td>
+            <td>{{soldarea[3]}}</td>
+        </tr>
+    </tbody>
+
+
+</table>
+
+<!--Below is time series for While Sweden from 13 MArch 2017 to 09 Sep 2017-->
+<!--<div id="ts_chart_{{idnum}}" style="height:600px"></div>-->
+
+
+
