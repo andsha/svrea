@@ -1,0 +1,25 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+<form method="post" > {% csrf_token %}
+    <div class="full">
+        <div class="container-fluid ">
+            <div class="row">
+                <div class="col-sm-4 text-center">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading text-center">New Post</div>
+                        <textarea name="post_title" rows="4" cols="50" wrap="soft">Title</textarea><br>
+                        <textarea name="post_text"  rows="4" cols="50" wrap="soft">Text</textarea><br>
+                        <div class="btns"><button type="submit" name="newpost" value="">Make New Post</button></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+
+

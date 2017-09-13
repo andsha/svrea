@@ -10,4 +10,7 @@ class Posts (models.Model):
     title = models.CharField(null=True,blank=True,max_length=1000)
     text = models.TextField(null=True, blank=True)
 
+    class Meta:
+        permissions = (("can_mke_new_posts", "Can make new posts"),
+                       )
 

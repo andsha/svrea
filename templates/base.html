@@ -61,8 +61,8 @@
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
+                        <li><a href="{% url 'posts:posts' %}">News</a></li>
                         {% if request.user.is_authenticated %}
-                        <p class="navbar-text">Welcome, {{ request.user.username }}!</p>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Favourite <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -71,6 +71,7 @@
                             </ul>
                         </li>
                         {% endif %}
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Maps <span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -85,6 +86,12 @@
                                 <li><a href='{% url "plots_general"  %}'>Summary</a></li>
                                 <li><a href='{% url "plots_histograms"  %}'>Histograms</a></li>
                                 <li><a href='{% url "plots_timeseries"  %}'>Time Series</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Tables <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href='{% url "tables:summary"  %}'>Summary</a></li>
                             </ul>
                         </li>
                         {% if perms.svrea_script.can_see_history or perms.svrea_script.can_run_script %}
@@ -112,6 +119,7 @@
                             {% csrf_token %}
                             <button type="submit" value="Log Out" name="submit" class="btn btn-default">Log Out</button>
                         </form>
+                        <p class="navbar-text navbar-right">Welcome, {{ request.user.username }}!</p>
                     {% else %}
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'register' %}">Register</a></li>

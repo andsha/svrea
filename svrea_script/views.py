@@ -110,63 +110,66 @@ def script_run(request):
             except Exception as e:
                 sqlres = e
     elif request.POST.get("newpost"):
-        blogperiodtype = request.POST.get('blogperiodtype')
-        blogperiod = datetime.datetime.strptime(request.POST.get('blogperiod'), '%Y-%m-%d')
+        #blogperiodtype = request.POST.get('blogperiodtype')
+        #blogperiod = datetime.datetime.strptime(request.POST.get('blogperiod'), '%Y-%m-%d')
 
-        if blogperiodtype == 'Monthly':
-            blogperiod = blogperiod.replace(day = 1)
-            previous_period1 = blogperiod.replace(month = blogperiod.month - 1)
-            previous_period2 = blogperiod.replace(year = blogperiod.year - 1)
-            previous_period3 = blogperiod.replace(year = blogperiod.year - 2)
-            qs = EtlListingsMonthly.objects
+        # if blogperiodtype == 'Monthly':
+        #     blogperiod = blogperiod.replace(day = 1)
+        #     previous_period1 = blogperiod.replace(month = blogperiod.month - 1)
+        #     previous_period2 = blogperiod.replace(year = blogperiod.year - 1)
+        #     previous_period3 = blogperiod.replace(year = blogperiod.year - 2)
+        #     qs = EtlListingsMonthly.objects
 
-        regions = ['Sweden', 'Uppsala', 'Göteborg', 'Malmö', 'Stockholm']
-        regions.sort()
-        data = qs.filter(
-            record_firstdate__in = [blogperiod, previous_period1, previous_period2, previous_period3],
-            geographic_name__in = regions,
-            property_type = 'Lägenhet'
-            ).annotate(date = To_char('record_firstdate', dtype = 'YYYY-MM-DD'))\
-            .values(
-            'date',
-            'geographic_name',
-            'active_listings',
-            'sold_today',
-            'sold_price_med',
-            'sold_price_sqm_med',
-            'sold_area_med'
-            ).order_by('record_firstdate', 'geographic_name')
+        #etlperiod = blogperiodtype
+        #etldate = blogperiod
 
-        # for r in data:
-        #     print (r)
-        rdata = {regions[i] : data[i::len(regions)] for i in range(len(regions))}
-
-        # for r in rdata:
-        #     print(r, rdata[r])
-
-        for a in rdata:
-            rdata[a][0]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][0]['active_listings'] -1)*100
-            rdata[a][1]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][1]['active_listings'] - 1)*100
-            rdata[a][2]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][2]['active_listings'] - 1)*100
-
-            rdata[a][0]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][0]['sold_today'] - 1)*100
-            rdata[a][1]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][1]['sold_today'] - 1)*100
-            rdata[a][2]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][2]['sold_today'] - 1)*100
-
-            rdata[a][0]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][0]['sold_price_med'] - 1)*100
-            rdata[a][1]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][1]['sold_price_med'] - 1)*100
-            rdata[a][2]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][2]['sold_price_med'] - 1)*100
-
-            rdata[a][0]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][0]['sold_price_sqm_med'] - 1)*100
-            rdata[a][1]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][1]['sold_price_sqm_med'] - 1)*100
-            rdata[a][2]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][2]['sold_price_sqm_med'] - 1)*100
-
-            rdata[a][0]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][0]['sold_area_med'] - 1)*100
-            rdata[a][1]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][1]['sold_area_med'] - 1)*100
-            rdata[a][2]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][2]['sold_area_med'] - 1)*100
-
-        # for d in rdata:
-        #     print(d)
+        # regions = ['Sweden', 'Uppsala', 'Göteborg', 'Malmö', 'Stockholm']
+        # regions.sort()
+        # data = qs.filter(
+        #     record_firstdate__in = [blogperiod, previous_period1, previous_period2, previous_period3],
+        #     geographic_name__in = regions,
+        #     property_type = 'Lägenhet'
+        #     ).annotate(date = To_char('record_firstdate', dtype = 'YYYY-MM-DD'))\
+        #     .values(
+        #     'date',
+        #     'geographic_name',
+        #     'active_listings',
+        #     'sold_today',
+        #     'sold_price_med',
+        #     'sold_price_sqm_med',
+        #     'sold_area_med'
+        #     ).order_by('record_firstdate', 'geographic_name')
+        #
+        # # for r in data:
+        # #     print (r)
+        # rdata = {regions[i] : data[i::len(regions)] for i in range(len(regions))}
+        #
+        # # for r in rdata:
+        # #     print(r, rdata[r])
+        #
+        # for a in rdata:
+        #     rdata[a][0]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][0]['active_listings'] -1)*100
+        #     rdata[a][1]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][1]['active_listings'] - 1)*100
+        #     rdata[a][2]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][2]['active_listings'] - 1)*100
+        #
+        #     rdata[a][0]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][0]['sold_today'] - 1)*100
+        #     rdata[a][1]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][1]['sold_today'] - 1)*100
+        #     rdata[a][2]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][2]['sold_today'] - 1)*100
+        #
+        #     rdata[a][0]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][0]['sold_price_med'] - 1)*100
+        #     rdata[a][1]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][1]['sold_price_med'] - 1)*100
+        #     rdata[a][2]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][2]['sold_price_med'] - 1)*100
+        #
+        #     rdata[a][0]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][0]['sold_price_sqm_med'] - 1)*100
+        #     rdata[a][1]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][1]['sold_price_sqm_med'] - 1)*100
+        #     rdata[a][2]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][2]['sold_price_sqm_med'] - 1)*100
+        #
+        #     rdata[a][0]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][0]['sold_area_med'] - 1)*100
+        #     rdata[a][1]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][1]['sold_area_med'] - 1)*100
+        #     rdata[a][2]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][2]['sold_area_med'] - 1)*100
+        #
+        # # for d in rdata:
+        # #     print(d)
 
         post = Posts(
             dateofcreation=datetime.datetime.now(),
@@ -189,10 +192,6 @@ def script_run(request):
         text = render_to_string('posts/post_template.html', context=context)
         post.text = text
         post.save()
-
-
-
-
 
     running_scripts = Info.objects.all().filter(status__exact = 'started')
 
