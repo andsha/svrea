@@ -4,16 +4,20 @@
 {% block content %}
 
 
- <div class="full">
-            <div class="text-center blue">
-                <h3>Welcome to SVREA<br></h3>
-                <h5>Get a fresh daily dose of real estate anaytics in Sweden</h5>
-                <p>SVREA is a dynamic website with a focus on presentation and analysis of current situation in Swedish real estate market.
-                <br/>
-                For better experience please use <a href="https://www.google.com/chrome/browser/desktop/index.html" style="">google Chrome</a>
-                </p>
-            </div>
+
+<div class="container-fluid">
+    <div class="col-md-8 col-md-offset-2">
+        <div class="panel panel-primary">
+            {% for post in posts %}
+            <div><h3><a href="{{post.get_detailed_url}}">{{post.title}}</a></h3></div>
+            <div>{{post.dateofcreation}} by {{post.createdby}}</div>
+            <div >{% autoescape off %}{{post.text|truncatechars:400}}{% endautoescape %}</div>
+            {% endfor %}
+        <div class="text-center"><a href="{%url 'posts:posts'%}"> See more news...</div>
         </div>
+    </div>
+</div>
+
 
 {% endblock %}
 

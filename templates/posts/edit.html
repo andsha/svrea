@@ -9,10 +9,10 @@
             <div class="row">
                 <div class="col-sm-8 text-center">
                     <div class="panel panel-primary">
-                        <div class="panel-heading text-center">New Post</div>
-                        <textarea name="post_title" wrap="soft">Title</textarea><br>
-                        <textarea name="post_text"  rows="4" wrap="soft">Text</textarea><br>
-                        <div class="btns"><button type="submit" name="newpost" value="1">Submit</button></div>
+                        <div class="panel-heading text-center">Edit Post {{post.id}}</div>
+                        <textarea name="post_title" wrap="soft">{{post.title}}</textarea><br>
+                        <textarea name="post_text"  rows="4" wrap="soft">{{post.text}}</textarea><br>
+                        <div class="btns"><button type="submit" name="editpost" value="1">Submit</button></div>
                     </div>
                 </div>
             </div>

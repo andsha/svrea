@@ -28,6 +28,7 @@ from svrea_etl.models import EtlListingsDaily, \
     EtlListingsYearly,\
     EtlTimeSeriesFavourite,\
     EtlHistogramFavourite
+from posts.models import Posts
 
 
 class To_char(Func):
@@ -50,25 +51,28 @@ def gindex(request):
 
 @ratelimit(key='ip', rate='1/s')
 def index(request):
-    return redirect('maps_listings')
+    #return redirect('maps_listings')
     #return redirect('posts:posts')
- #********************** do not delete this code *********************************
-    # if request.POST.get('submit') == 'Log Out':
-    #     logout(request)
-    #     return redirect('index')
-    # elif request.POST.get('submit') == 'Log In':
-    #     username = request.POST.get('username')
-    #     password = request.POST.get('password')
-    #     user = authenticate(username=username, password=password)
-    #
-    #     if user is not None:
-    #         login(request, user)
-    #     else:
-    #         messages.error(request, "Please Enter Correct User Name and Password ")
-    #
-    # context = {}
-    # return render(request, "svrea/index.html", context=context)
-#*****************************************************************************
+
+    if request.POST.get('submit') == 'Log Out':
+        logout(request)
+        return redirect('index')
+    elif request.POST.get('submit') == 'Log In':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+        else:
+            messages.error(request, "Please Enter Correct User Name and Password ")
+
+    posts = Posts.objects.order_by('-dateofcreation')[:3]
+    context = {
+        "posts": posts
+    }
+    return render(request, 'svrea/index.html', context=context)
+
 
 @ratelimit(key='ip', rate='1/s')
 def legal(request):
@@ -109,7 +113,7 @@ def fav_timeseries(request):
         #print('URL PARSE', ts)
         return redirect(reverse('plots_timeseries') + '?%s' %ts)
         #return(get_plots_timeseries(ts, request))
-    print()
+    #print()
     fav_ts = EtlTimeSeriesFavourite.objects.all().filter(username = request.user.get_username()).order_by('-creationdate')
     paginator = Paginator(fav_ts, 50, orphans=9)
     page = request.GET.get('page')

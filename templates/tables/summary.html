@@ -3,10 +3,258 @@
 {% load static %}
 {% block content %}
 
-Hello!
+<style>
+    .up{
+        color: green;
+    }
 
-Tables/Summary here
+    .down{
+        color: red;
+    }
+</style>
 
+<script>
+    function changePeriodType(){
+        document.getElementById('month').style.display='none';
+        document.getElementById('quarter').style.display='none';
+        document.getElementById('year').style.display='none';
+
+        //console.log(document.getElementById('period_type').value)
+        switch(document.getElementById('period_type').value){
+            case 'Monthly':
+                document.getElementById('month').style.display='';
+                break;
+            case 'Quarterly':
+                document.getElementById('quarter').style.display='';
+                break;
+            case 'Yearly':
+                document.getElementById('year').style.display='';
+                break;
+        }
+
+
+    }
+
+    window.onload = function(){
+    changePeriodType()
+}
+
+</script>
+
+<form method="get" >
+    <div class="full">
+        <div class="text-center blue">
+            <h4>You are viewing
+                <select name="period_type" id = "period_type" data-style="btn-primary" onchange="changePeriodType()">
+                    <option {% if period_type == 'Monthly'%} selected {% endif%}>Monthly</option>
+                    <option {% if period_type == 'Quarterly'%} selected {% endif%}>Quarterly</option>
+                    <option {% if period_tyoe == 'Yearly'%} selected {% endif%}>Yearly</option>
+                </select>
+                statistics for
+                <select name="month" data-style="btn-primary" id="month">
+                    {% for m in months %}
+                    <option {% if m == month %} selected {% endif%}>{{m}}</option>
+                    {% endfor %}
+                </select>
+                <select name="quarter" data-style="btn-primary" id="quarter">
+                    {% for q in quarters %}
+                    <option {% if q == quarter %} selected {% endif%}>{{q}}</option>
+                    {% endfor %}
+                </select>
+                <select name="year" data-style="btn-primary" id="year">
+                    {% for y in years %}
+                    <option {% if y == year %} selected {% endif%}>{{y}}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="button" class="btn btn-default" onclick="this.form.submit();">Refresh</button>
+            </h4>
+        </div>
+    </div>
+</form>
+{{caption}}
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Whole Sweden</th>
+            <th>Stockholm</th>
+            <th>Uppsala</th>
+            <th>Göteborg</th>
+            <th>Malmö</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Number of apartments available for sale</td>
+            <td>
+                {{Sweden.3|get_item:'active_listings' | intcomma}} /
+                <span class="{% if Sweden.2|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Sweden.2|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.1|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Sweden.1|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.0|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Sweden.0|get_item:'active_listings' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Stockholm.3|get_item:'active_listings' | intcomma}} /
+                <span class="{% if Stockholm.2|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.2|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.1|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.1|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.0|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.0|get_item:'active_listings' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Uppsala.3|get_item:'active_listings' | intcomma}} /
+                <span class="{% if Uppsala.2|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.2|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.1|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.1|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.0|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.0|get_item:'active_listings' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Göteborg.3|get_item:'active_listings' | intcomma}} /
+                <span class="{% if Göteborg.2|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.2|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.1|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.1|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.0|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.0|get_item:'active_listings' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Malmö.3|get_item:'active_listings' | intcomma}} /
+                <span class="{% if Malmö.2|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Malmö.2|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.1|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Malmö.1|get_item:'active_listings' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.0|get_item:'active_listings' > 0 %}up{% else %}down{%endif%}" >{{Malmö.0|get_item:'active_listings' | intcomma|floatformat:1}}%</span>
+            </td>
+        </tr>
+        <tr>
+            <td>NUmber of sold apartments</td>
+            <td>
+                {{Sweden.3|get_item:'sold_today' | intcomma}} /
+                <span class="{% if Sweden.2|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Sweden.2|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.1|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Sweden.1|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.0|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Sweden.0|get_item:'sold_today' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Stockholm.3|get_item:'sold_today' | intcomma}} /
+                <span class="{% if Stockholm.2|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.2|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.1|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.1|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.0|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.0|get_item:'sold_today' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Uppsala.3|get_item:'sold_today' | intcomma}} /
+                <span class="{% if Uppsala.2|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.2|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.1|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.1|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.0|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.0|get_item:'sold_today' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Göteborg.3|get_item:'sold_today' | intcomma}} /
+                <span class="{% if Göteborg.2|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.2|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.1|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.1|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.0|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.0|get_item:'sold_today' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Malmö.3|get_item:'sold_today' | intcomma}} /
+                <span class="{% if Malmö.2|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Malmö.2|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.1|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Malmö.1|get_item:'sold_today' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.0|get_item:'sold_today' > 0 %}up{% else %}down{%endif%}" >{{Malmö.0|get_item:'sold_today' | intcomma|floatformat:1}}%</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Sold Price, SEK</td>
+            <td>
+                {{Sweden.3|get_item:'sold_price_med' | intcomma}} /
+                <span class="{% if Sweden.2|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.2|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.1|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.1|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.0|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.0|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Stockholm.3|get_item:'sold_price_med' | intcomma}} /
+                <span class="{% if Stockholm.2|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.2|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.1|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.1|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.0|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.0|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Uppsala.3|get_item:'sold_price_med' | intcomma}} /
+                <span class="{% if Uppsala.2|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.2|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.1|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.1|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.0|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.0|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Göteborg.3|get_item:'sold_price_med' | intcomma}} /
+                <span class="{% if Göteborg.2|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.2|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.1|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.1|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.0|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.0|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Malmö.3|get_item:'sold_price_med' | intcomma}} /
+                <span class="{% if Malmö.2|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.2|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.1|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.1|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.0|get_item:'sold_price_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.0|get_item:'sold_price_med' | intcomma|floatformat:1}}%</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Sold Price per m<sup>2</sup>, SEK</td>
+            <td>
+                {{Sweden.3|get_item:'sold_price_sqm_med' | intcomma}} /
+                <span class="{% if Sweden.2|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.2|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.1|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.1|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.0|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.0|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Stockholm.3|get_item:'sold_price_sqm_med' | intcomma}} /
+                <span class="{% if Stockholm.2|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.2|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.1|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.1|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.0|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.0|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Uppsala.3|get_item:'sold_price_sqm_med' | intcomma}} /
+                <span class="{% if Uppsala.2|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.2|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.1|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.1|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.0|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.0|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Göteborg.3|get_item:'sold_price_sqm_med' | intcomma}} /
+                <span class="{% if Göteborg.2|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.2|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.1|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.1|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.0|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.0|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Malmö.3|get_item:'sold_price_sqm_med' | intcomma}} /
+                <span class="{% if Malmö.2|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.2|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.1|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.1|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.0|get_item:'sold_price_sqm_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.0|get_item:'sold_price_sqm_med' | intcomma|floatformat:1}}%</span>
+            </td>
+        </tr>
+        <tr>
+            <td>Property Area, m<sup>2</sup></td>
+            <td>
+                {{Sweden.3|get_item:'sold_area_med' | intcomma}} /
+                <span class="{% if Sweden.2|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.2|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.1|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.1|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Sweden.0|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Sweden.0|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Stockholm.3|get_item:'sold_area_med' | intcomma}} /
+                <span class="{% if Stockholm.2|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.2|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.1|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.1|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Stockholm.0|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Stockholm.0|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Uppsala.3|get_item:'sold_area_med' | intcomma}} /
+                <span class="{% if Uppsala.2|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.2|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.1|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.1|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Uppsala.0|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Uppsala.0|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Göteborg.3|get_item:'sold_area_med' | intcomma}} /
+                <span class="{% if Göteborg.2|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.2|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.1|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.1|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Göteborg.0|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Göteborg.0|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span>
+            </td>
+            <td>
+                {{Malmö.3|get_item:'sold_area_med' | intcomma}} /
+                <span class="{% if Malmö.2|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.2|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.1|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.1|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span> /
+                <span class="{% if Malmö.0|get_item:'sold_area_med' > 0 %}up{% else %}down{%endif%}" >{{Malmö.0|get_item:'sold_area_med' | intcomma|floatformat:1}}%</span>
+            </td>
+        </tr>
+
+    </tbody>
+
+
+</table>
 
 {% endblock %}
 

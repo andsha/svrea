@@ -1,0 +1,14 @@
+{% extends '../base.html' %}
+{% load humanize %}
+{% load static %}
+{% block content %}
+
+Title: {{post.title}}
+
+Text:
+{% autoescape off %}{{post.text}}{% endautoescape %}
+
+
+{% endblock %}
+
+

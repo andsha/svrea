@@ -259,13 +259,13 @@ function clearHistText(){
 <div id="full">
     <div class="container-fluid ">
         <form method="get" name="form_" id="histForm" value="hello">
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <div class="panel panel-primary text-center blue">
                     <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
                     <div style="padding:10px">
-                        # of bins <input type="text" name="num_bins" value="{{num_bins}}" size="3">
+                        # of bins <input type="text" name="num_bins" value="{{num_bins}}" size="3"></br>
                         Cutoffs: Lower <input type="text" name="LowerCutoff" value="{{LowerCutoff}}" size="3">%
-                        Upper <input type="text" name="UpperCutoff" value="{{UpperCutoff}}" size="3">%
+                        Upper <input type="text" name="UpperCutoff" value="{{UpperCutoff}}" size="3">%</br>
                         Style:
                         <select name="chart_type">
                             <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
@@ -273,15 +273,6 @@ function clearHistText(){
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
-                    <div id="listings_price_hist" style="height:600px"></div>
-                </div>
-                <div align="center" class="panel text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
-            </div>
-            <div class="col-md-12">
                 <div class="panel panel-primary text-center blue">
                     <div class="panel-heading"><h3 class="panel-title text-center">Histograms</h3></div>
                     <div style="padding:10px">
@@ -294,7 +285,7 @@ function clearHistText(){
                             <option {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
                             <option  {% if hist_type == "Days Before Sold" %} selected {% endif%}>Days Before Sold</option>
                             <option {% if hist_type == "Property Age" %} selected {% endif%}>Property Age</option>
-                        </select>
+                        </select></br>
                         Data:
                         <select name="data_type">
                             <option value="Abs" {% if data_type == "Abs" %} selected {% endif%}>Absolute</option>
@@ -302,7 +293,15 @@ function clearHistText(){
                         </select>
                     </div>
                 </div>
+                <div align="center" class="panel text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
             </div>
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
+                    <div id="listings_price_hist" style="height:600px"></div>
+                </div>
+            </div>
+
             <div class="col-md-12">
                 <div class="panel panel-primary" style="border:0;">
                     {% if request.user.is_authenticated %}
