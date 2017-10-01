@@ -1,10 +1,12 @@
 {% extends '../base.html' %}
 {% load humanize %}
 {% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{%static "css/style_index.css"%}">
+{% endblock %}
+
 {% block content %}
-
-
-
 <div class="container-fluid">
     <div class="col-md-8 col-md-offset-2">
         <div class="panel panel-primary">

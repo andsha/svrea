@@ -3,33 +3,18 @@
 {% load static %}
 {% load custom_ttags %}
 
+{% block styles %}
+<link rel="stylesheet" href="{%static "css/style_plots.css"%}">
+{% endblock %}
+
 {% block head%}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
-<style>
-    .js-example-basic-multiple{
-        width:70%;
-    }
-
-    .optionCounty{
-        font-weight: bold;
-    }
-
-    .optionMuni{
-        padding-left: 25px;
-    }
-
-</style>
-
 {% endblock%}
 
 {% block content %}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="{% static "js/js.cookie.js" %}"></script>
-
-
-
 <script type="text/javascript">
 
 google.charts.load('current', {'packages':['corechart', 'line']});
@@ -165,125 +150,121 @@ function clearSeriesText(){
 </script>
 
 
-<div id="full">
-    <div class="container-fluid ">
-        <form method="get" name="form_" id="histForm" value="hello">
-            <div class="col-md-12">
-                <div class="panel panel-primary text-center blue">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
-                    <div style="padding:10px">
-                        Style:
-                        <select name="chart_type">
-                            <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
-                            <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
-                        </select>
-                    </div>
+<form method="get" name="form_" id="histForm" value="hello">
+    <div class="histogram">
+        <div class="col-md-4">
+            <div class="panel panel-primary text-center blue">
+                <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
+                <div style="padding:10px">
+                    Style:
+                    <select name="chart_type">
+                        <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
+                        <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series Plot</h3></div>
-                    <div id="ts_chart" style="height:600px"></div>
-                </div>
-                <div align="center" class="panel text blue"><button name="refresh_plot"><h5>Refresh Plot</h5></button></div>
-            </div>
-            <div class="col-md-12">
-                <div class="panel panel-primary text-center blue">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Time Series</h3></div>
-                    <div style="padding:10px">
-                        <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
-                        From:<input type="date" id="period_from"  name="period_from" value="{{period_from}}">
-                        To:<input type="date" id="period_to"    name="period_to"   value="{{period_to}}">
-                        Period:<select name="period_step" id="period_step">
-                                <option {%if period_step == "Day"%} selected {%endif%}> Day </option>
-                                <option {%if period_step == "Week"%} selected {%endif%}> Week </option>
-                                <option {%if period_step == "Month"%} selected {%endif%}> Month </option>
-                                <option {%if period_step == "Quarter"%} selected {%endif%}> Quarter </option>
-                                <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
-                        </select>
-                        Display:
-                        <select name="data_type" id="data_type">
-                            <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
-                            <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
-                            <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
-                            <option {%if data_type == "Area"%} selected {%endif%}>Area</option>
-                            <option {%if data_type == "Rent"%} selected {%endif%}>Rent</option>
-                            <option {%if data_type == "Days Before Sold"%} selected {%endif%}>Days Before Sold</option>
-                            <option {%if data_type == "Property Age"%} selected {%endif%}>Property Age</option>
-                        </select>
-                    </div>
+            <div class="panel panel-primary text-center blue">
+                <div class="panel-heading"><h3 class="panel-title text-center">Time Series</h3></div>
+                <div style="padding:10px">
+                    <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
+                    From:<input type="date" id="period_from"  name="period_from" value="{{period_from}}"></br>
+                    To:<input type="date" id="period_to"    name="period_to"   value="{{period_to}}"></br>
+                    Period:<select name="period_step" id="period_step">
+                            <option {%if period_step == "Day"%} selected {%endif%}> Day </option>
+                            <option {%if period_step == "Week"%} selected {%endif%}> Week </option>
+                            <option {%if period_step == "Month"%} selected {%endif%}> Month </option>
+                            <option {%if period_step == "Quarter"%} selected {%endif%}> Quarter </option>
+                            <option {%if period_step == "Year"%} selected {%endif%}> Year </option>
+                    </select></br>
+                    Display:
+                    <select name="data_type" id="data_type">
+                        <option {%if data_type == "Number"%} selected {%endif%}>Number</option>
+                        <option {%if data_type == "Price"%} selected {%endif%}>Price</option>
+                        <option {%if data_type == "Price m2"%} selected {%endif%}>Price m2</option>
+                        <option {%if data_type == "Area"%} selected {%endif%}>Area</option>
+                        <option {%if data_type == "Rent"%} selected {%endif%}>Rent</option>
+                        <option {%if data_type == "Days Before Sold"%} selected {%endif%}>Days Before Sold</option>
+                        <option {%if data_type == "Property Age"%} selected {%endif%}>Property Age</option>
+                    </select>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="panel panel-primary" style="border:0;">
-                    {% if request.user.is_authenticated %}
-                    <div class="panel-primary text blue">
-                        {% if fav_ts %}
-                        <div style="">
-                            <input type="text" hidden name="fav_tsid" value="{{fav_ts.id}}">
-                            {{fav_ts.favouritename}}
-                            was created on {{fav_ts.creationdate}}
-                            and updated on {{fav_ts.lastupdatedate}}
-                            by {{fav_ts.username}}
-                            with comment <br><textarea name="fav_tscomment">{{fav_ts.comment}}</textarea>
-                        </div>
-                        {% endif %}
-                        <div style="float:left;">
-                            {% if fav_ts %}<button name="update_favourite" value=" ">Update {{fav_ts.favouritename}}</button>{% endif %}
-                            <button name="save_series" value=" ">{% if fav_ts %}Save as New Favourite{% else %}Add to Favourites{%endif%}</button>
-                            <input type="text" name="name_of_series" id="name_of_series" value="{% if fav_ts %} New Name{% else %}Series Name{%endif%}" onclick="clearSeriesText();">
-                        </div>
-                        <div style="float:right;">
-                            {% if fav_ts %}<button name="delete_series" value=" ">Delete {{fav_ts.favouritename}}</button>{%endif%}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                <br>
-                <div class="panel panel-primary" style="clear:both; border:0;" >
-                    <div class="text blue" id="ts_list">
-                        <div ><button name="test" type="button" onclick="newTS()">Add Series</button></div>
-                        {% for series in time_series %}
-                            <div id = "div_ts_{{forloop.counter0}}">
-                                <h5>
-                                    <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
-                                    {{forloop.counter0}}.
-                                    Type
-                                    <select name="ts_type_{{forloop.counter0}}" id="ts_type_{{forloop_counter0}}">
-                                        <option {% if series.ts_type == "Active" %} selected {% endif%}>Active</option>
-                                        <option {% if series.ts_type == "Sold" %} selected {% endif%}>Sold</option>
-                                    </select>
-                                    Property
-                                    <select name="p_type_{{forloop.counter0}}" id="p_type_{{forloop_counter0}}">
-                                        <option {% if series.p_type == "Villa" %} selected {% endif%}>Villa</option>
-                                        <option {% if series.p_type == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
-                                    </select>
-                                    Region:
-                                    <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
-                                         <option class="optionCounty" {% if 'Whole Sweden' in series.county_selected %} selected {% endif%}>Whole Sweden</option>
-                                        {% with clist=county_list|get_dic_value:"Whole Sweden" %}
-                                        {% for county, munis in clist.items %}
-                                            <option class="optionCounty" {% if county in series.county_selected %} selected {% endif%}>{{county}}</option>
-                                            {% for muni in munis%}
-                                            <option class="optionMuni" {% if muni in series.county_selected %} selected {% endif %}>{{muni}}</option>
-                                            {% endfor %}
+            <div align="center" class="panel text blue"><button name="refresh_plot"><h5>Refresh Plot</h5></button></div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title text-center">Time Series Plot</h3></div>
+                <div id="ts_chart" style="height:600px"></div>
+            </div>
+        </div>
 
-                                        {% endfor %}
-                                        {% endwith %}
-
-                                    </select>
-                                    <a href="javascript:removeTS({{forloop.counter0}})"> Remove</a>
-
-                                </h5>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        </form>
     </div>
-</div>
+    <div class="col-md-12">
+        <div class="panel panel-primary" style="border:0;">
+            {% if request.user.is_authenticated %}
+            <div class="panel-primary text blue">
+                {% if fav_ts %}
+                <div style="">
+                    <input type="text" hidden name="fav_tsid" value="{{fav_ts.id}}">
+                    {{fav_ts.favouritename}}
+                    was created on {{fav_ts.creationdate}}
+                    and updated on {{fav_ts.lastupdatedate}}
+                    by {{fav_ts.username}}
+                    with comment <br><textarea name="fav_tscomment">{{fav_ts.comment}}</textarea>
+                </div>
+                {% endif %}
+                <div style="float:left;">
+                    {% if fav_ts %}<button name="update_favourite" value=" ">Update {{fav_ts.favouritename}}</button>{% endif %}
+                    <button name="save_series" value=" ">{% if fav_ts %}Save as New Favourite{% else %}Add to Favourites{%endif%}</button>
+                    <input type="text" name="name_of_series" id="name_of_series" value="{% if fav_ts %} New Name{% else %}Series Name{%endif%}" onclick="clearSeriesText();">
+                </div>
+                <div style="float:right;">
+                    {% if fav_ts %}<button name="delete_series" value=" ">Delete {{fav_ts.favouritename}}</button>{%endif%}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <br>
+        <div class="panel panel-primary" style="clear:both; border:0;" >
+            <div class="text blue" id="ts_list">
+                <div ><button name="test" type="button" onclick="newTS()">Add Series</button></div>
+                {% for series in time_series %}
+                    <div id = "div_ts_{{forloop.counter0}}">
+                        <h5>
+                            <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
+                            {{forloop.counter0}}.
+                            Type
+                            <select name="ts_type_{{forloop.counter0}}" id="ts_type_{{forloop_counter0}}">
+                                <option {% if series.ts_type == "Active" %} selected {% endif%}>Active</option>
+                                <option {% if series.ts_type == "Sold" %} selected {% endif%}>Sold</option>
+                            </select>
+                            Property
+                            <select name="p_type_{{forloop.counter0}}" id="p_type_{{forloop_counter0}}">
+                                <option {% if series.p_type == "Villa" %} selected {% endif%}>Villa</option>
+                                <option {% if series.p_type == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
+                            </select>
+                            Region:
+                            <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
+                                 <option class="optionCounty" {% if 'Whole Sweden' in series.county_selected %} selected {% endif%}>Whole Sweden</option>
+                                {% with clist=county_list|get_dic_value:"Whole Sweden" %}
+                                {% for county, munis in clist.items %}
+                                    <option class="optionCounty" {% if county in series.county_selected %} selected {% endif%}>{{county}}</option>
+                                    {% for muni in munis%}
+                                    <option class="optionMuni" {% if muni in series.county_selected %} selected {% endif %}>{{muni}}</option>
+                                    {% endfor %}
 
+                                {% endfor %}
+                                {% endwith %}
+
+                            </select>
+                            <a href="javascript:removeTS({{forloop.counter0}})"> Remove</a>
+
+                        </h5>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</form>
 
 {% endblock %}
 

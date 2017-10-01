@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Func
+from django.db.models.functions import Coalesce
+from django.db.models import Func, Case, When, F, Value
 from django.shortcuts import render, reverse, redirect
 
 from svrea_etl.models import EtlListingsMonthly, EtlListingsQuarterly, EtlListingsYearly
@@ -39,13 +40,13 @@ def summary(request):
             messages.error(request, "Please Enter Correct User Name and Password ")
 
     period_type = 'Monthly'
-    period = datetime.date.today().replace(day=1)
-    month = '%s %s' %(calendar.month_name[datetime.date.today().month], datetime.date.today().year)
-    quarter = 'Q%s %s' %(1 if datetime.date.today().month <= 3
-                         else 2 if datetime.date.today().month <= 6
-                         else 3 if datetime.date.today().month <= 9
-                         else 4, datetime.date.today().year)
-    year = datetime.date.today().year
+    period = (datetime.date.today() - datetime.timedelta(days=1)).replace(day=1)
+    month = '%s %s' %(calendar.month_name[period.month], period.year)
+    quarter = 'Q%s %s' %(1 if period.month <= 3
+                         else 2 if period.month <= 6
+                         else 3 if period.month <= 9
+                         else 4, period.year)
+    year = period.year
     caption = "Numbers in the table refer to: Current Value/Change from Last Month/Change from Last Year/Change from 3 Years before"
 
     if request.GET.get('period_type'):
@@ -76,7 +77,7 @@ def summary(request):
                                    month = 1,
                                    year = int(request.GET.get('year')))
             year = request.GET.get('year')
-
+    #print(period_type)
     if period_type == 'Monthly':
         previous_period1 = monthdelta(period,-1)
         previous_period2 = period.replace(year=period.year - 1)
@@ -102,7 +103,7 @@ def summary(request):
         record_firstdate__in=[period, previous_period1, previous_period2, previous_period3],
         geographic_name__in=regions,
         property_type='Lägenhet'
-    ).annotate(date=To_char('record_firstdate', dtype='YYYY-MM-DD')) \
+    ).annotate(date=To_char('record_firstdate', dtype='YYYY-MM-DD'))\
         .values(
         'date',
         'geographic_name',
@@ -113,18 +114,24 @@ def summary(request):
         'sold_area_med'
     ).order_by('record_firstdate', 'geographic_name')
 
-    # for r in data:
-    #     print (r)
+
     rdata = {regions[i]: data[i::len(regions)] for i in range(len(regions))}
 
-    # for r in rdata:
-    #     print(r, rdata[r])
+    rdatalen = len(rdata)
+    while len(rdata[regions[0]]) < 4:
+        for a in rdata:
+            rdata[a].insert(0, dict(rdata[a][len(rdata[a]) - 1]))
+
 
     for a in rdata:
+        #print(rdata[a][0], rdata[a][1])
         rdata[a][0]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][0]['active_listings'] - 1) * 100
+        #print('q')
+        #print(rdata[a][0], rdata[a][1])
         rdata[a][1]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][1]['active_listings'] - 1) * 100
+        #print('e')
         rdata[a][2]['active_listings'] = (rdata[a][3]['active_listings'] / rdata[a][2]['active_listings'] - 1) * 100
-
+        #print('f')
         rdata[a][0]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][0]['sold_today'] - 1) * 100
         rdata[a][1]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][1]['sold_today'] - 1) * 100
         rdata[a][2]['sold_today'] = (rdata[a][3]['sold_today'] / rdata[a][2]['sold_today'] - 1) * 100
@@ -133,16 +140,25 @@ def summary(request):
         rdata[a][1]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][1]['sold_price_med'] - 1) * 100
         rdata[a][2]['sold_price_med'] = (rdata[a][3]['sold_price_med'] / rdata[a][2]['sold_price_med'] - 1) * 100
 
-        rdata[a][0]['sold_price_sqm_med'] = (
-                                            rdata[a][3]['sold_price_sqm_med'] / rdata[a][0]['sold_price_sqm_med'] - 1) * 100
-        rdata[a][1]['sold_price_sqm_med'] = (
-                                            rdata[a][3]['sold_price_sqm_med'] / rdata[a][1]['sold_price_sqm_med'] - 1) * 100
-        rdata[a][2]['sold_price_sqm_med'] = (
-                                            rdata[a][3]['sold_price_sqm_med'] / rdata[a][2]['sold_price_sqm_med'] - 1) * 100
+        rdata[a][0]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][0]['sold_price_sqm_med'] - 1) * 100
+        rdata[a][1]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][1]['sold_price_sqm_med'] - 1) * 100
+        rdata[a][2]['sold_price_sqm_med'] = (rdata[a][3]['sold_price_sqm_med'] / rdata[a][2]['sold_price_sqm_med'] - 1) * 100
 
         rdata[a][0]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][0]['sold_area_med'] - 1) * 100
         rdata[a][1]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][1]['sold_area_med'] - 1) * 100
         rdata[a][2]['sold_area_med'] = (rdata[a][3]['sold_area_med'] / rdata[a][2]['sold_area_med'] - 1) * 100
+
+    #print(rdatalen)
+    for a in rdata:
+        #print(a)
+        for idx in range(4-rdatalen):
+            #print(idx)
+            for key in rdata[a][idx]:
+                #print(key)
+                rdata[a][idx][key] = ''
+
+
+
 
     months = []
     d = datetime.date(day = 1, month=1,year=2013)

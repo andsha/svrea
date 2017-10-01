@@ -1,6 +1,9 @@
 {% extends '../base.html' %}
 {% load humanize %}
 {% load static %}
+{% block styles %}
+<link rel="stylesheet" href="{%static "css/style_posts.css"%}">
+{% endblock %}
 {% block content %}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 

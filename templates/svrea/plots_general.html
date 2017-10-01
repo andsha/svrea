@@ -2,6 +2,10 @@
 {% load humanize %}
 {% load static %}
 
+{% block styles %}
+<link rel="stylesheet" href="{%static "css/style_plots.css"%}">
+{% endblock %}
+
 {% block content %}
 {% if success %}
 

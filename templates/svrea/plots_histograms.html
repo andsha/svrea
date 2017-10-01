@@ -3,27 +3,14 @@
 {% load static %}
 {% load custom_ttags %}
 
+{% block styles %}
+<link rel="stylesheet" href="{%static "css/style_plots.css"%}">
+{% endblock %}
+
 {% block head%}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-
-<style>
-    .js-example-basic-multiple{
-        width:50%;
-    }
-
-    .optionCounty{
-        font-weight: bold;
-    }
-
-    .optionMuni{
-        padding-left: 25px;
-    }
-
-</style>
-
 {% endblock%}
-
 {% block content %}
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="{% static "js/js.cookie.js" %}"></script>
@@ -141,6 +128,7 @@ function newHist() {
                 option4.text = 'Year'
                 period_type.add(option4)
         h5.appendChild(period_type)
+        h5.appendChild(document.createTextNode(' '));
 
             input_day = document.createElement('input')
             input_day.type = 'date'
@@ -256,134 +244,132 @@ function clearHistText(){
 </script>
 
 
-<div id="full">
-    <div class="container-fluid ">
-        <form method="get" name="form_" id="histForm" value="hello">
-            <div class="col-md-4">
-                <div class="panel panel-primary text-center blue">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
-                    <div style="padding:10px">
-                        # of bins <input type="text" name="num_bins" value="{{num_bins}}" size="3"></br>
-                        Cutoffs: Lower <input type="text" name="LowerCutoff" value="{{LowerCutoff}}" size="3">%
-                        Upper <input type="text" name="UpperCutoff" value="{{UpperCutoff}}" size="3">%</br>
-                        Style:
-                        <select name="chart_type">
-                            <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
-                            <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="panel panel-primary text-center blue">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Histograms</h3></div>
-                    <div style="padding:10px">
-                        <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
-                        Type:
-                        <select name="hist_type">
-                            <option {% if hist_type == "Price" %} selected {% endif%}>Price</option>
-                            <option {% if hist_type == "Price m2" %} selected {% endif%}>Price m2</option>
-                            <option {% if hist_type == "Area" %} selected {% endif%}>Area</option>
-                            <option {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
-                            <option  {% if hist_type == "Days Before Sold" %} selected {% endif%}>Days Before Sold</option>
-                            <option {% if hist_type == "Property Age" %} selected {% endif%}>Property Age</option>
-                        </select></br>
-                        Data:
-                        <select name="data_type">
-                            <option value="Abs" {% if data_type == "Abs" %} selected {% endif%}>Absolute</option>
-                            <option value="Rel" {% if data_type == "Rel" %} selected {% endif%}>Relative</option>
-                        </select>
-                    </div>
-                </div>
-                <div align="center" class="panel text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
-            </div>
-            <div class="col-md-8">
-                <div class="panel panel-primary">
-                    <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
-                    <div id="listings_price_hist" style="height:600px"></div>
+
+
+<form method="get" name="form_" id="histForm" value="hello">
+    <div class="histogram">
+        <div class="col-md-4">
+            <div class="panel panel-primary text-center blue">
+                <div class="panel-heading"><h3 class="panel-title text-center">Plot Style</h3></div>
+                <div class="plotStyle">
+                    # of bins <input type="text" name="num_bins" value="{{num_bins}}" size="3"></br>
+                    Cutoffs: Lower <input type="text" name="LowerCutoff" value="{{LowerCutoff}}" size="3">%
+                    Upper <input type="text" name="UpperCutoff" value="{{UpperCutoff}}" size="3">%</br>
+                    Style:
+                    <select name="chart_type">
+                        <option value="Column" {% if chart_type == "Column" %} selected {% endif%}>Column</option>
+                        <option value="Line" {% if chart_type == "Line" %} selected {% endif%}>Line</option>
+                    </select>
                 </div>
             </div>
-
-            <div class="col-md-12">
-                <div class="panel panel-primary" style="border:0;">
-                    {% if request.user.is_authenticated %}
-                    <div class="panel-primary text blue">
-                        {% if fav_h %}
-                        <div style="">
-                            <input type="text" hidden name="fav_hid" value="{{fav_h.id}}">
-                            {{fav_h.favouritename}}
-                            was created on {{fav_h.creationdate}}
-                            and updated on {{fav_h.lastupdatedate}}
-                            by {{fav_h.username}}
-                            with comment <br><textarea name="fav_hcomment">{{fav_h.comment}}</textarea>
-                        </div>
-                        {% endif %}
-                        <div style="float:left;">
-                            {% if fav_h %}<button name="update_favourite" value=" ">Update {{fav_h.favouritename}}</button>{% endif %}
-                            <button name="save_hist" value=" ">{% if fav_h %}Save as New Favourite{% else %}Add to Favourites{%endif%}</button>
-                            <input type="text" name="name_of_hist" id="name_of_hist" value="{% if fav_h %} New Name{% else %}Histogram Name{%endif%}" onclick="clearHistText();">
-                        </div>
-                        <div style="float:right;">
-                            {% if fav_h %}<button name="delete_hist" value=" ">Delete {{fav_h.favouritename}}</button>{%endif%}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-                <br>
-                <div class="panel panel-primary" style="clear:both; border:0;">
-                    <div class="text blue" id="new_hist_list">
-                        <button name="test" type="button" onclick="newHist()">Add Histogram</button>
-                        <!--<button name="tte" style="float: centre;"><h3>Refresh Histogram</h3></button>-->
-                        <br><br>
-                        {% for hist in histInfo %}
-                            <div id = "div_hist_{{forloop.counter0}}">
-                                <h5>
-                                    <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
-                                    {{forloop.counter0}}. Dates:
-                                    <select name="period_type_{{forloop.counter0}}" id="period_type_{{forloop.counter0}}" onchange="displayPeriodForm({{forloop.counter0}})">
-                                        <option {%if hist.period_type == "Day"%} selected {%endif%}>Day</option>
-                                        <option {%if hist.period_type == "Week"%} selected {%endif%}>Week</option>
-                                        <option {%if hist.period_type == "Month"%} selected {%endif%}>Month</option>
-                                        <option {%if hist.period_type == "Quarter"%} selected {%endif%}>Quarter</option>
-                                        <option {%if hist.period_type == "Year"%} selected {%endif%}>Year</option>
-                                    </select>
-                                    <input type="date" id="period_day_{{forloop.counter0}}"      name="period_day_{{forloop.counter0}}"   {% if hist.period_type != "Day"%}  style="display:none" {%endif%} value="{{hist.period_day}}">
-                                    <input type="week" id="period_week_{{forloop.counter0}}"     name="period_week_{{forloop.counter0}}"  {% if hist.period_type != "Week"%}  style="display:none" {%endif%} value="{{hist.period_week}}">
-                                    <input type="month"id="period_month_{{forloop.counter0}}"    name="period_month_{{forloop.counter0}}" {% if hist.period_type != "Month"%} style="display:none" {%endif%} value="{{hist.period_month}}">
-                                    <input type="text" id="period_quarter_{{forloop.counter0}}"     name="period_quarter_{{forloop.counter0}}"  {% if hist.period_type != "Quarter"%}  style="display:none" {%endif%} value="{{hist.period_quarter}}">
-                                    <input type="year" id="period_year_{{forloop.counter0}}"     name="period_year_{{forloop.counter0}}"  {% if hist.period_type != "Year"%}  style="display:none" {%endif%} value="{{hist.period_year}}">
-                                    Type:
-                                    <select name="property_type_{{forloop.counter0}}">
-                                        <option {% if hist.property_type == "Active" %} selected {% endif%}>Active</option>
-                                        <option {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
-                                    </select>
-                                    Property:
-                                    <select name="property_{{forloop.counter0}}">
-                                        <option {% if hist.property == "Villa" %} selected {% endif%}>Villa</option>
-                                        <option {% if hist.property == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
-                                    </select>
-                                    Region:
-                                    <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
-                                         <option class="optionCounty" {% if 'Whole Sweden' in hist.county_selected %} selected {% endif%}>Whole Sweden</option>
-                                        {% with clist=county_list|get_dic_value:"Whole Sweden" %}
-                                        {% for county, munis in clist.items %}
-                                            <option class="optionCounty" {% if county in hist.county_selected %} selected {% endif%}>{{county}}</option>
-                                            {% for muni in munis%}
-                                            <option class="optionMuni" {% if muni in hist.county_selected %} selected {% endif %}>{{muni}}</option>
-                                            {% endfor %}
-
-                                        {% endfor %}
-                                        {% endwith %}
-
-                                    </select>
-                                    <a href="javascript:removeHist({{forloop.counter0}})"> Remove</a>
-                                </h5>
-                            </div>
-                        {% endfor %}
-                    </div>
+            <div class="panel panel-primary text-center blue">
+                <div class="panel-heading"><h3 class="panel-title text-center">Histograms</h3></div>
+                <div class="histograms">
+                    <input type="hidden" name="g_child" id="g_child" value="{{g_child}}">
+                    Type:
+                    <select name="hist_type">
+                        <option {% if hist_type == "Price" %} selected {% endif%}>Price</option>
+                        <option {% if hist_type == "Price m2" %} selected {% endif%}>Price m2</option>
+                        <option {% if hist_type == "Area" %} selected {% endif%}>Area</option>
+                        <option {% if hist_type == "Rent" %} selected {% endif%}>Rent</option>
+                        <option  {% if hist_type == "Days Before Sold" %} selected {% endif%}>Days Before Sold</option>
+                        <option {% if hist_type == "Property Age" %} selected {% endif%}>Property Age</option>
+                    </select></br>
+                    Data:
+                    <select name="data_type">
+                        <option value="Abs" {% if data_type == "Abs" %} selected {% endif%}>Absolute</option>
+                        <option value="Rel" {% if data_type == "Rel" %} selected {% endif%}>Relative</option>
+                    </select>
                 </div>
             </div>
-        </form>
+            <div align="center" class="panel text blue"><button name="tte"><h5>Refresh Histogram</h5></button></div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading"><h3 class="panel-title text-center">Price Histogram</h3></div>
+                <div id="listings_price_hist" style="height:600px"></div>
+            </div>
+        </div>
     </div>
-</div>
+    <div class="col-md-12">
+        <div class="panel panel-primary" style="border:0;">
+            {% if request.user.is_authenticated %}
+            <div class="panel-primary text blue">
+                {% if fav_h %}
+                <div style="">
+                    <input type="text" hidden name="fav_hid" value="{{fav_h.id}}">
+                    {{fav_h.favouritename}}
+                    was created on {{fav_h.creationdate}}
+                    and updated on {{fav_h.lastupdatedate}}
+                    by {{fav_h.username}}
+                    with comment <br><textarea name="fav_hcomment">{{fav_h.comment}}</textarea>
+                </div>
+                {% endif %}
+                <div style="float:left;">
+                    {% if fav_h %}<button name="update_favourite" value=" ">Update {{fav_h.favouritename}}</button>{% endif %}
+                    <button name="save_hist" value=" ">{% if fav_h %}Save as New Favourite{% else %}Add to Favourites{%endif%}</button>
+                    <input type="text" name="name_of_hist" id="name_of_hist" value="{% if fav_h %} New Name{% else %}Histogram Name{%endif%}" onclick="clearHistText();">
+                </div>
+                {% if fav_h %}<div style="float:right;">
+                    <button name="delete_hist" value=" ">Delete {{fav_h.favouritename}}</button>
+                </div>{%endif%}
+            </div>
+            {% endif %}
+        </div>
+        <br>
+        <div class="panel panel-primary" style="clear:both; border:0;">
+            <div class="text blue" id="new_hist_list">
+                <button name="test" type="button" onclick="newHist()">Add Histogram</button>
+                <!--<button name="tte" style="float: centre;"><h3>Refresh Histogram</h3></button>-->
+                <br><br>
+                {% for hist in histInfo %}
+                    <div id = "div_hist_{{forloop.counter0}}">
+                        <h5>
+                            <input type="hidden" name="index_{{forloop.counter0}}" value="{{forloop.counter0}}">
+                            {{forloop.counter0}}. Dates:
+                            <select name="period_type_{{forloop.counter0}}" id="period_type_{{forloop.counter0}}" onchange="displayPeriodForm({{forloop.counter0}})">
+                                <option {%if hist.period_type == "Day"%} selected {%endif%}>Day</option>
+                                <option {%if hist.period_type == "Week"%} selected {%endif%}>Week</option>
+                                <option {%if hist.period_type == "Month"%} selected {%endif%}>Month</option>
+                                <option {%if hist.period_type == "Quarter"%} selected {%endif%}>Quarter</option>
+                                <option {%if hist.period_type == "Year"%} selected {%endif%}>Year</option>
+                            </select>
+                            <input type="date" id="period_day_{{forloop.counter0}}"      name="period_day_{{forloop.counter0}}"   {% if hist.period_type != "Day"%}  style="display:none" {%endif%} value="{{hist.period_day}}">
+                            <input type="week" id="period_week_{{forloop.counter0}}"     name="period_week_{{forloop.counter0}}"  {% if hist.period_type != "Week"%}  style="display:none" {%endif%} value="{{hist.period_week}}">
+                            <input type="month"id="period_month_{{forloop.counter0}}"    name="period_month_{{forloop.counter0}}" {% if hist.period_type != "Month"%} style="display:none" {%endif%} value="{{hist.period_month}}">
+                            <input type="text" id="period_quarter_{{forloop.counter0}}"     name="period_quarter_{{forloop.counter0}}"  {% if hist.period_type != "Quarter"%}  style="display:none" {%endif%} value="{{hist.period_quarter}}">
+                            <input type="year" id="period_year_{{forloop.counter0}}"     name="period_year_{{forloop.counter0}}"  {% if hist.period_type != "Year"%}  style="display:none" {%endif%} value="{{hist.period_year}}">
+                            Type:
+                            <select name="property_type_{{forloop.counter0}}">
+                                <option {% if hist.property_type == "Active" %} selected {% endif%}>Active</option>
+                                <option {% if hist.property_type == "Sold" %} selected {% endif%}>Sold</option>
+                            </select>
+                            Property:
+                            <select name="property_{{forloop.counter0}}">
+                                <option {% if hist.property == "Villa" %} selected {% endif%}>Villa</option>
+                                <option {% if hist.property == "Lägenhet" %} selected {% endif%}>Lägenhet</option>
+                            </select>
+                            Region:
+                            <select class="js-example-basic-multiple" name="county_selected_{{forloop.counter0}}" multiple="multiple" required>
+                                 <option class="optionCounty" {% if 'Whole Sweden' in hist.county_selected %} selected {% endif%}>Whole Sweden</option>
+                                {% with clist=county_list|get_dic_value:"Whole Sweden" %}
+                                {% for county, munis in clist.items %}
+                                    <option class="optionCounty" {% if county in hist.county_selected %} selected {% endif%}>{{county}}</option>
+                                    {% for muni in munis%}
+                                    <option class="optionMuni" {% if muni in hist.county_selected %} selected {% endif %}>{{muni}}</option>
+                                    {% endfor %}
 
+                                {% endfor %}
+                                {% endwith %}
+
+                            </select>
+                            <a href="javascript:removeHist({{forloop.counter0}})"> Remove</a>
+                        </h5>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</form>
 {% endblock %}
 

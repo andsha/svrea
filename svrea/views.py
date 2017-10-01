@@ -500,7 +500,7 @@ def maps_listings(request):
                                                                    'latestprice',
                                                                    'livingarea',
                                                                    'floor'
-                                                                         )[:5000]  # , booliid__exact = '2162349')
+                                                                         )[:2]  # , booliid__exact = '2162349')
     #print(len(listing_list))
 
     data = []  # ['Lat', 'Long', 'tip', 'type']

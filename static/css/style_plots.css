@@ -1,0 +1,128 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{padding: 0;margin: 0}
+html{
+	background: #6CBDEC;
+  background: -webkit-linear-gradient(#6CBDEC, #FFFFFF);
+  background: -o-linear-gradient(#6CBDEC, #FFFFFF);
+  background: linear-gradient(#6CBDEC, #FFFFFF);
+	font-size: 100%;
+
+}
+body{
+	font-family: 'Montserrat', sans-serif;
+	font-size: 100%;
+	color:#0000CC;
+	background-color: transparent;
+}
+.panel.panel-primary{
+	border-color: transparent;
+	border-radius: 0;
+	padding: 0;
+}
+.histogram{
+	display: block;
+	width: 94%;
+	float: left;
+	background: #ffffff;
+	margin: 3%;
+	padding-top: 10px;
+}
+.panel-primary>.panel-heading{
+	background-color: #ffffff;
+	border: none;
+}
+h3.panel-title.text-center{
+	color:#0000CC !important;
+	font-size: 120% !important;
+	font-weight: 700;
+}
+.panel{
+	box-shadow: none;
+}
+.col-md-4{
+	width: 20%;
+	padding-right: 0;
+}
+.col-md-8{
+	width: 80%;
+	padding-left: 0;
+}
+
+.plotStyle{
+	text-align: left;
+	margin-top: 20px;
+	padding: 0 10%;
+	line-height: 160%;
+}
+.histograms{
+	text-align: left;
+	margin-top: 20px;
+	padding: 0 10%;
+	line-height: 150%;
+}
+button.btn.btn-default{
+	color: white;
+	border-radius: 50px;
+	border-color: transparent;
+	background:#0000CC;
+	/*linear-gradient(to right, #0000FF, #00FFFF);*/
+}
+input, select, option {
+	background-color: #CCCCCC;
+	border: none;
+	height: 22px;
+
+}
+button{
+	color: white;
+	border-radius: 50px;
+	border-color: transparent;
+	background:#0000CC;
+	font-size: 80%;
+	padding: 7px 13px;
+	}
+h5{
+	margin:0;
+	line-height: 1.7em;
+	word-spacing: 5px;
+	}
+.container-fluid>.navbar-collapse, .container-fluid>.navbar-header, .container>.navbar-collapse, .container>.navbar-header{
+	padding: 0;
+}
+.col-md-12{
+	display: block;
+	width: 94%;
+	float: left;
+	margin: 3%;
+}
+.panel-primary.text.blue{
+	background-color: transparent;
+}
+.panel.panel-primary{
+	background-color: transparent;
+}
+.select2-container--default .select2-selection--multiple{
+	height: 19px;
+	border-radius: 0;
+	background-color: #CCCCCC;
+	border: none;
+}
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+	float: none;
+}
+
+.js-example-basic-multiple{
+        width:50%;
+    }
+
+    .optionCounty{
+        font-weight: bold;
+    }
+    .optionMuni{
+        padding-left: 25px;
+    }
+
+
+
