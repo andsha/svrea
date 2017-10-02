@@ -1,0 +1,18 @@
+@charset "utf-8"
+
+*{ padding: 0;	margin: 0;}
+html{
+
+	background: url("img/svreaBackground.cc415774e539.png") no-repeat center center fixed;
+
+}
+
+div.col-md-8{
+	display: block;
+	width:800px;
+	background-color: white;
+	margin: 5% auto;
+	padding: 0 4%;
+	float: none;
+
+}
