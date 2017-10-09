@@ -119,4 +119,175 @@ footer {
 	width: 100%;
   }
 
+@media only screen and (max-width: 768px){
+
+.navbar.navbar-default{
+	width: 700px;
+	height: 110px;
+	}
+
+.logOut{
+	width: 100%;
+	padding-right: 30px;
+	}
+
+a.dropdown-toggle{
+	font-size: 90%;
+		}
+.rea {
+	font-size:500%;
+	font-weight: 900;
+	margin: 3% 0 0 0;
+	}
+body{
+	font-size: 100%;
+	}
+.nav>li>a {
+    padding: 15px 32px 0 10px;
+}
+
+	@media only screen and (max-width: 425px){
+
+body{
+	font-size: 80%;
+	}
+.navbar.navbar-default{
+	width: 300px;
+	height: 130px;
+}
+a.dropdown-toggle{
+	font-size: 110%;
+	}
+	.navbar-form.navbar-right{
+		float: right;
+		box-shadow: none;
+		margin-bottom: 0;
+	}
+
+.nav>li>a {
+    padding: 10px 20px 0 40px;
+}
+	.nav>li{
+   display: inline-block;
+}
+
+.rea {
+	font-size:400%;
+	font-weight: 900;
+	margin: 3% 0;
+	}
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+.logOut{
+	width: 100%;
+	padding-top: 15px;
+		}
+	.container-fluid>.navbar-collapse{
+		margin: 0 auto;
+	}
+	.navbar-text.navbar-right{
+	margin-top: 25px;
+}
+h1{
+	font-size:160%;
+	margin: 20px 3%;
+	}
+
+
+@media only screen and (max-width: 375px){
+
+body{
+	font-size: 80%;
+	}
+.navbar.navbar-default{
+	width: 300px;
+	height: 100px;
+}
+a.dropdown-toggle{
+	font-size: 90%;
+	}
+	.navbar-form.navbar-right{
+		float: right;
+		box-shadow: none;
+		margin-bottom: 0;
+	}
+
+.nav>li>a {
+    padding: 13px 0 10px 30px;
+}
+	.nav>li{
+   display: inline-block;
+}
+
+.rea {
+	font-size:450%;
+	font-weight: 900;
+	margin: 3% 0 0 0;
+	}
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+.logOut{
+	width: 100%;
+
+		}
+	.container-fluid>.navbar-collapse{
+		margin: 0 auto;
+	}
+
+h1{
+	font-size:160%;
+	}
+
+@media only screen and (max-width: 320px){
+
+body{
+	font-size: 80%;
+	}
+.navbar.navbar-default{
+	width: 250px;
+	height: 130px;
+}
+a.dropdown-toggle{
+	font-size: 90%;
+	}
+	.navbar-form.navbar-right{
+		float: right;
+		box-shadow: none;
+		margin-bottom: 0;
+	}
+
+.nav>li>a {
+    padding: 10px 0 0 40px;
+}
+	.nav>li{
+   display: inline-block;
+}
+
+.rea {
+	font-size:300%;
+	font-weight: 900;
+	margin: 3% 0 0 0;
+	}
+	.navbar-default .navbar-collapse, .navbar-default .navbar-form{
+		border: none;
+	}
+.logOut{
+	width: 100%;
+
+		}
+	.container-fluid>.navbar-collapse{
+		margin: 0 auto;
+
+	}
+h1{
+	font-size:100% ;
+	}
+.navbar-text.navbar-right{
+	margin-top: 18px;
+}
+
+}
+
 
