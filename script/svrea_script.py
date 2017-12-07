@@ -305,6 +305,7 @@ class Svrea_script():
             # print(data.downloaded, data.uploaded, data.type, data.areacode)
 
             for listing in data.rawdata[data.type]:
+                #logging.info(listing)
 
                 if Aux.objects.get(key='UploadAuxKey').value != 'run':
                     info.status = 'stopped'
@@ -340,14 +341,14 @@ class Svrea_script():
                 areaname = None
 
                 if 'streetAddress' in listing['location']['address']:
-                    house = re.search('\\d+[^ ]*', listing['location']['address']['streetAddress'])
+                    house = re.search('\\d+[^ \s]*', listing['location']['address']['streetAddress'])
 
                     if house is not None:
                         house = house.group(0)
                     else:
                         house = None
 
-                    street = re.sub('\\d+[^ ]*', '', listing['location']['address']['streetAddress'])
+                    street = re.sub('\\d+[^ \s]*', '', listing['location']['address']['streetAddress'])
 
                 if 'city' in listing['location']['address']:
                     city = listing['location']['address']['city']
@@ -363,6 +364,7 @@ class Svrea_script():
                 if 'namedAreas' in listing['location']:
                     areaname = listing['location']['namedAreas']
 
+                #logging.info(house)
                 address, address_created = Address.objects.update_or_create(
                     house=house,
                     street=street,
