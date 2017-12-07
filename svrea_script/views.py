@@ -86,7 +86,9 @@ def script_run(request):
         params = {'upload' : True,
                   'forced' : True}
         script = Svrea_script(params=params, username=request.user.username)
+        #print("RUN")
         res = q.enqueue(script.run, timeout=workertimeout)
+        #print("RUNNING:",res)
     elif request.POST.get('analyze'):
         q = Queue(connection=conn)
         etlperiodtype = request.POST.get('etlperiodtype')

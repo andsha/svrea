@@ -91,10 +91,13 @@ DATABASES = {
 
 
 db_from_env = dj_database_url.config(conn_max_age=0)
-
+#print(db_from_env)
 #db_from_env['OPTIONS'] = {'options':'-c search_path=django'}
 #print(db_from_env)
 DATABASES['default'].update(db_from_env)
+
+
+#print(DATABASES)
 
 
 # *************************************  Password validation **************************

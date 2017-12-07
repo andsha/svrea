@@ -134,7 +134,7 @@ class Svrea_script():
         runtoday = False
         err = 0
         a = None
-
+        #logging.info("1")
         # looking for script matching current config
         # if no script matching current config is found, then generate new Info entry
         for s in today_scripts:
@@ -150,7 +150,7 @@ class Svrea_script():
                     s.save()
                     info = s
                     break
-
+       # logging.info("2")
         # New entry since no script matching current config was found
         if not runtoday:
             l = Info(user_name = self.username,
@@ -158,7 +158,7 @@ class Svrea_script():
                      status = 'started')
             l.save()
             info = l
-
+        #logging.info("3")
         # ___ First, download data from web ___
         if 'download' in self.options:
             tolog(INFO, ("Downloading %s" %self.options['download']))
@@ -168,11 +168,12 @@ class Svrea_script():
 
         # ___ Second, upload downloaded data from data table to Listings, Address etc ___
         if 'upload' in self.options and self.options['upload']:
+            #logging.info("4")
             tolog(INFO, 'Uploading data')
             a, created = Aux.objects.update_or_create(key='UploadAuxKey', defaults={"key": "UploadAuxKey",
                                                                          "value": "run"})
             err += self.uploadData(info=info)
-
+            #logging.info("5", err)
         # ___ Third, do ETL on uploaded data ___
         if 'analyze' in self.options and self.options['analyze']:
             tolog(INFO, 'Analyzing Data')
@@ -289,11 +290,14 @@ class Svrea_script():
 
 
     def uploadData(self, info=None):
+        #logging.info("IN")
         data_to_upload = Rawdata.objects.filter(isuploaded__exact=False). \
             annotate(downloaded_date=Datetime_to_date('downloaded')). \
-            order_by('downloaded_date', '-type', 'areacode')
+            order_by('downloaded_date', '-type', 'areacode')[:50]
+        #logging.info("OK", data_to_upload)
 
         for data in data_to_upload:
+            #logging.info(data)
             today = data.downloaded.date()
             if data.type == 'sold':
                 Listings.objects.filter(isactive=True). \
@@ -301,6 +305,7 @@ class Svrea_script():
             # print(data.downloaded, data.uploaded, data.type, data.areacode)
 
             for listing in data.rawdata[data.type]:
+
                 if Aux.objects.get(key='UploadAuxKey').value != 'run':
                     info.status = 'stopped'
                     info.save()
