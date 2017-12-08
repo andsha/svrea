@@ -293,7 +293,7 @@ class Svrea_script():
         #logging.info("IN")
         data_to_upload = Rawdata.objects.filter(isuploaded__exact=False). \
             annotate(downloaded_date=Datetime_to_date('downloaded')). \
-            order_by('downloaded_date', '-type', 'areacode')
+            order_by('downloaded_date', '-type', 'areacode')[:200]
         #logging.info("OK", data_to_upload)
 
         for data in data_to_upload:
