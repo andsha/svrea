@@ -39,7 +39,8 @@
             var map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 63.210463, lng:  14.256282},
                 zoom: 5,
-                scaleControl: true
+                scaleControl: true,
+                clickableIcons: false
             });
             markers = {{ data | safe | intcomma }}
 
@@ -63,22 +64,28 @@
                         ico = ico_def;
                 }
 
+
+
                 var marker = new google.maps.Marker({
                     position: {lat: markers[i][0], lng: markers[i][1]},
                     map : map,
-                    title : markers[i][2],
+                    fitle : markers[i][2],
                     icon : ico
                 });
 
                 marker.addListener('click', (function(marker, i) {
                     return function() {
-                    info.setContent(marker.title);
+
+                    info.setContent(marker.fitle);
                     info.open(map, marker);
                     }
                  })(marker, i));
 
+
                 mlist.push(marker)
             }
+
+
 
             var markerCluster = new MarkerClusterer(map,mlist,{imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m',
                                                               maxZoom:12,
