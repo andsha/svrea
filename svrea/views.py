@@ -654,7 +654,7 @@ def plots_histograms(request):
             histInfo[-1]['period_day'] = request.GET.get('period_day_%s' % idx)
             histInfo[-1]['period_week'] = request.GET.get('period_week_%s' % idx)
             histInfo[-1]['period_month'] = request.GET.get('period_month_%s' % idx)
-            histInfo[-1]['period_quarter'] = request.GET.get('period_quater_%s' % idx)
+            histInfo[-1]['period_quarter'] = request.GET.get('period_quarter_%s' % idx)
             histInfo[-1]['period_year'] = request.GET.get('period_year_%s' % idx)
             idx += 1
 
@@ -736,6 +736,8 @@ def plots_histograms(request):
             datefrom = datetime.datetime.strptime(hist["period_month"] + '-1', "%Y-%m-%d")
             dateto = datefrom + datetime.timedelta(days=calendar.monthrange(datefrom.year, datefrom.month)[1])
         elif hist['period_type'] == 'Quarter':
+            #print("hist", hist)
+            #print("Period quarter:", hist['period_quarter'])
             datefrom = datetime.date(day = 1,
                                      month = 1 if hist['period_quarter'][6] == '1' else 4 if hist['period_quarter'][6] == '2' else 7 if hist['period_quarter'][6] == '3' else 10,
                                      year = int(hist['period_quarter'][:4]))
