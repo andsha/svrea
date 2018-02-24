@@ -134,7 +134,7 @@ class Svrea_script():
         runtoday = False
         err = 0
         a = None
-        #logging.info("1")
+        logging.info("1")
         # looking for script matching current config
         # if no script matching current config is found, then generate new Info entry
         for s in today_scripts:
@@ -293,16 +293,16 @@ class Svrea_script():
         #logging.info("IN")
         data_to_upload = Rawdata.objects.filter(isuploaded__exact=False). \
             annotate(downloaded_date=Datetime_to_date('downloaded')). \
-            order_by('downloaded_date', '-type', 'areacode')
-        #logging.info("OK", data_to_upload)
+            order_by('downloaded_date', '-type', 'areacode')[:1]
+
 
         for data in data_to_upload:
-            #logging.info(data)
+            logging.info("data")
             today = data.downloaded.date()
             if data.type == 'sold':
                 Listings.objects.filter(isactive=True). \
                     update(isactive=False, dateinactive=today)
-            # print(data.downloaded, data.uploaded, data.type, data.areacode)
+            #print(data.downloaded, data.uploaded, data.type, data.areacode)
 
             for listing in data.rawdata[data.type]:
                 #logging.info(listing)
@@ -319,7 +319,7 @@ class Svrea_script():
                 sourcename = listing['source']['name']
                 sourcetype = listing['source']['type']
                 sourceurl = listing['source']['url']
-                # print(sourceid, sourcename,sourcetype, sourceurl )
+                #logging.info("%s %s %s %s " %(sourceid, sourcename,sourcetype, sourceurl ))
 
                 (source, source_created) = Source.objects.update_or_create(
                     sourceid=sourceid,
@@ -339,16 +339,20 @@ class Svrea_script():
                 county = None
                 municipality = None
                 areaname = None
+                #logging.info(listing['location']['address']['streetAddress'])
 
                 if 'streetAddress' in listing['location']['address']:
-                    house = re.search('\\d+[^ \s]*', listing['location']['address']['streetAddress'])
+                    s = listing['location']['address']['streetAddress']
+                    for c in ['\r', '\n']:
+                        s = s.replace(c, " ")
+                    house = re.search('\\d+[^ \s]*', s)
 
                     if house is not None:
                         house = house.group(0)
                     else:
                         house = None
 
-                    street = re.sub('\\d+[^ \s]*', '', listing['location']['address']['streetAddress'])
+                    street = re.sub('\\d+[^ \s]*', '', s)
 
                 if 'city' in listing['location']['address']:
                     city = listing['location']['address']['city']
@@ -365,16 +369,19 @@ class Svrea_script():
                     areaname = listing['location']['namedAreas']
 
                 #logging.info(house)
-                address, address_created = Address.objects.update_or_create(
-                    house=house,
-                    street=street,
-                    city=city,
-                    municipality=municipality,
-                    county=county,
-                    defaults={
-                        "areaname": areaname
-                    }
-                )
+                try :
+                    address, address_created = Address.objects.update_or_create(
+                        house=house,
+                        street=street,
+                        city=city,
+                        municipality=municipality,
+                        county=county,
+                        defaults={
+                            "areaname": areaname
+                        }
+                    )
+                except Exception as e:
+                    tolog(INFO, "%s\n%s" %(e, listing))
 
                 #######################################################
                 plotarea = None
